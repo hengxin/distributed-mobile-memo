@@ -1,6 +1,7 @@
 package ics.mobilememo;
 
-import ics.mobilememo.MemoFragment.OnFragmentInteractionListener;
+import ics.mobilememo.memo.MemoFragment;
+import ics.mobilememo.memo.MemoFragment.OnFragmentInteractionListener;
 
 import java.util.ArrayList;
 import java.util.List;

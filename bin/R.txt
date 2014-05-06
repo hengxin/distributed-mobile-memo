@@ -249,7 +249,7 @@ int id action_context_bar 0x7f05001d
 int id action_menu_divider 0x7f050016
 int id action_menu_presenter 0x7f050017
 int id action_mode_close_button 0x7f050024
-int id action_settings 0x7f050044
+int id action_settings 0x7f050045
 int id activity_chooser_view_content 0x7f050025
 int id always 0x7f05000b
 int id beginning 0x7f050011
@@ -271,11 +271,12 @@ int id image 0x7f050027
 int id imgbtn_add_memo 0x7f05003e
 int id imgbtn_delete_memo 0x7f050040
 int id imgbtn_get_memo 0x7f05003f
+int id kv_representation 0x7f050041
 int id listMode 0x7f050001
 int id list_item 0x7f050029
-int id menu_get_kv 0x7f050042
-int id menu_put_kv 0x7f050041
-int id menu_remove_kv 0x7f050043
+int id menu_get_kv 0x7f050043
+int id menu_put_kv 0x7f050042
+int id menu_remove_kv 0x7f050044
 int id middle 0x7f050012
 int id never 0x7f050009
 int id none 0x7f050010
@@ -333,10 +334,9 @@ int layout abc_search_dropdown_item_icons_2line 0x7f030015
 int layout abc_search_view 0x7f030016
 int layout abc_simple_decor 0x7f030017
 int layout activity_mobile_memo 0x7f030018
-int layout fragment_memo 0x7f03001c
-int layout fragment_memo_grid 0x7f030019
-int layout fragment_memo_list 0x7f03001a
-int layout support_simple_spinner_dropdown_item 0x7f03001b
+int layout fragment_memo 0x7f03001b
+int layout fragment_memo_list 0x7f030019
+int layout support_simple_spinner_dropdown_item 0x7f03001a
 int menu menu_memo 0x7f0c0000
 int menu mobile_memo 0x7f0c0001
 int string abc_action_bar_home_description 0x7f0a0001
@@ -365,6 +365,7 @@ int string title_reminder_list 0x7f0a0012
 int string title_section_benchmark 0x7f0a0010
 int string title_section_members 0x7f0a000e
 int string title_section_memo 0x7f0a000f
+int string txt_kv_representation 0x7f0a001b
 int string txt_memo_operations 0x7f0a0017
 int style AppBaseTheme 0x7f0b008b
 int style AppTheme 0x7f0b008c

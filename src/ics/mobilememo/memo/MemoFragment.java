@@ -1,4 +1,13 @@
-package ics.mobilememo;
+package ics.mobilememo.memo;
+
+import ics.mobilememo.R;
+import ics.mobilememo.dummy.DummyContent;
+import ics.mobilememo.sharedmemory.data.kvs.KVPair;
+import ics.mobilememo.sharedmemory.data.kvs.Key;
+import ics.mobilememo.sharedmemory.data.kvs.Version;
+import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
+
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,11 +21,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import ics.mobilememo.dummy.DummyContent;
 
 /**
  * A fragment representing a list of Items.
@@ -54,6 +61,8 @@ public class MemoFragment extends Fragment implements
 	 * Views.
 	 */
 	private ListAdapter mAdapter;
+	
+	private ArrayList<KVPair> kvpairs_list = new ArrayList<>();
 
 	// TODO: Rename and change types of parameters
 	public static MemoFragment newInstance(String param1, String param2)
@@ -93,9 +102,9 @@ public class MemoFragment extends Fragment implements
 
 		
 		// TODO: Change Adapter to display your content
-		mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+		this.mAdapter = new ArrayAdapter<KVPair>(getActivity(),
 				android.R.layout.simple_list_item_1, android.R.id.text1,
-				DummyContent.ITEMS);
+				this.kvpairs_list);
 	}
 
 	@Override
@@ -111,12 +120,17 @@ public class MemoFragment extends Fragment implements
 		 */
 		this.addButtonListener(view);
 		
+		/**
+		 * TODO: test of ListView; It is OK.
+		 */
+		this.kvpairs_list.add(new KVPair(new Key("TestKey"), new VersionValue(new Version(1, 1), "TestValue")));
+		
 		// Set the adapter
-		mListView = (AbsListView) view.findViewById(android.R.id.list);
-		((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+		this.mListView = (AbsListView) view.findViewById(android.R.id.list);
+		((AdapterView<ListAdapter>) this.mListView).setAdapter(this.mAdapter);
 
 		// Set OnItemClickListener so we can be notified on item clicks
-		mListView.setOnItemClickListener(this);
+		this.mListView.setOnItemClickListener(this);
 
 		return view;
 	}
@@ -127,7 +141,7 @@ public class MemoFragment extends Fragment implements
 		super.onAttach(activity);
 		try
 		{
-			mListener = (OnFragmentInteractionListener) activity;
+			this.mListener = (OnFragmentInteractionListener) activity;
 		} catch (ClassCastException e)
 		{
 			throw new ClassCastException(activity.toString()
@@ -139,7 +153,7 @@ public class MemoFragment extends Fragment implements
 	public void onDetach()
 	{
 		super.onDetach();
-		mListener = null;
+		this.mListener = null;
 	}
 	
 	/**

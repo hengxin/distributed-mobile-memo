@@ -17,39 +17,55 @@
         android:id="@+id/imgbtn_add_memo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="20dp"
+        android:layout_alignParentTop="true"
         android:contentDescription="@string/imgbtn_add"
-        android:src="@drawable/add"/>
+        android:maxHeight="@dimen/abc_action_bar_default_height"
+        android:src="@drawable/add" />
 
    <ImageButton
-        android:id="@+id/imgbtn_get_memo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf = "@+id/imgbtn_add_memo"
-        android:contentDescription="@string/imgbtn_search"
-        android:src="@drawable/get"/>
+       android:id="@+id/imgbtn_get_memo"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentTop="true"
+       android:layout_toLeftOf="@+id/imgbtn_add_memo"
+       android:contentDescription="@string/imgbtn_search"
+       android:maxHeight="@dimen/abc_action_bar_default_height"
+       android:src="@drawable/get" />
 
     <ImageButton
         android:id="@+id/imgbtn_delete_memo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf = "@+id/imgbtn_get_memo"
+        android:layout_toLeftOf="@+id/imgbtn_get_memo"
         android:contentDescription="@string/imgbtn_delete"
-        android:src="@drawable/delete"/>    
-        
+        android:maxHeight="@dimen/abc_action_bar_default_height"
+        android:src="@drawable/delete" />
+    
 <!-- list of key-value pairs -->        
+    <!-- key-value pairs representation -->
+
+    <TextView
+        android:id="@+id/kv_representation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgbtn_delete_memo"
+        android:text="@string/txt_kv_representation" />
+
+    <!-- key-value pairs -->
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/imgbtn_delete_memo" />   
+        android:layout_below="@+id/kv_representation" />
+
     <TextView
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" />         
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center" />
+         
 </RelativeLayout>
