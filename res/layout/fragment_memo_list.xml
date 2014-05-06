@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content" >
+
+<!-- operations -->
+
+	<TextView
+	    android:id="@+id/txt_memo_operations"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:text="@string/txt_memo_operations" />
+	
+    <ImageButton
+        android:id="@+id/imgbtn_add_memo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="20dp"
+        android:contentDescription="@string/imgbtn_add"
+        android:src="@drawable/add"/>
+
+   <ImageButton
+        android:id="@+id/imgbtn_get_memo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf = "@+id/imgbtn_add_memo"
+        android:contentDescription="@string/imgbtn_search"
+        android:src="@drawable/get"/>
+
+    <ImageButton
+        android:id="@+id/imgbtn_delete_memo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf = "@+id/imgbtn_get_memo"
+        android:contentDescription="@string/imgbtn_delete"
+        android:src="@drawable/delete"/>    
+        
+<!-- list of key-value pairs -->        
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imgbtn_delete_memo" />   
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" />         
+</RelativeLayout>
