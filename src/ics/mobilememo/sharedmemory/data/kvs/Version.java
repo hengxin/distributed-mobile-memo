@@ -94,7 +94,7 @@ public class Version implements Comparable<Version>, Serializable
 	}
 
 	/**
-	 * are two Version (s) equal
+	 * are the two Version (s) equal
 	 */
 	@Override
 	public boolean equals(Object obj)

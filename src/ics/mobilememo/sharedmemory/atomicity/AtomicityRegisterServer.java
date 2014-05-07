@@ -1,0 +1,79 @@
+/**
+ * @author hengxin
+ * @creation 2013-8-13
+ * @file AtomicRegisterServer.java
+ *
+ * @description
+ */
+package ics.mobilememo.sharedmemory.atomicity;
+
+import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
+import ics.mobilememo.sharedmemory.architecture.communication.IReceiver;
+import ics.mobilememo.sharedmemory.data.kvs.KVStore;
+import ics.mobilememo.sharedmemory.data.kvs.Key;
+import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
+import android.content.res.Configuration;
+import android.util.Log;
+
+/**
+ * @author hengxin
+ * @date 2013-8-13
+ * @description server part (replica) of the "client/server" architecture
+ *
+ * Singleton design pattern with Java Enum which is simple and thread-safe
+ */
+public enum AtomicityRegisterServer implements IReceiver // implements IServerReceiver
+{
+	INSTANCE;	// it is thread-safe
+
+	private static final String TAG = AtomicityRegisterServer.class.getName();
+
+	/**
+	 * receiving READ_PHASE or WRITE_PHASE messages
+	 * from the client part (of the client/server architecture)
+	 *
+	 * dispatched from @see {@link MessagingService}{@link #onReceive(IPMessage)}
+	 */
+	@Override
+	public void onReceive(IPMessage msg)
+	{
+		String from_ip = msg.getSenderIP();
+		String own_ip = Configuration.getInstance().getIp();
+
+		RegisterMessage rmsg = (RegisterMessage) msg;
+		Key key = rmsg.getKey();
+		int cnt = rmsg.getCnt();
+
+		Log.i(TAG, own_ip + " receiving the message " + rmsg.toString());
+
+		switch (msg.getType())
+		{
+			/**
+			 * responds to the READ_PHASE message with READ_PHASE_ACK message,
+			 * including the Key and the VersionValue (may be null) found
+			 * in the server replica
+			 */
+			case READ_PHASE:
+				VersionValue vval = KVStore.INSTANCE.getVersionValue(key);
+				IPMessage read_phase_ack_rmsg = new RegisterMessage(MessageTypeEnum.READ_PHASE_ACK, own_ip, cnt, key, vval);
+				MessagingService.INSTANCE.sendOneWay(from_ip, read_phase_ack_rmsg);
+				break;
+
+				/**
+				 * responds to the WRITE_PHASE message with WRITE_PHASE_ACK message,
+				 * while writing the key-value pair carried with the WRITE_PHASE into
+				 * the key-value store maintained by the server replica
+				 */
+			case WRITE_PHASE:
+				VersionValue vval_now = KVStore.INSTANCE.getVersionValue(key);
+				VersionValue vval_max = VersionValue.max(rmsg.getVersionValue(), vval_now);
+				KVStore.INSTANCE.put(key, vval_max);
+				IPMessage write_phase_ack_rmsg = new RegisterMessage(MessageTypeEnum.WRITE_PHASE_ACK, own_ip, cnt, null, null);
+				MessagingService.INSTANCE.sendOneWay(from_ip, write_phase_ack_rmsg);
+				break;
+
+			default:
+				break;
+		}
+	}
+}

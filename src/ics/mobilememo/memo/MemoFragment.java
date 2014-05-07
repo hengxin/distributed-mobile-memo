@@ -1,11 +1,11 @@
 package ics.mobilememo.memo;
 
 import ics.mobilememo.R;
-import ics.mobilememo.dummy.DummyContent;
 import ics.mobilememo.sharedmemory.data.kvs.KVPair;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.Version;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
+import ics.mobilememo.test.unittest.UnitTestConfig;
 
 import java.util.ArrayList;
 
@@ -123,7 +123,9 @@ public class MemoFragment extends Fragment implements
 		/**
 		 * TODO: test of ListView; It is OK.
 		 */
-		this.kvpairs_list.add(new KVPair(new Key("TestKey"), new VersionValue(new Version(1, 1), "TestValue")));
+		if(UnitTestConfig.isUnittestEnabled)
+			this.kvpairs_list.add(new KVPair(new Key("TestKey"), 
+					new VersionValue(new Version(1, 1), "TestValue")));
 		
 		// Set the adapter
 		this.mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -170,6 +172,8 @@ public class MemoFragment extends Fragment implements
     
     /**
      * add and handle with button listeners
+     * they are requests on this MobileMemo shared memory including
+     * add, get, and remove.
      */
     private void addButtonListener(View view)
     {
@@ -213,7 +217,7 @@ public class MemoFragment extends Fragment implements
 		{
 			// Notify the active callbacks interface (the activity, if the
 			// fragment is attached to one) that an item has been selected.
-			mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+//			mListener.onFragmentInteraction(this.kvpairs_list.get(position).id);
 		}
 	}
 
