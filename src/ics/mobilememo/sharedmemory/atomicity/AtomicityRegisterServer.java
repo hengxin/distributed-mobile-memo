@@ -111,7 +111,7 @@ public enum AtomicityRegisterServer implements IAtomicityMessageHandler
 			VersionValue vval_now = KVStoreInMemory.INSTANCE.getVersionValue(key);
 			VersionValue vval_max = VersionValue.max(atomicityMessage.getVersionValue(), vval_now);
 			KVStoreInMemory.INSTANCE.put(key, vval_max);
-			IPMessage atomicity_write_phase_ack_rmsg = new AtomicityWritePhaseAckMessage(my_ip, cnt, null, null);
+			IPMessage atomicity_write_phase_ack_rmsg = new AtomicityWritePhaseAckMessage(my_ip, cnt);
 			MessagingService.INSTANCE.sendOneWay(from_ip, atomicity_write_phase_ack_rmsg);
 		}
 			

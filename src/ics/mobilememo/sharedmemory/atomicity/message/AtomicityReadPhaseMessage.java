@@ -9,7 +9,6 @@
 package ics.mobilememo.sharedmemory.atomicity.message;
 
 import ics.mobilememo.sharedmemory.data.kvs.Key;
-import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 public class AtomicityReadPhaseMessage extends AtomicityMessage
 {
@@ -22,12 +21,9 @@ public class AtomicityReadPhaseMessage extends AtomicityMessage
 	 * @param ip IPMessage
 	 * @param cnt @see IPMessage#cnt
 	 * @param key {@link Key}  to query from @see AtomicityMessage#key
-	 * @param vval {@link VersionValue} @see AtomicityMessage#vval 
 	 */
-	public AtomicityReadPhaseMessage(String ip, int cnt, Key key, VersionValue vval)
+	public AtomicityReadPhaseMessage(String ip, int cnt, Key key)
 	{
-		super(ip, cnt, key, vval);
-		super.vval = null;
+		super(ip, cnt, key, null);
 	}
-	
 }

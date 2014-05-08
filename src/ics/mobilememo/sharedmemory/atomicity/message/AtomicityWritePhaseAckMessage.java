@@ -9,7 +9,6 @@
 package ics.mobilememo.sharedmemory.atomicity.message;
 
 import ics.mobilememo.sharedmemory.data.kvs.Key;
-import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 public class AtomicityWritePhaseAckMessage extends AtomicityMessage
 {
@@ -22,14 +21,9 @@ public class AtomicityWritePhaseAckMessage extends AtomicityMessage
 	 * 
 	 * @param ip IPMessage
 	 * @param cnt @see IPMessage#cnt
-	 * @param key {@link Key} @see AtomicityMessage#key
-	 * @param vval {@link VersionValue} @see AtomicityMessage#vval 
 	 */	
-	public AtomicityWritePhaseAckMessage(String ip, int cnt, Key key,
-			VersionValue vval)
+	public AtomicityWritePhaseAckMessage(String ip, int cnt)
 	{
-		super(ip, cnt, key, vval);
-		this.key = null;
-		this.vval = null;
+		super(ip, cnt, null, null);
 	}
 }
