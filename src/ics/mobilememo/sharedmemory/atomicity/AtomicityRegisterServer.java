@@ -11,18 +11,17 @@
 package ics.mobilememo.sharedmemory.atomicity;
 
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
-import ics.mobilememo.sharedmemory.architecture.communication.IReceiver;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
 import ics.mobilememo.sharedmemory.architecture.config.SystemConfig;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseAckMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseMessage;
+import ics.mobilememo.sharedmemory.atomicity.message.AtomicityWritePhaseAckMessage;
+import ics.mobilememo.sharedmemory.atomicity.message.AtomicityWritePhaseMessage;
 import ics.mobilememo.sharedmemory.atomicity.messagehandler.IAtomicityMessageHandler;
-import ics.mobilememo.sharedmemory.data.kvs.KVStore;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
-import android.content.res.Configuration;
-import android.util.Log;
+import ics.mobilememo.sharedmemory.data.kvs.kvstore.KVStoreInMemory;
 
 /**
  * Singleton design pattern with Java Enum which is simple and thread-safe
@@ -39,7 +38,7 @@ public enum AtomicityRegisterServer implements IAtomicityMessageHandler
 	 *
 	 * dispatched from @see {@link MessagingService}{@link #onReceive(IPMessage)}
 	 */
-	public void onReceive(IPMessage msg)
+/*	public void onReceive(IPMessage msg)
 	{
 		String from_ip = msg.getSenderIP();
 		String own_ip = Configuration.getInstance().getIp();
@@ -52,26 +51,26 @@ public enum AtomicityRegisterServer implements IAtomicityMessageHandler
 
 		switch (msg.getType())
 		{
-			/**
+			*//**
 			 * responds to the READ_PHASE message with READ_PHASE_ACK message,
 			 * including the Key and the VersionValue (may be null) found
 			 * in the server replica
-			 */
+			 *//*
 			case READ_PHASE:
-				VersionValue vval = KVStore.INSTANCE.getVersionValue(key);
+				VersionValue vval = KVStoreInMemory.INSTANCE.getVersionValue(key);
 				IPMessage read_phase_ack_rmsg = new RegisterMessage(MessageTypeEnum.READ_PHASE_ACK, own_ip, cnt, key, vval);
 				MessagingService.INSTANCE.sendOneWay(from_ip, read_phase_ack_rmsg);
 				break;
 
-				/**
+				*//**
 				 * responds to the WRITE_PHASE message with WRITE_PHASE_ACK message,
 				 * while writing the key-value pair carried with the WRITE_PHASE into
 				 * the key-value store maintained by the server replica
-				 */
+				 *//*
 			case WRITE_PHASE:
-				VersionValue vval_now = KVStore.INSTANCE.getVersionValue(key);
+				VersionValue vval_now = KVStoreInMemory.INSTANCE.getVersionValue(key);
 				VersionValue vval_max = VersionValue.max(rmsg.getVersionValue(), vval_now);
-				KVStore.INSTANCE.put(key, vval_max);
+				KVStoreInMemory.INSTANCE.put(key, vval_max);
 				IPMessage write_phase_ack_rmsg = new RegisterMessage(MessageTypeEnum.WRITE_PHASE_ACK, own_ip, cnt, null, null);
 				MessagingService.INSTANCE.sendOneWay(from_ip, write_phase_ack_rmsg);
 				break;
@@ -79,7 +78,7 @@ public enum AtomicityRegisterServer implements IAtomicityMessageHandler
 			default:
 				break;
 		}
-	}
+	}*/
 
 	/**
 	 * the server replica passively receives messages of type 
@@ -103,11 +102,18 @@ public enum AtomicityRegisterServer implements IAtomicityMessageHandler
 		if (atomicityMessage instanceof AtomicityReadPhaseMessage)
 		{	
 			// TODO: refactor KVStore
-			VersionValue vval = KVStore.INSTANCE.getVersionValue(key);
+			VersionValue vval = KVStoreInMemory.INSTANCE.getVersionValue(key);
 			IPMessage atomicity_read_phase_ack_msg = new AtomicityReadPhaseAckMessage(my_ip, cnt, key, vval);
 			MessagingService.INSTANCE.sendOneWay(from_ip, atomicity_read_phase_ack_msg);
 		}
 		else // (atomicityMessage instanceof AtomicityWritePhaseMessage)
+		{
+			VersionValue vval_now = KVStoreInMemory.INSTANCE.getVersionValue(key);
+			VersionValue vval_max = VersionValue.max(atomicityMessage.getVersionValue(), vval_now);
+			KVStoreInMemory.INSTANCE.put(key, vval_max);
+			IPMessage atomicity_write_phase_ack_rmsg = new AtomicityWritePhaseAckMessage(my_ip, cnt, null, null);
+			MessagingService.INSTANCE.sendOneWay(from_ip, atomicity_write_phase_ack_rmsg);
+		}
 			
 	}
 }

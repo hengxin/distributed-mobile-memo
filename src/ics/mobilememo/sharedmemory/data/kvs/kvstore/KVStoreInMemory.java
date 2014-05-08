@@ -5,7 +5,10 @@
  *
  * @description
  */
-package ics.mobilememo.sharedmemory.data.kvs;
+package ics.mobilememo.sharedmemory.data.kvs.kvstore;
+
+import ics.mobilememo.sharedmemory.data.kvs.Key;
+import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -20,11 +23,11 @@ import java.util.concurrent.ConcurrentMap;
  *
  * Singleton design pattern with Java enum which is simple and thread-safe
  */
-public enum KVStore
+public enum KVStoreInMemory implements IKVStore
 {
 	INSTANCE;	// it is thread-safe
 
-	private static final String TAG = KVStore.class.getName();
+	private static final String TAG = KVStoreInMemory.class.getName();
 
 	// using the thread-safe ConcurrentHashMap to cope with the multi-thread concurrency.
 	private ConcurrentMap<Key, VersionValue> key_vval_map = new ConcurrentHashMap<Key, VersionValue>();
@@ -50,6 +53,7 @@ public enum KVStore
 	 * @param key Key to identify
 	 * @param vval VersionValue associated with the Key
 	 */
+	@Override
 	public void put(Key key, VersionValue vval)
 	{
 		VersionValue current_vval = this.key_vval_map.get(key);
@@ -72,6 +76,7 @@ public enum KVStore
 	 * @param key Key to identify
 	 * @return VersionValue associated
 	 */
+	@Override
 	public VersionValue getVersionValue(Key key)
 	{
 		VersionValue vval = this.key_vval_map.get(key);
@@ -99,6 +104,7 @@ public enum KVStore
 	 * remove the key and associated value from the kvs
 	 * @param key key to identify and remove
 	 */
+	@Override
 	public void remove(Key key)
 	{
 		this.key_vval_map.remove(key);

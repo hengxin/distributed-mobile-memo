@@ -42,7 +42,7 @@ public class AtomicityMessage extends IPMessage
 	 * @return {@link #vval}
 	 * @see VersionValue
 	 */
-	public VersionValue getVVal()
+	public VersionValue getVersionValue()
 	{
 		return this.vval;
 	}
