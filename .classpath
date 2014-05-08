@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="ics/mobilememo/sharedmemory/atomicity/messagehandler/AtomicityReadPhaseAckMessageHandler.java|ics/mobilememo/sharedmemory/atomicity/messagehandler/AtomicityReadPhaseMessageHandler.java|ics/mobilememo/sharedmemory/atomicity/messagehandler/AtomicityWritePhaseAckMessageHandler.java|ics/mobilememo/sharedmemory/atomicity/messagehandler/AtomicityWritePhaseMessageHandler.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>

@@ -8,6 +8,8 @@
 package ics.mobilememo.sharedmemory.atomicity;
 
 import ics.mobilememo.sharedmemory.architecture.IRegisterClient;
+import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
+import ics.mobilememo.sharedmemory.atomicity.messagehandler.IAtomicityMessageHandler;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.Version;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
@@ -26,7 +28,7 @@ import android.util.Log;
  *
  * Singleton design pattern with Java Enum which is simple and thread-safe
  */
-public enum AtomicityRegisterClient implements IRegisterClient, IReceiver //, IClientReceiver
+public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessageHandler //, IClientReceiver
 {
 	INSTANCE;
 
@@ -317,6 +319,13 @@ public enum AtomicityRegisterClient implements IRegisterClient, IReceiver //, IC
 							|| (this.rmsg.getType() == MessageTypeEnum.WRITE_PHASE && received_rmsg.getType() == MessageTypeEnum.WRITE_PHASE_ACK) )
 					 );
 		}
+	}
+
+	@Override
+	public void handleAtomicityMessage(AtomicityMessage atomicityMessage)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

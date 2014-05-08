@@ -29,4 +29,21 @@ public class AtomicityMessage extends IPMessage
 		this.vval = vval;
 	}
 
+	/**
+	 * @return {@link #key}
+	 * @see Key
+	 */
+	public Key getKey()
+	{
+		return this.key;
+	}
+	
+	/**
+	 * @return {@link #vval}
+	 * @see VersionValue
+	 */
+	public VersionValue getVVal()
+	{
+		return this.vval;
+	}
 }

@@ -1,14 +1,23 @@
 /**
  * @author hengxin
- * @creation 2013-8-13
+ * @creation 2013-8-13; 2014-05-08
  * @file AtomicRegisterServer.java
  *
- * @description
+ * @description server part (replica) of the "client/server" architecture;
+ *  the server replica passively receives messages of type 
+ *  {@link AtomicityReadPhaseMessage} and {@link AtomicityWritePhaseMessage} and responds with
+ *  messages of type {@link AtomicityReadPhaseAckMessage} and {@link AtomicityWritePhaseAckMessage}, respectively.
  */
 package ics.mobilememo.sharedmemory.atomicity;
 
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.architecture.communication.IReceiver;
+import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
+import ics.mobilememo.sharedmemory.architecture.config.SystemConfig;
+import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
+import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseAckMessage;
+import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseMessage;
+import ics.mobilememo.sharedmemory.atomicity.messagehandler.IAtomicityMessageHandler;
 import ics.mobilememo.sharedmemory.data.kvs.KVStore;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
@@ -16,13 +25,9 @@ import android.content.res.Configuration;
 import android.util.Log;
 
 /**
- * @author hengxin
- * @date 2013-8-13
- * @description server part (replica) of the "client/server" architecture
- *
  * Singleton design pattern with Java Enum which is simple and thread-safe
  */
-public enum AtomicityRegisterServer implements IReceiver // implements IServerReceiver
+public enum AtomicityRegisterServer implements IAtomicityMessageHandler
 {
 	INSTANCE;	// it is thread-safe
 
@@ -34,7 +39,6 @@ public enum AtomicityRegisterServer implements IReceiver // implements IServerRe
 	 *
 	 * dispatched from @see {@link MessagingService}{@link #onReceive(IPMessage)}
 	 */
-	@Override
 	public void onReceive(IPMessage msg)
 	{
 		String from_ip = msg.getSenderIP();
@@ -75,5 +79,35 @@ public enum AtomicityRegisterServer implements IReceiver // implements IServerRe
 			default:
 				break;
 		}
+	}
+
+	/**
+	 * the server replica passively receives messages of type 
+	 * {@link AtomicityReadPhaseMessage} and {@link AtomicityWritePhaseMessage} and responds with
+	 * messages of type {@link AtomicityReadPhaseAckMessage} and {@link AtomicityWritePhaseAckMessage}, respectively.
+	 */
+	@Override
+	public void handleAtomicityMessage(AtomicityMessage atomicityMessage)
+	{
+		String from_ip = atomicityMessage.getSenderIP();
+		String my_ip = SystemConfig.INSTANCE.getIP();
+		int cnt = atomicityMessage.getCnt();
+		Key key = atomicityMessage.getKey();
+		
+		/**
+		 * responds to the message of type {@link AtomicityReadPhaseMessage} 
+		 * with message of type {@link AtomicityReadAckPhaseMessage},
+		 * including the {@link Key} and the {@link VersionValue} (may be null) found
+		 * in the server replica
+		 */
+		if (atomicityMessage instanceof AtomicityReadPhaseMessage)
+		{	
+			// TODO: refactor KVStore
+			VersionValue vval = KVStore.INSTANCE.getVersionValue(key);
+			IPMessage atomicity_read_phase_ack_msg = new AtomicityReadPhaseAckMessage(my_ip, cnt, key, vval);
+			MessagingService.INSTANCE.sendOneWay(from_ip, atomicity_read_phase_ack_msg);
+		}
+		else // (atomicityMessage instanceof AtomicityWritePhaseMessage)
+			
 	}
 }
