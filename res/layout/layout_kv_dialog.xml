@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/txt_kv_request_dialog_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_kv_key" />
+
+    <EditText
+        android:id="@+id/etxt_kv_request_dialog_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_kv_request_dialog_key"
+        android:ems="10"
+        android:inputType="none" >
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/txt_kv_request_dialog_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etxt_kv_request_dialog_key"
+        android:text="@string/txt_kv_value" />
+
+    <EditText
+        android:id="@+id/etxt_kv_request_dialog_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_kv_request_dialog_value"
+        android:ems="10"
+        android:inputType="none" />
+
+    <!-- 
+	<Button
+	    android:id="@+id/btn_kv_ok"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:layout_below="@+id/etxt_kv_value"
+	    android:layout_marginRight="20dp"
+	    android:layout_marginTop="40dp"
+	    android:text="@android:string/ok" />
+
+	<Button
+	    android:id="@+id/btn_kv_cancel"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBaseline="@+id/btn_kv_ok"
+	    android:layout_alignBottom="@+id/btn_kv_ok"
+	    android:layout_marginRight="20dp"
+	    android:layout_toLeftOf="@+id/btn_kv_ok"
+	    android:text="@android:string/cancel" />
+	 -->
+	 
+</RelativeLayout>

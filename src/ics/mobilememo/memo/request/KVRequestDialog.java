@@ -1,0 +1,125 @@
+/**
+ * @author hengxin
+ * @date May 9, 2014
+ * @description {@link KVRequestDialog} is used to collect necessary information
+ * 	for issuing requests on server replicas.
+ *  The requests includes put, get, and remove.
+ *  {@link KVRequestDialog} is a generic one which can be instantiated as 
+ *  {@link KVPutRequestDialog}, {@link KVGetRequestDialog}, and {@link KVRemoveRequestDialog}.
+ *  
+ *  @see KVPutRequestDialog
+ *  @see KVGetRequestDialog
+ *  @see KVRemoveRequestDialog
+ */
+package ics.mobilememo.memo.request;
+
+import ics.mobilememo.R;
+import ics.mobilememo.sharedmemory.data.kvs.Key;
+import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+
+public abstract class KVRequestDialog extends DialogFragment
+{
+	/**
+	 * {@link Key} in its String format
+	 */
+	protected String key_str = null;
+	/**
+	 * value in its String format
+	 * 
+	 * @see VersionValue
+	 * 
+	 *      note: the information of {@link #val_str} is not necessary for both
+	 *      {@link KVGetRequestDialog} and {@link KVRemoveRequestDialog}
+	 * @see #is_val_required
+	 */
+	protected String val_str = null;
+
+	protected Key request_key = null;
+	protected VersionValue vval_return = null;
+	
+	/**
+	 * the information of {@link #val_str} (thus, together with the value input
+	 * box) is not necessary for both {@link KVGetRequestDialog} and
+	 * {@link KVRemoveRequestDialog} while it is required for
+	 * {@link KVPutRequestDialog}
+	 * 
+	 * @see KVPutRequestDialog
+	 * @see KVGetRequestDialog
+	 * @see KVRemoveRequestDialog
+	 */
+	protected boolean is_val_required = false;
+
+	protected EditText etxt_key = null;
+	protected EditText etxt_val = null;
+
+	/**
+	 * resource id of the title of dialog
+	 */
+	protected int dialog_title_id = -1;
+
+	/**
+	 * create dialog by reusing the {@link AlertDialog}
+	 */
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState)
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		
+		/**
+		 *  inflate and set the layout for the dialog
+		 *  pass <code>null</code> as the parent view because its going in the dialog layout
+		 */
+		View view = inflater.inflate(R.layout.layout_kv_dialog, null);
+        this.etxt_key = (EditText) view.findViewById(R.id.etxt_kv_request_dialog_key);
+        this.etxt_val = (EditText) view.findViewById(R.id.etxt_kv_request_dialog_value);
+        
+		builder.setView(view)
+				// add action buttons
+				.setPositiveButton(android.R.string.ok,
+						new DialogInterface.OnClickListener()
+						{
+							/**
+							 * perform the corresponding request
+							 */
+							@Override
+							public void onClick(DialogInterface dialog, int id)
+							{
+								/**
+								 * collecting information from input box:
+								 * #key_str and #val_str
+								 * and construct the {@link Key} from #key_str since it is fixed
+								 */
+								KVRequestDialog.this.key_str = KVRequestDialog.this.etxt_key.getText().toString();
+								KVRequestDialog.this.val_str = KVRequestDialog.this.etxt_val.getText().toString();
+								KVRequestDialog.this.request_key = new Key(KVRequestDialog.this.key_str);
+								
+								// TODO: 
+								KVRequestDialog.this.onRequestPerformed();
+							}
+						})
+				.setNegativeButton(android.R.string.cancel,
+						new DialogInterface.OnClickListener()
+						{
+							public void onClick(DialogInterface dialog, int id)
+							{
+								KVRequestDialog.this.getDialog().cancel();
+							}
+						});
+		return builder.create();
+	}
+
+	/**
+	 * upon clicking the OK button, perform the corresponding request
+	 * @return {@link VersionValue} as the result of a request
+	 */
+	public abstract VersionValue onRequestPerformed();
+}
