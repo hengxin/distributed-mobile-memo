@@ -46,4 +46,18 @@ public class AtomicityMessage extends IPMessage
 	{
 		return this.vval;
 	}
+	
+	/**
+	 * extract the {@link VersionValue}s carried with a set of {@link AtomicityMessage}s
+	 * 
+	 * @param atomicity_messages an array of {@link AtomicityMessage}s
+	 * @return an array of {@link VersionValue} carried with the set of @param atomicity_messages
+	 */
+	public static VersionValue[] extractVersionValues(AtomicityMessage[] atomicity_messages)
+	{
+		VersionValue[] vvals = new VersionValue[atomicity_messages.length];
+		for (int i = 0; i < atomicity_messages.length; i++)
+			vvals[i] = atomicity_messages[i].vval;
+		return vvals;
+	}
 }

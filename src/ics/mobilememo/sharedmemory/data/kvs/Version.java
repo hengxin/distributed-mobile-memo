@@ -56,6 +56,9 @@ public class Version implements Comparable<Version>, Serializable
 	 */
 	public Version increment(int pid)
 	{
+		// make sure that pid has been set
+		assert pid >= 0;
+		
 		return new Version(this.seqno + 1, pid);
 	}
 

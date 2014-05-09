@@ -1,10 +1,11 @@
 /**
  * @author hengxin
  * @date May 8, 2014
- * @description store the environment variables for network communication
- * 	which are global to the whole system
+ * @description configuration parameters for client/server: network communication and pid 
  */
 package ics.mobilememo.sharedmemory.architecture.config;
+
+import android.R.integer;
 
 
 public enum SystemConfig
@@ -26,6 +27,14 @@ public enum SystemConfig
 	private String ip = null;
 	
 	/**
+	 * my pid
+	 * it should be unique in the whole system
+	 * now, this requirement is enforced manually and in a centralized way
+	 *   // TODO: to implement this requirement automatically and in a distributed way
+	 */
+	private int pid = -1;
+	
+	/**
 	 * @return {@link #ip}: my ip address
 	 */
 	public String getIP()
@@ -40,5 +49,22 @@ public enum SystemConfig
 	public void setIP(String ip)
 	{
 		this.ip = ip;
+	}
+
+	/**
+	 * @return {@link #pid}: id of the process as a client or server
+	 */
+	public int getPid()
+	{
+		return pid;
+	}
+	
+	/**
+	 * set {@link #pid}
+	 * @param pid pid to set
+	 */
+	public void setPid(int pid)
+	{
+		this.pid = pid;
 	}
 }

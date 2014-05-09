@@ -1,18 +1,24 @@
 /**
  * @author hengxin
- * @creation 2013-8-8
+ * @creation 2013-8-8; 2014-05-08
  * @file AtomicRegisterClient.java
  *
- * @description
+ * @description {@link AtomicRegisterClient}, together with {@link AtomicRegisterServer}
+ *  implements the atomicity consistency protocol.
+ *  it can issue put/get/remove requests on {@link AtomicRegisterServer} 
+ *  and handle with the messages from the latter.
  */
 package ics.mobilememo.sharedmemory.atomicity;
 
+import ics.mobilememo.group.GroupConfig;
+import ics.mobilememo.group.member.ServerReplica;
 import ics.mobilememo.sharedmemory.architecture.IRegisterClient;
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.architecture.communication.IReceiver;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
 import ics.mobilememo.sharedmemory.architecture.config.SystemConfig;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
+import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessagingService;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseAckMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityWritePhaseAckMessage;
@@ -23,6 +29,7 @@ import ics.mobilememo.sharedmemory.data.kvs.Version;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -55,7 +62,7 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 		this.op_cnt++;
 
 		// read phase: contact a quorum of the server replicas for the latest value and version
-		Map<String, RegisterMessage> read_phase_acks = this.readPhase(key);
+		Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
 
 		// local computation: extract the latest VersionValue (value and its version)
 		VersionValue max_vval = this.extractMaxVValFromAcks(read_phase_acks);
@@ -77,7 +84,7 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 		this.op_cnt++;
 
 		// read phase: contact a quorum of the server replicas for the latest value and version
-		Map<String, RegisterMessage> read_phase_acks = this.readPhase(key);
+		Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
 
 		// local computation: extract the latest VersionValue; increment the version; construct the new VersionValue to write
 		VersionValue max_vval = this.extractMaxVValFromAcks(read_phase_acks);
@@ -96,9 +103,9 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	 * @param acks acks which contain a map of key-registermessage pairs
 	 * @return max VersionValue contained in the acks
 	 */
-	private VersionValue extractMaxVValFromAcks(Map<String, RegisterMessage> acks)
+	private VersionValue extractMaxVValFromAcks(Map<String, AtomicityMessage> acks)
 	{
-		VersionValue[] vvals = RegisterMessage.extractVValue(acks.values().toArray(new RegisterMessage[acks.size()]));
+		VersionValue[] vvals = AtomicityMessage.extractVersionValues(acks.values().toArray(new AtomicityMessage[acks.size()]));
 		VersionValue max_vval = VersionValue.max(vvals);
 		return max_vval;
 	}
@@ -111,7 +118,7 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	 */
 	private Version getNextVersion(Version old_ver)
 	{
-		return old_ver.increment(Configuration.getInstance().getPid());
+		return old_ver.increment(SystemConfig.INSTANCE.getPid());
 	}
 
 	/**
@@ -187,21 +194,23 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 //		int[] status = new int[replicas_num];	// to control the sending of messages
 		Map<String, Integer> turn = new HashMap<String, Integer>();
 		Map<String, Integer> status = new HashMap<String, Integer>();
-		Map<String, RegisterMessage> info = new HashMap<String, RegisterMessage>();
+		Map<String, AtomicityMessage> info = new HashMap<String, AtomicityMessage>();
 
 		public Communication(AtomicityMessage rmsg)
 		{
 			this.atomicity_message = rmsg;
 
 //			this.ack_num = 0;	// number of acks collected
-			this.replicas_num = Configuration.getInstance().getReplicasNum();	// number of processors in the system
+			this.replicas_num = GroupConfig.INSTANCE.getGroupSize();	// number of processors in the system
 			this.proc_majority = replicas_num / 2 + 1;	// counter indicating a majority of processors
 			this.latch_majority = new CountDownLatch(proc_majority);	// wait for a majority of acks
 
 			// initialization
+			List<ServerReplica> replica_list = GroupConfig.INSTANCE.getGroupMembers();
+			
 			for (int i = 0; i < replicas_num; i++)
 			{
-				String ip = Configuration.getInstance().getReplicaList().get(i).getIp();
+				String ip = replica_list.get(i).getIp();
 				turn.put(ip, Communication.HERE);
 				status.put(ip, Communication.NOT_SENT);
 				info.put(ip, null);
@@ -218,12 +227,14 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 		 * @return collection of corresponding ACK messages
 		 * Note: the method is invoked by only ONE thread. No synchronization is needed.
 		 */
-		public Map<String, RegisterMessage> communicate()
+		public Map<String, AtomicityMessage> communicate()
 		{
+			List<ServerReplica> replica_list = GroupConfig.INSTANCE.getGroupMembers();
+			
 			// broadcast
 			for (int i = 0; i < replicas_num; i++)
 			{
-				String ip = Configuration.getInstance().getReplicaList().get(i).getIp();
+				String ip = replica_list.get(i).getIp();
 				if (turn.get(ip) == Communication.HERE)	// it is my turn (ping)
 				{
 					MessagingService.INSTANCE.sendOneWay(ip, atomicity_message);	// send message to each replica
@@ -249,9 +260,9 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 			}
 
 			// TODO: the communication instance is done. do something.
-			if (this.atomicity_message.getType() == MessageTypeEnum.READ_PHASE)
+			if (this.atomicity_message instanceof AtomicityReadPhaseMessage)
 				Log.i(TAG, "Read phase finished.");
-			else //
+			else // this.atomicity_message instanceof AtomicityWritePhaseMessage
 				Log.i(TAG, "Write phase finished.");
 
 			return this.info;
@@ -270,10 +281,10 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 		@Override
 		public void onReceive(IPMessage msg)
 		{
-			if (this.isDeprecated((RegisterMessage) msg))	// discard the delayed message
+			if (this.isDeprecated((AtomicityMessage) msg))	// discard the delayed message
 				return;
 
-			String from_ip = msg.getSenderIp();
+			String from_ip = msg.getSenderIP();
 
 			switch (this.status.get(from_ip))
 			{
@@ -293,7 +304,7 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 
 				case Communication.NOT_ACK:
 					this.status.put(from_ip, Communication.ACK);
-					info.put(from_ip, (RegisterMessage) msg);
+					info.put(from_ip, (AtomicityMessage) msg);
 //					info[from_id] = msg;
 
 					/**
@@ -311,17 +322,22 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 		}
 
 		/**
-		 * to check whether the received message is a delayed one (deprecated).
-		 * @param received_rmsg received message
+		 * to check whether the received message is a delayed one (and should be discarded)
+		 * 
+		 * @param received_rmsg received message of type {@link AtomicityMessage}
 		 * @return true, if the message is deprecated; false, otherwise.
 		 */
-		private boolean isDeprecated(RegisterMessage received_rmsg)
+		private boolean isDeprecated(AtomicityMessage received_rmsg)
 		{
 			return ! ( 	// negation
 					(this.atomicity_message.getCnt() == received_rmsg.getCnt())	// belong to the same operation
-					&& ( (this.atomicity_message.getType() == MessageTypeEnum.READ_PHASE && received_rmsg.getType() == MessageTypeEnum.READ_PHASE_ACK) // belong to the same read/write phase
-							|| (this.atomicity_message.getType() == MessageTypeEnum.WRITE_PHASE && received_rmsg.getType() == MessageTypeEnum.WRITE_PHASE_ACK) )
-					 );
+					&& ( (this.atomicity_message instanceof AtomicityReadPhaseMessage && received_rmsg instanceof AtomicityReadPhaseAckMessage)
+							|| (this.atomicity_message instanceof AtomicityWritePhaseMessage && received_rmsg instanceof AtomicityWritePhaseAckMessage)
+						)  // belong to the same read/write phase
+					);
+//					&& ( (this.atomicity_message.getType() == MessageTypeEnum.READ_PHASE && received_rmsg.getType() == MessageTypeEnum.READ_PHASE_ACK) // belong to the same read/write phase
+//							|| (this.atomicity_message.getType() == MessageTypeEnum.WRITE_PHASE && received_rmsg.getType() == MessageTypeEnum.WRITE_PHASE_ACK) )
+//					 );
 		}
 	}
 
