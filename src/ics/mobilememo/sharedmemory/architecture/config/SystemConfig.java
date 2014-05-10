@@ -5,9 +5,6 @@
  */
 package ics.mobilememo.sharedmemory.architecture.config;
 
-import android.R.integer;
-
-
 public enum SystemConfig
 {
 	INSTANCE;

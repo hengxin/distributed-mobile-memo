@@ -5,33 +5,33 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/txt_kv_request_dialog_key"
+        android:id="@+id/txt_replica_ip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/txt_kv_key" />
+        android:text="@string/txt_replica_ip" />
 
     <EditText
-        android:id="@+id/etxt_kv_request_dialog_key"
+        android:id="@+id/etxt_replica_ip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_kv_request_dialog_key"
+        android:layout_below="@+id/txt_replica_ip"
         android:ems="10"
         android:inputType="none" >
         <requestFocus />
     </EditText>
 
     <TextView
-        android:id="@+id/txt_kv_request_dialog_value"
+        android:id="@+id/txt_replica_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etxt_kv_request_dialog_key"
-        android:text="@string/txt_kv_value" />
+        android:layout_below="@+id/etxt_replica_ip"
+        android:text="@string/txt_replica_name" />
 
     <EditText
-        android:id="@+id/etxt_kv_request_dialog_value"
+        android:id="@+id/etxt_replica_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_kv_request_dialog_value"
+        android:layout_below="@+id/txt_replica_name"
         android:ems="10"
         android:inputType="none" />
 </RelativeLayout>

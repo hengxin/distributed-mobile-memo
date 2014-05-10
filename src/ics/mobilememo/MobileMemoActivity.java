@@ -1,30 +1,25 @@
 package ics.mobilememo;
 
+import ics.mobilememo.group.GroupFragment;
 import ics.mobilememo.memo.MemoFragment;
-import ics.mobilememo.memo.MemoFragment.OnFragmentInteractionListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 public class MobileMemoActivity extends ActionBarActivity implements
-		ActionBar.TabListener, OnFragmentInteractionListener
+		ActionBar.TabListener // , OnFragmentInteractionListener
 {
 
 	/**
@@ -101,14 +96,14 @@ public class MobileMemoActivity extends ActionBarActivity implements
 	 */
 	private List<Fragment> addFragments()
 	{
-		this.fragments.add(new MemoFragment());
-		this.frament_titles.add(getString(R.string.title_section_members).toUpperCase(Locale.getDefault()));
+		this.fragments.add(new GroupFragment());
+		this.frament_titles.add(getString(R.string.title_section_group).toUpperCase(Locale.getDefault()));
 
 		this.fragments.add(new MemoFragment());
-		this.frament_titles.add(getString(R.string.title_section_members).toUpperCase(Locale.getDefault()));
+		this.frament_titles.add(getString(R.string.title_section_memo).toUpperCase(Locale.getDefault()));
 
 		this.fragments.add(new MemoFragment());
-		this.frament_titles.add(getString(R.string.title_section_members).toUpperCase(Locale.getDefault()));
+		this.frament_titles.add(getString(R.string.title_section_benchmark).toUpperCase(Locale.getDefault()));
 		
 	    return this.fragments;
 	}
@@ -207,13 +202,18 @@ public class MobileMemoActivity extends ActionBarActivity implements
 	/**
 	 * belongs to the {@link OnFragmentInteractionListener} interface;
 	 * interact with its Fragments
+	 * 
+	 * not used for the time being
+	 * 
+	 * @see GroupFragment
+	 * @see MemoFragment
 	 */
-	@Override
-	public void onFragmentInteraction(String id)
-	{
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void onFragmentInteraction(String id)
+//	{
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 
 }

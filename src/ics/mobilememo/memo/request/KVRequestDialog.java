@@ -14,6 +14,7 @@
 package ics.mobilememo.memo.request;
 
 import ics.mobilememo.R;
+import ics.mobilememo.memo.MemoFragment;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 import android.app.AlertDialog;
@@ -64,7 +65,7 @@ public abstract class KVRequestDialog extends DialogFragment
 	 * resource id of the title of dialog
 	 */
 	protected int dialog_title_id = -1;
-
+	
 	/**
 	 * create dialog by reusing the {@link AlertDialog}
 	 */
@@ -82,6 +83,7 @@ public abstract class KVRequestDialog extends DialogFragment
         this.etxt_key = (EditText) view.findViewById(R.id.etxt_kv_request_dialog_key);
         this.etxt_val = (EditText) view.findViewById(R.id.etxt_kv_request_dialog_value);
         
+        builder.setTitle(this.dialog_title_id);
 		builder.setView(view)
 				.setNegativeButton(android.R.string.cancel,
 						new DialogInterface.OnClickListener()
@@ -112,18 +114,28 @@ public abstract class KVRequestDialog extends DialogFragment
 								KVRequestDialog.this.request_key = new Key(KVRequestDialog.this.key_str);
 								
 								// invoke appropriate action for each request 
-								KVRequestDialog.this.onRequestPerformed();
+								VersionValue vval = KVRequestDialog.this.onRequestPerformed();
+								
+								// test with a mock return value
+//								VersionValue vval = new VersionValue(new Version(11, 11), "dialogreturn");
 								
 								// close the dialog
 								KVRequestDialog.this.dismiss();
+								
+								// notify the listener {@link MemoFragment}
+								((IRequestResultListener) KVRequestDialog.this.getTargetFragment()).onRequestRusultReturned(request_key, vval);
 							}
 						});
 		return builder.create();
 	}
-	
+    
 	/**
 	 * upon clicking the OK button, perform the corresponding request
 	 * @return {@link VersionValue} as the result of a request
+	 * 
+	 * @see KVPutRequestDialog
+	 * @see KVGetRequestDialog
+	 * @see KVRemoveRequestDialog
 	 */
 	public abstract VersionValue onRequestPerformed();
 	

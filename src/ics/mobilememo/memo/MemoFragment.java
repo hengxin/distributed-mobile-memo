@@ -14,8 +14,6 @@ import ics.mobilememo.test.unittest.UnitTestConfig;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -53,41 +51,51 @@ public class MemoFragment extends Fragment implements
 		AbsListView.OnItemClickListener,	//
 		IRequestResultListener	// 
 {
+	/**
+	 * communication between this fragment between its popped dialog
+	 * @see KVRequestDialog
+	 * @see #addButtonListener(View)
+	 */
+	public static final int FRAGMENT_REQUEST_CODE = 1;
+	
 	// title of MemoFragment; used in {@link FragmentPagerAdapter#getPageTitle(int)}
 	public static final String MEMO_FRAGMENT_TITLE = "MEMO";
 	
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String ARG_PARAM1 = "param1";
-	private static final String ARG_PARAM2 = "param2";
-
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
-
-	private OnFragmentInteractionListener mListener;
+//	private OnFragmentInteractionListener mListener;	// not used for the time being
 
 	/**
 	 * The fragment's ListView/GridView.
 	 */
-	private AbsListView mListView;
+	private AbsListView data_listview;
 
 	/**
 	 * The Adapter which will be used to populate the ListView/GridView with
 	 * Views.
+	 *  // TODO: to extend to support other data types than {@link KVPair}
 	 */
-	private ListAdapter mAdapter;
+	private ArrayAdapter<KVPair> data_list_adapter;
 	
+	/**
+	 * list of {@link KVPair}s to display
+	 */
 	private ArrayList<KVPair> kvpairs_list = new ArrayList<>();
 
-	// TODO: Rename and change types of parameters
+	/**
+	 * this method is reserved (not used yet) for construct an instance
+	 * of {@link MemoFragment} with possible parameters.
+	 * if you are not going to instantiate it with parameters,
+	 * you can use its default constructor {@link #MemoFragment()}
+	 * 
+	 * @see #MemoFragment()
+	 * 
+	 * TODO: Rename and change types of parameters
+	 * @param param1
+	 * @param param2
+	 * @return an instance of {@link MemoFragment}
+	 */
 	public static MemoFragment newInstance(String param1, String param2)
 	{
 		MemoFragment fragment = new MemoFragment();
-		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		args.putString(ARG_PARAM2, param2);
-		fragment.setArguments(args);
 		return fragment;
 	}
 
@@ -110,19 +118,15 @@ public class MemoFragment extends Fragment implements
 		 */
 		setHasOptionsMenu(true);
 
-		if (getArguments() != null)
-		{
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
-		}
-
-		
 		// TODO: Change Adapter to display your content
-		this.mAdapter = new ArrayAdapter<KVPair>(getActivity(),
+		this.data_list_adapter = new ArrayAdapter<KVPair>(getActivity(),
 				android.R.layout.simple_list_item_1, android.R.id.text1,
 				this.kvpairs_list);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
@@ -144,34 +148,34 @@ public class MemoFragment extends Fragment implements
 					new VersionValue(new Version(1, 1), "TestValue")));
 		
 		// Set the adapter
-		this.mListView = (AbsListView) view.findViewById(android.R.id.list);
-		((AdapterView<ListAdapter>) this.mListView).setAdapter(this.mAdapter);
+		this.data_listview = (AbsListView) view.findViewById(android.R.id.list);
+		((AdapterView<ListAdapter>) this.data_listview).setAdapter(this.data_list_adapter);
 
 		// Set OnItemClickListener so we can be notified on item clicks
-		this.mListView.setOnItemClickListener(this);
+		this.data_listview.setOnItemClickListener(this);
 
 		return view;
 	}
 
-	@Override
-	public void onAttach(Activity activity)
-	{
-		super.onAttach(activity);
-		try
-		{
-			this.mListener = (OnFragmentInteractionListener) activity;
-		} catch (ClassCastException e)
-		{
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
-		}
-	}
+//	@Override
+//	public void onAttach(Activity activity)
+//	{
+//		super.onAttach(activity);
+//		try
+//		{
+//			this.mListener = (OnFragmentInteractionListener) activity;
+//		} catch (ClassCastException e)
+//		{
+//			throw new ClassCastException(activity.toString()
+//					+ " must implement OnFragmentInteractionListener");
+//		}
+//	}
 
 	@Override
 	public void onDetach()
 	{
 		super.onDetach();
-		this.mListener = null;
+//		this.mListener = null;
 	}
 	
 	/**
@@ -199,8 +203,9 @@ public class MemoFragment extends Fragment implements
 			@Override
 			public void onClick(View v)
 			{
-				KVRequestDialog kv_request_dialog = new KVPutRequestDialog();
-				kv_request_dialog.show(getFragmentManager(), getString(R.string.tag_put_dialog));
+				KVRequestDialog kv_put_request_dialog = new KVPutRequestDialog();
+				kv_put_request_dialog.setTargetFragment(MemoFragment.this, FRAGMENT_REQUEST_CODE);
+				kv_put_request_dialog.show(getFragmentManager(), getString(R.string.tag_put_dialog));
 			}
 		});
     	
@@ -210,8 +215,9 @@ public class MemoFragment extends Fragment implements
 			@Override
 			public void onClick(View v)
 			{
-				KVRequestDialog kv_request_dialog = new KVGetRequestDialog();
-				kv_request_dialog.show(getFragmentManager(), getString(R.string.tag_get_dialog));				
+				KVRequestDialog kv_get_request_dialog = new KVGetRequestDialog();
+				kv_get_request_dialog.setTargetFragment(MemoFragment.this, FRAGMENT_REQUEST_CODE);
+				kv_get_request_dialog.show(getFragmentManager(), getString(R.string.tag_get_dialog));				
 			}
 		});
     	
@@ -221,21 +227,25 @@ public class MemoFragment extends Fragment implements
 			@Override
 			public void onClick(View v)
 			{
-				KVRequestDialog kv_request_dialog = new KVRemoveRequestDialog();
-				kv_request_dialog.show(getFragmentManager(), getString(R.string.tag_remove_dialog));				
+				KVRequestDialog kv_remove_request_dialog = new KVRemoveRequestDialog();
+				kv_remove_request_dialog.setTargetFragment(MemoFragment.this, FRAGMENT_REQUEST_CODE);
+				kv_remove_request_dialog.show(getFragmentManager(), getString(R.string.tag_remove_dialog));				
 			}
 		});
     }
     
+    /**
+     *  // TODO: handle with the click events on list items: supporting remove request?
+     */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 	{
-		if (null != mListener)
-		{
-			// Notify the active callbacks interface (the activity, if the
-			// fragment is attached to one) that an item has been selected.
-//			mListener.onFragmentInteraction(this.kvpairs_list.get(position).id);
-		}
+//		if (null != mListener)
+//		{
+//			// Notify the active callbacks interface (the activity, if the
+//			// fragment is attached to one) that an item has been selected.
+////			mListener.onFragmentInteraction(this.kvpairs_list.get(position).id);
+//		}
 	}
 
 	/**
@@ -245,7 +255,7 @@ public class MemoFragment extends Fragment implements
 	 */
 	public void setEmptyText(CharSequence emptyText)
 	{
-		View emptyView = mListView.getEmptyView();
+		View emptyView = data_listview.getEmptyView();
 
 		if (emptyText instanceof TextView)
 		{
@@ -264,8 +274,8 @@ public class MemoFragment extends Fragment implements
 	@Override
 	public void onRequestRusultReturned(Key key, VersionValue vval)
 	{
-		// TODO Auto-generated method stub
-		
+		this.kvpairs_list.add(new KVPair(key, vval));
+		this.data_list_adapter.notifyDataSetChanged();
 	}
 	
 	/**
@@ -276,11 +286,15 @@ public class MemoFragment extends Fragment implements
 	 * See the Android Training lesson <a href=
 	 * "http://developer.android.com/training/basics/fragments/communicating.html"
 	 * >Communicating with Other Fragments</a> for more information.
+	 * 
+	 * Not used for the time being
+	 * 
+	 * @see MobileMemoActivity
 	 */
-	public interface OnFragmentInteractionListener
-	{
-		// TODO: Update argument type and name
-		public void onFragmentInteraction(String id);
-	}
+//	public interface OnFragmentInteractionListener
+//	{
+//		// TODO: Update argument type and name
+//		public void onFragmentInteraction(String id);
+//	}
 
 }

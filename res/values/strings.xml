@@ -5,7 +5,7 @@
     <string name="app_name">MEMO</string>
 
     <!-- application consists of three pager sections -->
-    <string name="title_section_members">Members</string>
+    <string name="title_section_group">Group</string>
     <string name="title_section_memo">Memo</string>
     <string name="title_section_benchmark">Benchmark</string>
     <string name="action_settings">Settings</string>
@@ -23,7 +23,7 @@
     <string name = "imgbtn_delete">Delete</string>
     <string name="txt_kv_representation">Key ; Value ; Version</string>
     
-    <!-- begin: put/get/remove kv-pairs dialogs -->
+    	<!-- begin: put/get/remove kv-pairs dialogs -->
     
     	<!-- title of dialogs -->
 	    <string name="kv_put_dialog_title">Put Key-value Dialog</string>
@@ -39,5 +39,20 @@
 	    <string name="tag_get_dialog">tag_get_dialog</string>
 	    <string name="tag_remove_dialog">tag_remove_dialog</string>
 	
-	<!-- end: put/get/remove kv-pairs dialogs -->    
+		<!-- end: put/get/remove kv-pairs dialogs -->   
+		
+	<!-- begin: for the group fragment -->
+	<string name="txt_replica_representation">IP ; Name</string>
+	
+		<!-- begin: dialog for adding new server replica -->
+		<string name="tag_join_group_dialog">tag_join_group_dialog</string>
+		<string name="join_group_dialog_title">Add new server replica</string>
+		<string name="txt_replica_ip">IP:</string>
+		<string name="txt_replica_name">Name:</string>
+		<!-- end: dialog for adding new server replica -->
+		
+		<!-- begin: dialog for scanning server replicas -->
+		
+		<!-- end: dialog for scanning server replicas -->
+	<!-- end: for the group fragment --> 
 </resources>
