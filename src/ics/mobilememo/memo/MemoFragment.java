@@ -1,6 +1,11 @@
 package ics.mobilememo.memo;
 
 import ics.mobilememo.R;
+import ics.mobilememo.memo.request.KVGetRequestDialog;
+import ics.mobilememo.memo.request.KVPutRequestDialog;
+import ics.mobilememo.memo.request.KVRemoveRequestDialog;
+import ics.mobilememo.memo.request.KVRequestDialog;
+import ics.mobilememo.memo.request.KVRequestDialog.IRequestResultListener;
 import ics.mobilememo.sharedmemory.data.kvs.KVPair;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.Version;
@@ -10,6 +15,7 @@ import ics.mobilememo.test.unittest.UnitTestConfig;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,8 +28,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * A fragment representing a list of Items.
@@ -33,9 +39,19 @@ import android.widget.Toast;
  * <p />
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
+ * 
+ * It implements {@link AbsListView#OnItemClickListener} to handle with 
+ * the click events on items in its {@link ListView}.  // TODO
+ * 
+ * It implements {@link IRequestResultListener} to handle with
+ * the return values from its dialogs: update its {@link ListView} with
+ * the returned {@link VersionValue}.
+ * @see KVRequestDialog
+ * @see IRequestResultListener
  */
 public class MemoFragment extends Fragment implements
-		AbsListView.OnItemClickListener
+		AbsListView.OnItemClickListener,	//
+		IRequestResultListener	// 
 {
 	// title of MemoFragment; used in {@link FragmentPagerAdapter#getPageTitle(int)}
 	public static final String MEMO_FRAGMENT_TITLE = "MEMO";
@@ -183,7 +199,8 @@ public class MemoFragment extends Fragment implements
 			@Override
 			public void onClick(View v)
 			{
-				Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
+				KVRequestDialog kv_request_dialog = new KVPutRequestDialog();
+				kv_request_dialog.show(getFragmentManager(), getString(R.string.tag_put_dialog));
 			}
 		});
     	
@@ -193,8 +210,8 @@ public class MemoFragment extends Fragment implements
 			@Override
 			public void onClick(View v)
 			{
-				// TODO Auto-generated method stub
-				
+				KVRequestDialog kv_request_dialog = new KVGetRequestDialog();
+				kv_request_dialog.show(getFragmentManager(), getString(R.string.tag_get_dialog));				
 			}
 		});
     	
@@ -204,8 +221,8 @@ public class MemoFragment extends Fragment implements
 			@Override
 			public void onClick(View v)
 			{
-				// TODO Auto-generated method stub
-				
+				KVRequestDialog kv_request_dialog = new KVRemoveRequestDialog();
+				kv_request_dialog.show(getFragmentManager(), getString(R.string.tag_remove_dialog));				
 			}
 		});
     }
@@ -236,6 +253,21 @@ public class MemoFragment extends Fragment implements
 		}
 	}
 
+	/**
+	 * It implements {@link IRequestResultListener} to handle with
+	 * the return values ({@link Key} and {@link VersionValue}) 
+	 * from its dialogs: update its {@link ListView} with
+	 * the returned {@link VersionValue}.
+	 * 
+	 * @inheritDoc
+	 */
+	@Override
+	public void onRequestRusultReturned(Key key, VersionValue vval)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
 	/**
 	 * This interface must be implemented by activities that contain this
 	 * fragment to allow an interaction in this fragment to be communicated to

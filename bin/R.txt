@@ -371,6 +371,9 @@ int string kv_put_dialog_title 0x7f0a001c
 int string kv_remove_dialog_title 0x7f0a001e
 int string put_kv 0x7f0a0014
 int string remove_kv 0x7f0a0016
+int string tag_get_dialog 0x7f0a0022
+int string tag_put_dialog 0x7f0a0021
+int string tag_remove_dialog 0x7f0a0023
 int string title_reminder_detail 0x7f0a0013
 int string title_reminder_list 0x7f0a0012
 int string title_section_benchmark 0x7f0a0010

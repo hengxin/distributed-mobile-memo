@@ -23,11 +23,21 @@
     <string name = "imgbtn_delete">Delete</string>
     <string name="txt_kv_representation">Key ; Value ; Version</string>
     
-    <!-- put/get/remove kv-pairs dialogs -->
-    <string name="kv_put_dialog_title">Put Key-value Dialog</string>
-    <string name="kv_get_dialog_title">Get Key-value Dialog</string>
-    <string name="kv_remove_dialog_title">Remove Key-value Dialog</string>
-
-    <string name="txt_kv_key">Key:</string>
-    <string name="txt_kv_value">Value:</string>
+    <!-- begin: put/get/remove kv-pairs dialogs -->
+    
+    	<!-- title of dialogs -->
+	    <string name="kv_put_dialog_title">Put Key-value Dialog</string>
+	    <string name="kv_get_dialog_title">Get Key-value Dialog</string>
+	    <string name="kv_remove_dialog_title">Remove Key-value Dialog</string>
+	
+    	<!-- input boxes in dialogs -->
+	    <string name="txt_kv_key">Key:</string>
+	    <string name="txt_kv_value">Value:</string>
+	    
+	    <!-- tag names of dialogs; used when the dialog is shown -->
+	    <string name="tag_put_dialog">tag_put_dialog</string>
+	    <string name="tag_get_dialog">tag_get_dialog</string>
+	    <string name="tag_remove_dialog">tag_remove_dialog</string>
+	
+	<!-- end: put/get/remove kv-pairs dialogs -->    
 </resources>

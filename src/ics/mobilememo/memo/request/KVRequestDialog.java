@@ -83,6 +83,15 @@ public abstract class KVRequestDialog extends DialogFragment
         this.etxt_val = (EditText) view.findViewById(R.id.etxt_kv_request_dialog_value);
         
 		builder.setView(view)
+				.setNegativeButton(android.R.string.cancel,
+						new DialogInterface.OnClickListener()
+						{
+							public void onClick(DialogInterface dialog, int id)
+							{
+								// simply close the dialog
+								KVRequestDialog.this.getDialog().dismiss();
+							}
+						})		
 				// add action buttons
 				.setPositiveButton(android.R.string.ok,
 						new DialogInterface.OnClickListener()
@@ -102,24 +111,38 @@ public abstract class KVRequestDialog extends DialogFragment
 								KVRequestDialog.this.val_str = KVRequestDialog.this.etxt_val.getText().toString();
 								KVRequestDialog.this.request_key = new Key(KVRequestDialog.this.key_str);
 								
-								// TODO: 
+								// invoke appropriate action for each request 
 								KVRequestDialog.this.onRequestPerformed();
-							}
-						})
-				.setNegativeButton(android.R.string.cancel,
-						new DialogInterface.OnClickListener()
-						{
-							public void onClick(DialogInterface dialog, int id)
-							{
-								KVRequestDialog.this.getDialog().cancel();
+								
+								// close the dialog
+								KVRequestDialog.this.dismiss();
 							}
 						});
 		return builder.create();
 	}
-
+	
 	/**
 	 * upon clicking the OK button, perform the corresponding request
 	 * @return {@link VersionValue} as the result of a request
 	 */
 	public abstract VersionValue onRequestPerformed();
+	
+	/**
+	 * @author hengxin
+	 * @date May 10, 2014
+	 * @description Any class (such as {@link MemoFragment}) which wants 
+	 * to do something upon the request result should implement 
+	 * this interface {@link IRequestResultListener}.
+	 * 
+	 * @see MemoFragment
+	 */
+	public interface IRequestResultListener 
+	{
+		/**
+		 * implement this method to get and handle with the request result
+		 * @param key {@link Key} to return
+		 * @param vval {@link VersionValue} to return
+		 */
+	    public void onRequestRusultReturned(Key key, VersionValue vval);
+	}
 }
