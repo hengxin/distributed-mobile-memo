@@ -2,7 +2,7 @@ package ics.mobilememo.group;
 
 import ics.mobilememo.R;
 import ics.mobilememo.group.JoinGroupDialog.IJoinGroupListener;
-import ics.mobilememo.group.member.ServerReplica;
+import ics.mobilememo.group.member.SystemNode;
 import ics.mobilememo.test.unittest.UnitTestConfig;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,8 +17,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
- * A fragment representing a list of {@link ServerReplica}s.
- * the data source is an ArrayList of {@link ServerReplica}s maintained
+ * A fragment representing a list of {@link SystemNode}s.
+ * the data source is an ArrayList of {@link SystemNode}s maintained
  * by {@link GroupConfig} 
  * 
  * <p />
@@ -50,7 +50,7 @@ public class GroupFragment extends Fragment implements
 	 * The Adapter which will be used to populate the ListView/GridView with
 	 * Views.
 	 */
-	private ArrayAdapter<ServerReplica> server_replica_list_adapter;
+	private ArrayAdapter<SystemNode> server_replica_list_adapter;
 	
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -66,7 +66,7 @@ public class GroupFragment extends Fragment implements
 		super.onCreate(savedInstanceState);
 
 		// TODO: Change Adapter to display your content
-		this.server_replica_list_adapter = new ArrayAdapter<ServerReplica>(getActivity(),
+		this.server_replica_list_adapter = new ArrayAdapter<SystemNode>(getActivity(),
 				android.R.layout.simple_list_item_1, android.R.id.text1,
 				GroupConfig.INSTANCE.getGroupMembers());
 	}
@@ -91,7 +91,7 @@ public class GroupFragment extends Fragment implements
 		 * TODO: test of ListView; It is OK.
 		 */
 		if(UnitTestConfig.isUnittestEnabled)
-			GroupConfig.INSTANCE.getGroupMembers().add(new ServerReplica("10.0.0.1", "testreplica"));
+			GroupConfig.INSTANCE.getGroupMembers().add(new SystemNode("10.0.0.1", "testreplica"));
 		
 		// Set the adapter
 		this.server_replica_listview = (AbsListView) view.findViewById(android.R.id.list);
@@ -149,10 +149,10 @@ public class GroupFragment extends Fragment implements
 
 	/**
 	 * @inheritDoc
-	 * update the {@link ListView} of {@link ServerReplica}s
+	 * update the {@link ListView} of {@link SystemNode}s
 	 */
 	@Override
-	public void onJoinGroup(ServerReplica replica)
+	public void onJoinGroup(SystemNode replica)
 	{
 		GroupConfig.INSTANCE.addReplica(replica);
 		this.server_replica_list_adapter.notifyDataSetChanged();

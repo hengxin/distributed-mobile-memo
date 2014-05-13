@@ -11,7 +11,7 @@
 package ics.mobilememo.group;
 
 import ics.mobilememo.R;
-import ics.mobilememo.group.member.ServerReplica;
+import ics.mobilememo.group.member.SystemNode;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -87,7 +87,7 @@ public class JoinGroupDialog extends DialogFragment
 								
 								// notify the listener (here, it is {@link GroupFragment})
 								((IJoinGroupListener) JoinGroupDialog.this.getTargetFragment()).onJoinGroup(
-										new ServerReplica(JoinGroupDialog.this.replica_ip, JoinGroupDialog.this.replica_name));
+										new SystemNode(JoinGroupDialog.this.replica_ip, JoinGroupDialog.this.replica_name));
 							}
 						});
 		return builder.create();
@@ -103,6 +103,6 @@ public class JoinGroupDialog extends DialogFragment
 	 */
 	public interface IJoinGroupListener
 	{
-		public void onJoinGroup(ServerReplica replica);
+		public void onJoinGroup(SystemNode replica);
 	}
 }

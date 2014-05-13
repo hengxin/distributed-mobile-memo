@@ -40,7 +40,8 @@ public enum KVStoreInMemory implements IKVStore
 	 */
 	private final Object[] locks = new Object[16];
 	{
-		for(int i = 0;i<locks.length;i++) locks[i] = new Object();
+		for(int i = 0; i < locks.length; i++) 
+			locks[i] = new Object();
 	}
 
 	/**

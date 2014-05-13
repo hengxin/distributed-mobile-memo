@@ -59,6 +59,17 @@ public class WifiAdmin
 	}
 	
 	/**
+	 * to check whether an ip address is available now
+	 * @param ip ip address to check
+	 * @return <code>true</code> if the ip address is available;
+	 * 	<code>false</code>, otherwise. 
+	 */
+	public boolean isAvailable(String ip)
+	{
+		return this.getIP().equals(ip);
+	}
+	
+	/**
 	 * convert ip address in Integer format to the one in String format
 	 * @param ipAddress ip address in Integer format
 	 * @return ip address in String format

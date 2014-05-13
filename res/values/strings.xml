@@ -12,6 +12,9 @@
     <string name="title_reminder_list">Reminders</string>
     <string name="title_reminder_detail">Reminder Detail</string>
 
+    <!-- login manager -->
+    <string name="login_info_relogin">ReLogin</string>
+    
     <!-- for the MemoFragment -->
     <string name="put_kv">Add</string>
     <string name="get_kv">Search</string>

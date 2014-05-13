@@ -11,7 +11,7 @@
 package ics.mobilememo.sharedmemory.atomicity;
 
 import ics.mobilememo.group.GroupConfig;
-import ics.mobilememo.group.member.ServerReplica;
+import ics.mobilememo.group.member.SystemNode;
 import ics.mobilememo.sharedmemory.architecture.IRegisterClient;
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.architecture.communication.IReceiver;
@@ -206,11 +206,11 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 			this.latch_majority = new CountDownLatch(proc_majority);	// wait for a majority of acks
 
 			// initialization
-			List<ServerReplica> replica_list = GroupConfig.INSTANCE.getGroupMembers();
+			List<SystemNode> replica_list = GroupConfig.INSTANCE.getGroupMembers();
 			
 			for (int i = 0; i < replicas_num; i++)
 			{
-				String ip = replica_list.get(i).getIp();
+				String ip = replica_list.get(i).getNodeIp();
 				turn.put(ip, Communication.HERE);
 				status.put(ip, Communication.NOT_SENT);
 				info.put(ip, null);
@@ -229,12 +229,12 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 		 */
 		public Map<String, AtomicityMessage> communicate()
 		{
-			List<ServerReplica> replica_list = GroupConfig.INSTANCE.getGroupMembers();
+			List<SystemNode> replica_list = GroupConfig.INSTANCE.getGroupMembers();
 			
 			// broadcast
 			for (int i = 0; i < replicas_num; i++)
 			{
-				String ip = replica_list.get(i).getIp();
+				String ip = replica_list.get(i).getNodeIp();
 				if (turn.get(ip) == Communication.HERE)	// it is my turn (ping)
 				{
 					MessagingService.INSTANCE.sendOneWay(ip, atomicity_message);	// send message to each replica

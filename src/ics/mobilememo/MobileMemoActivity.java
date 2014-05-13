@@ -1,6 +1,7 @@
 package ics.mobilememo;
 
 import ics.mobilememo.group.GroupFragment;
+import ics.mobilememo.login.SessionManager;
 import ics.mobilememo.memo.MemoFragment;
 
 import java.util.ArrayList;
@@ -38,12 +39,14 @@ public class MobileMemoActivity extends ActionBarActivity implements
 	 * becomes too memory intensive, it may be best to switch to a
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
-	SectionsPagerAdapter mSectionsPagerAdapter;
+	private SectionsPagerAdapter mSectionsPagerAdapter;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
-	ViewPager mViewPager;
+	private ViewPager mViewPager;
+	
+	private SessionManager session;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -51,6 +54,10 @@ public class MobileMemoActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mobile_memo);
 
+		// check login
+		this.session = new SessionManager(getApplicationContext());
+		session.checkLogin();
+		
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

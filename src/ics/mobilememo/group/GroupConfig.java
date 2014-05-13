@@ -2,11 +2,11 @@
  * @author hengxin
  * @date May 9, 2014
  * @description {@link GroupConfig} is responsible for establishing and maintaining
- *  the membership information about {@link ServerReplica}s (not about clients).
+ *  the membership information about {@link SystemNode}s (not about clients).
  */
 package ics.mobilememo.group;
 
-import ics.mobilememo.group.member.ServerReplica;
+import ics.mobilememo.group.member.SystemNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,12 @@ public enum GroupConfig
 	INSTANCE;
 	
 	/**
-	 * maintain a list of {@link ServerReplica}s
+	 * maintain a list of {@link SystemNode}s
 	 */
-	private List<ServerReplica> replica_list = new ArrayList<>();
+	private List<SystemNode> replica_list = new ArrayList<>();
 	
 	/**
-	 * @return the size of the group of {@link ServerReplica}s
+	 * @return the size of the group of {@link SystemNode}s
 	 */
 	public int getGroupSize()
 	{
@@ -29,18 +29,18 @@ public enum GroupConfig
 	}
 	
 	/**
-	 * @return a list of {@link ServerReplica}s in the group
+	 * @return a list of {@link SystemNode}s in the group
 	 */
-	public List<ServerReplica> getGroupMembers()
+	public List<SystemNode> getGroupMembers()
 	{
 		return this.replica_list;
 	}
 	
 	/**
-	 * add a new {@link ServerReplica} into this group
-	 * @param replica {@link ServerReplica} to be added
+	 * add a new {@link SystemNode} into this group
+	 * @param replica {@link SystemNode} to be added
 	 */
-	public void addReplica(ServerReplica replica)
+	public void addReplica(SystemNode replica)
 	{
 		this.replica_list.add(replica);
 	}

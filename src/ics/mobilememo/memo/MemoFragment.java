@@ -77,6 +77,7 @@ public class MemoFragment extends Fragment implements
 	
 	/**
 	 * list of {@link KVPair}s to display
+	 * this is only a client cache of {@link KVPair}s
 	 */
 	private ArrayList<KVPair> kvpairs_list = new ArrayList<>();
 
