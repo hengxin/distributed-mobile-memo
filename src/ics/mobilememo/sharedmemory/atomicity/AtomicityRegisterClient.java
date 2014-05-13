@@ -10,13 +10,15 @@
  */
 package ics.mobilememo.sharedmemory.atomicity;
 
+import ics.mobilememo.MobileMemoActivity;
 import ics.mobilememo.group.GroupConfig;
 import ics.mobilememo.group.member.SystemNode;
+import ics.mobilememo.login.SessionManager;
 import ics.mobilememo.sharedmemory.architecture.IRegisterClient;
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.architecture.communication.IReceiver;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
-import ics.mobilememo.sharedmemory.architecture.config.SystemConfig;
+import ics.mobilememo.sharedmemory.architecture.config.NetworkConfig;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessagingService;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseAckMessage;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 
@@ -118,7 +121,8 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	 */
 	private Version getNextVersion(Version old_ver)
 	{
-		return old_ver.increment(SystemConfig.INSTANCE.getPid());
+//		return old_ver.increment(SystemConfig.INSTANCE.getPid());
+		return old_ver.increment(new SessionManager().getNodeId());
 	}
 
 	/**
@@ -144,7 +148,7 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	 */
 	private Map<String, AtomicityMessage> readPhase(Key key)
 	{
-		AtomicityMessage atomicity_read_phase_message = new AtomicityReadPhaseMessage(SystemConfig.INSTANCE.getIP(), this.op_cnt, key);
+		AtomicityMessage atomicity_read_phase_message = new AtomicityReadPhaseMessage(/** SystemConfig.INSTANCE.getIP(), **/ new SessionManager().getNodeIp(), this.op_cnt, key);
 		this.comm = new Communication(atomicity_read_phase_message);
 		return this.comm.communicate();
 	}
@@ -157,7 +161,7 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	 */
 	private void writePhase(Key key, VersionValue vval)
 	{
-		AtomicityMessage atomicity_write_phase_message = new AtomicityWritePhaseMessage(SystemConfig.INSTANCE.getIP(), this.op_cnt, key, vval);
+		AtomicityMessage atomicity_write_phase_message = new AtomicityWritePhaseMessage(/** SystemConfig.INSTANCE.getIP(), **/ new SessionManager().getNodeIp(), this.op_cnt, key, vval);
 		this.comm = new Communication(atomicity_write_phase_message);
 		this.comm.communicate();
 	}

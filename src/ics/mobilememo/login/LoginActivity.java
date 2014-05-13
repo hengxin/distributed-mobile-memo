@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -40,7 +39,7 @@ public class LoginActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		this.session = new SessionManager(LoginActivity.this);
+		this.session = new SessionManager();
 		
 		// set up the login form
 		this.etxt_node_id = (EditText) findViewById(R.id.etxt_node__id);

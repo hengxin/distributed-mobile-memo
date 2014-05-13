@@ -8,7 +8,7 @@
  */
 package ics.mobilememo.sharedmemory.architecture.communication;
 
-import ics.mobilememo.sharedmemory.architecture.config.SystemConfig;
+import ics.mobilememo.sharedmemory.architecture.config.NetworkConfig;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessagingService;
 
@@ -53,11 +53,11 @@ public enum MessagingService implements IReceiver
 			public void run()
 			{
 				InetSocketAddress socket_address = new InetSocketAddress(
-						receiver_ip, SystemConfig.NETWORK_PORT);
+						receiver_ip, NetworkConfig.NETWORK_PORT);
 				Socket socket = new Socket();
 				try
 				{
-					socket.connect(socket_address, SystemConfig.TIMEOUT);
+					socket.connect(socket_address, NetworkConfig.TIMEOUT);
 					ObjectOutputStream oos = new ObjectOutputStream(
 							socket.getOutputStream());
 					oos.writeObject(msg);
@@ -101,7 +101,7 @@ public enum MessagingService implements IReceiver
 		{
 			server_socket = new ServerSocket();
 			server_socket.bind(new InetSocketAddress(server_ip,
-					SystemConfig.NETWORK_PORT));
+					NetworkConfig.NETWORK_PORT));
 
 			while (true)
 			{

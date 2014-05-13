@@ -9,12 +9,10 @@
  */
 package ics.mobilememo.login;
 
+import ics.mobilememo.MobileMemoActivity;
 import ics.mobilememo.R;
 import ics.mobilememo.group.member.SystemNode;
 import ics.mobilememo.network.wifi.WifiAdmin;
-
-import java.util.HashMap;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,7 +32,7 @@ public class SessionManager
 	// Editor for Shared preferences
 	private Editor editor;
 
-	private Context _context;
+	private Context _context = MobileMemoActivity.MOBILEMEMO_ACTIVITY;;
 
 	private SystemNode system_node = new SystemNode();
 	
@@ -49,25 +47,15 @@ public class SessionManager
 	public static final String KEY_NODE_IP = "ip"; 
 	
 	/**
-	 * indicates whether the necessary [required] login information,
-	 * including {@link #KEY_NODE_ID}, {@link #KEY_NODE_NAME}, and {@link #KEY_NODE_IP},
-	 * is complete or not
-	 * Note that the associated value of {@link #IS_LOGIN_INFO_COMPLETE} is <code>true</code>
-	 * does not necessarily imply that the user has logged on successfully.
-	 * We have to check whether the ip address associated with {@link #KEY_NODE_IP}
-	 * is available.
-	 * 
-	 * @see SessionManager#isLoggedIn()
-	 */
-	private static final String IS_LOGIN_INFO_COMPLETE = "IsLogInInfoComplete";
-
-	/**
 	 * constructor of {@link SessionManager}
+	 * 
 	 * @param context {@link Context} in which the {@link SessionManager} works
+	 * 	Note: the parameter should be YourActivity.this instead of getApplicationContext(); 
+	 *   otherwise you may get the WindowManager$BadTokenException.
+	 *  See <url>http://stackoverflow.com/questions/7933206/android-unable-to-add-window-token-null-is-not-for-an-application-exception</url>
 	 */
-	public SessionManager(Context context)
+	public SessionManager()
 	{
-		this._context = context;
 		this.pref = this._context.getSharedPreferences(PREF_FILE_NAME, PRIVATE_MODE);
 		this.editor = this.pref.edit();
 	}
@@ -87,8 +75,6 @@ public class SessionManager
 		this.editor.putString(KEY_NODE_NAME, name);
 		editor.putString(KEY_NODE_IP, ip);
 		
-//		editor.putBoolean(IS_LOGIN_INFO_COMPLETE, true);
-
 		editor.commit();
 	}
 
@@ -139,21 +125,29 @@ public class SessionManager
 	}
 
 	/**
-	 * Get stored session data
-	 * */
-	public HashMap<String, String> getUserDetails()
+	 * @return the identifier of the logged {@link SystemNode}
+	 */
+	public int getNodeId()
 	{
-		HashMap<String, String> user = new HashMap<String, String>();
-		// user name
-		user.put(KEY_NODE_ID, pref.getString(KEY_NODE_ID, null));
-
-		// user email id
-		user.put(KEY_NODE_NAME, pref.getString(KEY_NODE_NAME, null));
-
-		// return user
-		return user;
+		return this.pref.getInt(KEY_NODE_ID, SystemNode.NODE_ID_DEFAULT);
 	}
-
+	
+	/**
+	 * @return the name of the logged {@link SystemNode}
+	 */
+	public String getNodeName()
+	{
+		return this.pref.getString(KEY_NODE_NAME, SystemNode.NODE_NAME_DEFAULT);
+	}
+	
+	/**
+	 * @return the ip address of the logged {@link SystemNode}
+	 */
+	public String getNodeIp()
+	{
+		return this.pref.getString(KEY_NODE_IP, SystemNode.NODE_IP_DEFAULT);
+	}
+	
 	/**
 	 * Clear session details
 	 * */
@@ -165,13 +159,9 @@ public class SessionManager
 
 		// After logout redirect user to Loing Activity
 		Intent i = new Intent(_context, LoginActivity.class);
-		// Closing all the Activities
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-		// Add new Flag to start new Activity
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-		// Staring Login Activity
 		_context.startActivity(i);
 	}
 
@@ -199,14 +189,10 @@ public class SessionManager
 	 */
 	public boolean isLoggedIn()
 	{
-		/**
-		 * to check whether the login information is complete or not
-		 */
+		// check whether the login information is complete or not
 		if (! this.isLoginInfoComplete())
 			return false;
-		/**
-		 * to check whether the ip address is available 
-		 */
+		// check whether the ip address is available 
 		return new WifiAdmin(this._context).isAvailable(this.system_node.getNodeIp());
 	}
 	

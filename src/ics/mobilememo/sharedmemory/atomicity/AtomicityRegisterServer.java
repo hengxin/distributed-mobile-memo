@@ -10,9 +10,10 @@
  */
 package ics.mobilememo.sharedmemory.atomicity;
 
+import ics.mobilememo.login.SessionManager;
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
-import ics.mobilememo.sharedmemory.architecture.config.SystemConfig;
+import ics.mobilememo.sharedmemory.architecture.config.NetworkConfig;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseAckMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseMessage;
@@ -89,7 +90,8 @@ public enum AtomicityRegisterServer implements IAtomicityMessageHandler
 	public void handleAtomicityMessage(AtomicityMessage atomicityMessage)
 	{
 		String from_ip = atomicityMessage.getSenderIP();
-		String my_ip = SystemConfig.INSTANCE.getIP();
+//		String my_ip = SystemConfig.INSTANCE.getIP();
+		String my_ip = new SessionManager().getNodeIp();
 		int cnt = atomicityMessage.getCnt();
 		Key key = atomicityMessage.getKey();
 		

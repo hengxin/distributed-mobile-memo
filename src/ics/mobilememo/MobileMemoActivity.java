@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,8 @@ public class MobileMemoActivity extends ActionBarActivity implements
 		ActionBar.TabListener // , OnFragmentInteractionListener
 {
 
+	public static Activity MOBILEMEMO_ACTIVITY; 
+	
 	/**
 	 *  this application consists of 3 fragments/pagers/sections:
 	 *  (1) members: class MemberFragment, title "MEMBER"
@@ -54,10 +57,6 @@ public class MobileMemoActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mobile_memo);
 
-		// check login
-		this.session = new SessionManager(MobileMemoActivity.this);
-		session.checkLogin();
-		
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -95,6 +94,12 @@ public class MobileMemoActivity extends ActionBarActivity implements
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
+		
+		MOBILEMEMO_ACTIVITY = this;
+		
+		// check login
+		this.session = new SessionManager();
+		session.checkLogin();
 	}
 
 	/**

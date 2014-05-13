@@ -14,10 +14,13 @@ import java.nio.ByteOrder;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.nfc.Tag;
 import android.util.Log;
 
 public class WifiAdmin
 {
+	private static final String TAG = WifiAdmin.class.getName();
+	
 	private final Context context;
 	private final WifiManager wifi_manager;
 	private WifiInfo wifi_info;
@@ -31,6 +34,8 @@ public class WifiAdmin
 	{
 		this.context = context;
 		this.wifi_manager = (WifiManager) this.context.getSystemService(Context.WIFI_SERVICE);
+		
+		Log.d(TAG, "The wifi manager now is " + this.wifi_manager);
 	}
 	
 	/**
@@ -51,7 +56,9 @@ public class WifiAdmin
 		if (wifi_manager != null)
 		{
 			this.wifi_info = this.wifi_manager.getConnectionInfo();
+			Log.d(TAG, "The wifi info is now " + this.wifi_info);
 			int ipAddress = this.wifi_info.getIpAddress();
+			Log.d(TAG, "The Integer format of ip address is " + ipAddress);
 			return this.formatIP(ipAddress);
 		}
 		
@@ -66,7 +73,9 @@ public class WifiAdmin
 	 */
 	public boolean isAvailable(String ip)
 	{
-		return this.getIP().equals(ip);
+		String wifi_ip = this.getIP();
+		Log.d(TAG, "The wifi ip is now " + wifi_ip);
+		return wifi_ip.equals(ip);
 	}
 	
 	/**
@@ -94,6 +103,7 @@ public class WifiAdmin
 	        ipAddressString = null;
 	    }
 
+	    Log.d(TAG, "The String format of the ip address is " + ipAddressString);
 	    return ipAddressString;
 	}
 }
