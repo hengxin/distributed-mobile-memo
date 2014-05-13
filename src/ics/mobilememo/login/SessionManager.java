@@ -21,9 +21,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 
 public class SessionManager
 {
+	private static final String TAG = SessionManager.class.getName(); 
+			
 	private SharedPreferences pref;
 	private static final String PREF_FILE_NAME = "MobileMemoPref";
 	// Shared pref mode
@@ -99,37 +102,40 @@ public class SessionManager
 		// the user has been logged in successfully
 		if (this.isLoggedIn())
 		{
-			AlertDialog dialog = null;
+			Log.d(TAG, "the user has been logged in successfully");
+			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this._context);
 			
 			builder.setTitle("Login Info")
 				.setMessage("You have logged in as: \n " + this.system_node.toString())
-				.setIcon(R.drawable.success);
+				.setIcon(R.drawable.success)
 
-			// continue 
-			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+			// confirm the login information and then continue 
+			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
 			{
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
 					dialog.dismiss();
 				}
-			});
+			})
 			
-			// relogin: redirect to the {@link LoginActivity}
-			builder.setNegativeButton(R.string.login_info_relogin, new DialogInterface.OnClickListener()
+			// re-login: redirect to the {@link LoginActivity}
+			.setNegativeButton(R.string.login_info_relogin, new DialogInterface.OnClickListener()
 			{
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
 					SessionManager.this.redirect2Login();
 				}
-			});
-			
-			dialog = builder.create();
+			})
+			.show();
 		}
 		else
+		{
+			Log.d(TAG, "Not logged in yet. Redirect to Login screen");
 			this.redirect2Login();
+		}
 	}
 
 	/**

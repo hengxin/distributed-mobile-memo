@@ -41,19 +41,19 @@
             android:orientation="vertical" >
 
             <EditText
-                android:id="@+id/unique_id"
+                android:id="@+id/etxt_node__id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_unique_id"
+                android:hint="@string/prompt_node_id"
                 android:inputType="number"
                 android:maxLines="1"
                 android:singleLine="true" />
 
             <EditText
-                android:id="@+id/name"
+                android:id="@+id/etxt_node_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_name"
+                android:hint="@string/prompt_node_name"
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
@@ -62,14 +62,14 @@
                 android:singleLine="true" />
 
             <EditText
-                android:id="@+id/ip"
+                android:id="@+id/etxt_node_ip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_ip"
+                android:hint="@string/prompt_node_ip"
+                android:inputType="text"
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
-                android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
                         

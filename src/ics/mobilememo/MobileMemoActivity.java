@@ -55,7 +55,7 @@ public class MobileMemoActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_mobile_memo);
 
 		// check login
-		this.session = new SessionManager(getApplicationContext());
+		this.session = new SessionManager(MobileMemoActivity.this);
 		session.checkLogin();
 		
 		// Set up the action bar.

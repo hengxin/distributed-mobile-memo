@@ -239,7 +239,8 @@ int drawable delete 0x7f020058
 int drawable fail 0x7f020059
 int drawable get 0x7f02005a
 int drawable ic_launcher 0x7f02005b
-int drawable success 0x7f02005c
+int drawable mobilememo_launcher 0x7f02005c
+int drawable success 0x7f02005d
 int id action_bar 0x7f05001c
 int id action_bar_activity_content 0x7f050015
 int id action_bar_container 0x7f05001b
@@ -266,6 +267,9 @@ int id edit_query 0x7f050030
 int id end 0x7f050013
 int id etxt_kv_request_dialog_key 0x7f050053
 int id etxt_kv_request_dialog_value 0x7f050055
+int id etxt_node__id 0x7f05003f
+int id etxt_node_ip 0x7f050042
+int id etxt_node_name 0x7f050040
 int id etxt_replica_ip 0x7f05004f
 int id etxt_replica_name 0x7f050051
 int id exit_button 0x7f050044
@@ -281,7 +285,6 @@ int id imgbtn_add_memo 0x7f05004a
 int id imgbtn_delete_group 0x7f050047
 int id imgbtn_delete_memo 0x7f05004c
 int id imgbtn_get_memo 0x7f05004b
-int id ip 0x7f050042
 int id kv_representation 0x7f05004d
 int id listMode 0x7f050001
 int id list_item 0x7f050029
@@ -293,7 +296,6 @@ int id menu_get_kv 0x7f050058
 int id menu_put_kv 0x7f050057
 int id menu_remove_kv 0x7f050059
 int id middle 0x7f050012
-int id name 0x7f050040
 int id never 0x7f050009
 int id none 0x7f050010
 int id normal 0x7f050000
@@ -327,7 +329,6 @@ int id txt_kv_request_dialog_value 0x7f050054
 int id txt_memo_operations 0x7f050049
 int id txt_replica_ip 0x7f05004e
 int id txt_replica_name 0x7f050050
-int id unique_id 0x7f05003f
 int id up 0x7f050021
 int id useLogo 0x7f050003
 int id withText 0x7f05000c
@@ -386,10 +387,8 @@ int string action_settings 0x7f0a0011
 int string action_sign_in_register 0x7f0a002e
 int string action_sign_in_short 0x7f0a0030
 int string app_name 0x7f0a000d
-int string error_field_required 0x7f0a0036
-int string error_incorrect_password 0x7f0a0035
-int string error_invalid_email 0x7f0a0033
-int string error_invalid_password 0x7f0a0034
+int string error_field_required 0x7f0a0034
+int string error_unavailable_ip 0x7f0a0033
 int string get_kv 0x7f0a0016
 int string imgbtn_add 0x7f0a0019
 int string imgbtn_delete 0x7f0a001b
@@ -400,9 +399,9 @@ int string kv_put_dialog_title 0x7f0a001d
 int string kv_remove_dialog_title 0x7f0a001f
 int string login_info_relogin 0x7f0a0014
 int string login_progress_signing_in 0x7f0a0032
-int string prompt_ip 0x7f0a002d
-int string prompt_name 0x7f0a002c
-int string prompt_unique_id 0x7f0a002b
+int string prompt_node_id 0x7f0a002b
+int string prompt_node_ip 0x7f0a002d
+int string prompt_node_name 0x7f0a002c
 int string put_kv 0x7f0a0015
 int string remove_kv 0x7f0a0017
 int string tag_get_dialog 0x7f0a0023

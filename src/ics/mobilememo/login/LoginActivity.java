@@ -1,22 +1,23 @@
+/**
+ * @author hengxin
+ * @date May 12, 2014
+ * @description {@link LoginActivity} shows and handles with the login activity of the users.
+ * 
+ *  // TODO: to enhance its functionality by 
+ *  using an asynchronous login task to authenticate the user
+ *  and showing a progress spinner
+ *  you can find such an example in the automatically-generated code for login activities by eclipse
+ */
 package ics.mobilememo.login;
 
+import ics.mobilememo.MobileMemoActivity;
 import ics.mobilememo.R;
-import ics.mobilememo.R.id;
-import ics.mobilememo.R.layout;
-import ics.mobilememo.R.menu;
-import ics.mobilememo.R.string;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
+import ics.mobilememo.network.wifi.WifiAdmin;
 import android.app.Activity;
-import android.os.AsyncTask;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,255 +27,103 @@ import android.widget.TextView;
  */
 public class LoginActivity extends Activity
 {
-	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
-
-	/**
-	 * The default email to populate the email field with.
-	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
-
-	/**
-	 * Keep track of the login task to ensure we can cancel it if requested.
-	 */
-	private UserLoginTask mAuthTask = null;
-
-	// Values for email and password at the time of the login attempt.
-	private String mEmail;
-	private String mPassword;
-
 	// UI references.
-	private EditText mEmailView;
-	private EditText mPasswordView;
-	private View mLoginFormView;
-	private View mLoginStatusView;
-	private TextView mLoginStatusMessageView;
-
+	private EditText etxt_node_id;
+	private EditText etxt_node_name;
+	private EditText etxt_node_ip;
+	
+	private SessionManager session;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_login);
 
-		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
-		mEmailView = (EditText) findViewById(R.id.unique_id);
-		mEmailView.setText(mEmail);
+		this.session = new SessionManager(LoginActivity.this);
+		
+		// set up the login form
+		this.etxt_node_id = (EditText) findViewById(R.id.etxt_node__id);
+		this.etxt_node_name = (EditText) findViewById(R.id.etxt_node_name);
+		this.etxt_node_ip = (EditText) findViewById(R.id.etxt_node_ip);
+		
+		// fill the ip address if possible
+		this.etxt_node_ip.setText(new WifiAdmin(getApplicationContext()).getIP());
 
-		mPasswordView = (EditText) findViewById(R.id.name);
-		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener()
-				{
-					@Override
-					public boolean onEditorAction(TextView textView, int id,
-							KeyEvent keyEvent)
-					{
-						if (id == R.id.login || id == EditorInfo.IME_NULL)
-						{
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				});
-
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener()
+		findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View view)
 					{
-						attemptLogin();
+						LoginActivity.this.attemptLogin();
 					}
 				});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
-	}
-
 	/**
-	 * Attempts to sign in or register the account specified by the login form.
-	 * If there are form errors (invalid email, missing fields, etc.), the
+	 * attempts to log in the system
+	 * If there are form errors (missing fields, unavailable ip, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
-	public void attemptLogin()
+	private void attemptLogin()
 	{
-		if (mAuthTask != null)
-		{
-			return;
-		}
-
+		// values for node identifier, node name, and node ip at the time of the login attempt.
+		int node_id = -1;
+		String node_name;
+		String node_ip; 
+		
 		// Reset errors.
-		mEmailView.setError(null);
-		mPasswordView.setError(null);
-
-		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
-		mPassword = mPasswordView.getText().toString();
-
+		this.etxt_node_id.setError(null);
+		this.etxt_node_name.setError(null);
+		this.etxt_node_ip.setError(null);
+		
 		boolean cancel = false;
 		View focusView = null;
 
-		// Check for a valid password.
-		if (TextUtils.isEmpty(mPassword))
+		// check node_id
+		String node_id_str = this.etxt_node_id.getText().toString();
+		if (TextUtils.isEmpty(node_id_str))
 		{
-			mPasswordView.setError(getString(R.string.error_field_required));
-			focusView = mPasswordView;
+			this.etxt_node_name.setError(getString(R.string.error_field_required));
+			focusView = etxt_node_name;
 			cancel = true;
-		} else if (mPassword.length() < 4)
+		}
+		else 
+			node_id = Integer.parseInt(node_id_str);
+		
+		// check node_name
+		node_name = this.etxt_node_name.getText().toString();
+		if (TextUtils.isEmpty(node_name))
 		{
-			mPasswordView.setError(getString(R.string.error_invalid_password));
-			focusView = mPasswordView;
+			this.etxt_node_name.setError(getString(R.string.error_field_required));
+			focusView = etxt_node_name;
+			cancel = true;
+		}
+		
+		// check node_ip
+		node_ip = this.etxt_node_ip.getText().toString();
+		if (TextUtils.isEmpty(node_ip))
+		{
+			this.etxt_node_ip.setError(getString(R.string.error_field_required));
+			focusView = this.etxt_node_ip;
+			cancel = true;
+		} else if (! new WifiAdmin(getApplicationContext()).isAvailable(node_ip))	// check whether the ip address is available or not
+		{
+			this.etxt_node_ip.setError(getString(R.string.error_unavailable_ip));
+			focusView = etxt_node_ip;
 			cancel = true;
 		}
 
-		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail))
-		{
-			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
-			cancel = true;
-		} else if (!mEmail.contains("@"))
-		{
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
-			cancel = true;
-		}
-
+		// an error here. don't attempt to login
 		if (cancel)
-		{
-			// There was an error; don't attempt login and focus the first
-			// form field with an error.
 			focusView.requestFocus();
-		} else
+		else	// TODO: show a progress spinner and kick off a background task to perform the user login attempt
 		{
-			// Show a progress spinner, and kick off a background task to
-			// perform the user login attempt.
-			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
-			showProgress(true);
-			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
-		}
-	}
-
-	/**
-	 * Shows the progress UI and hides the login form.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-	private void showProgress(final boolean show)
-	{
-		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs to fade-in
-		// the progress spinner.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
-		{
-			int shortAnimTime = getResources().getInteger(
-					android.R.integer.config_shortAnimTime);
-
-			mLoginStatusView.setVisibility(View.VISIBLE);
-			mLoginStatusView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 1 : 0)
-					.setListener(new AnimatorListenerAdapter()
-					{
-						@Override
-						public void onAnimationEnd(Animator animation)
-						{
-							mLoginStatusView.setVisibility(show ? View.VISIBLE
-									: View.GONE);
-						}
-					});
-
-			mLoginFormView.setVisibility(View.VISIBLE);
-			mLoginFormView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 0 : 1)
-					.setListener(new AnimatorListenerAdapter()
-					{
-						@Override
-						public void onAnimationEnd(Animator animation)
-						{
-							mLoginFormView.setVisibility(show ? View.GONE
-									: View.VISIBLE);
-						}
-					});
-		} else
-		{
-			// The ViewPropertyAnimator APIs are not available, so simply show
-			// and hide the relevant UI components.
-			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-		}
-	}
-
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean>
-	{
-		@Override
-		protected Boolean doInBackground(Void... params)
-		{
-			// TODO: attempt authentication against a network service.
-
-			try
-			{
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e)
-			{
-				return false;
-			}
-
-			for (String credential : DUMMY_CREDENTIALS)
-			{
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail))
-				{
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: register the new account here.
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(final Boolean success)
-		{
-			mAuthTask = null;
-			showProgress(false);
-
-			if (success)
-			{
-				finish();
-			} else
-			{
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
-		}
-
-		@Override
-		protected void onCancelled()
-		{
-			mAuthTask = null;
-			showProgress(false);
+			this.session.createLoginSession(node_id, node_name, node_ip);
+			// start the main activity {@link MobileMemoActivity}
+            Intent intent = new Intent(getApplicationContext(), MobileMemoActivity.class);
+            startActivity(intent);
+            finish();
 		}
 	}
 }
