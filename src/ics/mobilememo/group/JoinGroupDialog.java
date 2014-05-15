@@ -30,10 +30,10 @@ public class JoinGroupDialog extends DialogFragment
 	/**
 	 * name of the replica which joins the group
 	 */
-	private String replica_name = null;
+//	private String replica_name = null;
 	
 	private EditText etxt_replica_ip = null;
-	private EditText etxt_replica_name = null;
+//	private EditText etxt_replica_name = null;
 	
 	/**
 	 * create dialog by reusing the {@link AlertDialog}
@@ -50,7 +50,7 @@ public class JoinGroupDialog extends DialogFragment
 		 */
 		View view = inflater.inflate(R.layout.layout_join_group_dialog, null);
         this.etxt_replica_ip = (EditText) view.findViewById(R.id.etxt_replica_ip);
-        this.etxt_replica_name = (EditText) view.findViewById(R.id.etxt_replica_name);
+//        this.etxt_replica_name = (EditText) view.findViewById(R.id.etxt_replica_name);
         
         builder.setTitle(R.string.join_group_dialog_title);
 		builder.setView(view)
@@ -80,14 +80,14 @@ public class JoinGroupDialog extends DialogFragment
 								 * and construct the {@link Key} from #key_str since it is fixed
 								 */
 								JoinGroupDialog.this.replica_ip = JoinGroupDialog.this.etxt_replica_ip.getText().toString();
-								JoinGroupDialog.this.replica_name = JoinGroupDialog.this.etxt_replica_name.getText().toString();
+//								JoinGroupDialog.this.replica_name = JoinGroupDialog.this.etxt_replica_name.getText().toString();
 								
 								// close the dialog
 								JoinGroupDialog.this.dismiss();
 								
 								// notify the listener (here, it is {@link GroupFragment})
 								((IJoinGroupListener) JoinGroupDialog.this.getTargetFragment()).onJoinGroup(
-										new SystemNode(JoinGroupDialog.this.replica_ip, JoinGroupDialog.this.replica_name));
+										new SystemNode(JoinGroupDialog.this.replica_ip /*, JoinGroupDialog.this.replica_name */));
 							}
 						});
 		return builder.create();

@@ -3,35 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/txt_replica_ip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/txt_replica_ip" />
-
+	
     <EditText
         android:id="@+id/etxt_replica_ip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_replica_ip"
-        android:ems="10"
-        android:inputType="none" >
+        android:hint="@string/prompt_replica_ip"
+        android:ems="15"
+        android:inputType="number"
+        android:digits="0123456789."
+        android:maxLines="1"
+		android:singleLine="true" >
         <requestFocus />
     </EditText>
-
-    <TextView
-        android:id="@+id/txt_replica_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etxt_replica_ip"
-        android:text="@string/txt_replica_name" />
-
-    <EditText
-        android:id="@+id/etxt_replica_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_replica_name"
-        android:ems="10"
-        android:inputType="none" />
+	 
 </RelativeLayout>

@@ -10,7 +10,6 @@
  */
 package ics.mobilememo.sharedmemory.atomicity;
 
-import ics.mobilememo.MobileMemoActivity;
 import ics.mobilememo.group.GroupConfig;
 import ics.mobilememo.group.member.SystemNode;
 import ics.mobilememo.login.SessionManager;
@@ -18,7 +17,6 @@ import ics.mobilememo.sharedmemory.architecture.IRegisterClient;
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.architecture.communication.IReceiver;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
-import ics.mobilememo.sharedmemory.architecture.config.NetworkConfig;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessagingService;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseAckMessage;
@@ -35,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 

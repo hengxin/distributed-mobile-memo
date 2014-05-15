@@ -116,9 +116,6 @@ public abstract class KVRequestDialog extends DialogFragment
 								// invoke appropriate action for each request 
 								VersionValue vval = KVRequestDialog.this.onRequestPerformed();
 								
-								// test with a mock return value
-//								VersionValue vval = new VersionValue(new Version(11, 11), "dialogreturn");
-								
 								// close the dialog
 								KVRequestDialog.this.dismiss();
 								

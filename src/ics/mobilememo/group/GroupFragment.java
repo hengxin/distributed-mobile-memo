@@ -3,7 +3,6 @@ package ics.mobilememo.group;
 import ics.mobilememo.R;
 import ics.mobilememo.group.JoinGroupDialog.IJoinGroupListener;
 import ics.mobilememo.group.member.SystemNode;
-import ics.mobilememo.test.unittest.UnitTestConfig;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -35,7 +34,7 @@ public class GroupFragment extends Fragment implements
 						IJoinGroupListener
 {
 	/**
-	 *  communication between this fragment and its poped dialog
+	 *  communication between this fragment and its popped dialog
 	 *  @see JoinGroupDialog
 	 *  @see #addButtonListener(View)
 	 */
@@ -65,7 +64,7 @@ public class GroupFragment extends Fragment implements
 	{
 		super.onCreate(savedInstanceState);
 
-		// TODO: Change Adapter to display your content
+		// set adapter to show a list of {@link SystemNode}s
 		this.server_replica_list_adapter = new ArrayAdapter<SystemNode>(getActivity(),
 				android.R.layout.simple_list_item_1, android.R.id.text1,
 				GroupConfig.INSTANCE.getGroupMembers());
@@ -86,12 +85,6 @@ public class GroupFragment extends Fragment implements
 		 *  also of the main task of this app
 		 */
 		this.addButtonListener(view);
-		
-		/**
-		 * TODO: test of ListView; It is OK.
-		 */
-		if(UnitTestConfig.isUnittestEnabled)
-			GroupConfig.INSTANCE.getGroupMembers().add(new SystemNode("10.0.0.1", "testreplica"));
 		
 		// Set the adapter
 		this.server_replica_listview = (AbsListView) view.findViewById(android.R.id.list);
@@ -130,6 +123,10 @@ public class GroupFragment extends Fragment implements
 			@Override
 			public void onClick(View v)
 			{
+				// TODO: pre-install two server replicas; misuse the button click for test
+				GroupConfig.INSTANCE.addReplica(new SystemNode("172.25.147.2"));	// tablet
+				GroupConfig.INSTANCE.addReplica(new SystemNode("172.25.147.244"));	// WHF
+				server_replica_list_adapter.notifyDataSetChanged();
 			}
 		});
     }

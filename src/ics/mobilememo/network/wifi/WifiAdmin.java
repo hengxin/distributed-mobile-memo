@@ -11,11 +11,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 
+import android.R.integer;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.nfc.Tag;
 import android.util.Log;
+import android.widget.Toast;
 
 public class WifiAdmin
 {
@@ -56,9 +58,9 @@ public class WifiAdmin
 		if (wifi_manager != null)
 		{
 			this.wifi_info = this.wifi_manager.getConnectionInfo();
-			Log.d(TAG, "The wifi info is now " + this.wifi_info);
 			int ipAddress = this.wifi_info.getIpAddress();
 			Log.d(TAG, "The Integer format of ip address is " + ipAddress);
+			Toast.makeText(this.context, "IP = " + ipAddress, Toast.LENGTH_LONG).show();
 			return this.formatIP(ipAddress);
 		}
 		

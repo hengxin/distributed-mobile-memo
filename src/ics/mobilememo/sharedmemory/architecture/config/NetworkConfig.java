@@ -14,5 +14,5 @@ public class NetworkConfig
 	/**
 	 * timeout for connection
 	 */
-	public static final int TIMEOUT = 5000;
+	public static final int TIMEOUT = 30000;
 }

@@ -51,6 +51,8 @@ public class MemoFragment extends Fragment implements
 		AbsListView.OnItemClickListener,	//
 		IRequestResultListener	// 
 {
+	private static final String TAG = MemoFragment.class.getName();
+	
 	/**
 	 * communication between this fragment between its popped dialog
 	 * @see KVRequestDialog

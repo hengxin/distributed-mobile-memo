@@ -13,7 +13,6 @@ package ics.mobilememo.sharedmemory.atomicity;
 import ics.mobilememo.login.SessionManager;
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
-import ics.mobilememo.sharedmemory.architecture.config.NetworkConfig;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseAckMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityReadPhaseMessage;

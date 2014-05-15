@@ -8,8 +8,6 @@ package ics.mobilememo.group.member;
 
 import java.io.Serializable;
 
-import android.R.integer;
-
 public class SystemNode implements Serializable
 {
 	private static final long serialVersionUID = 2642974560070519463L;
@@ -46,6 +44,17 @@ public class SystemNode implements Serializable
 		this.node_id = SystemNode.NODE_ID_DEFAULT;
 		this.node_name = SystemNode.NODE_NAME_DEFAULT;
 		this.node_ip = SystemNode.NODE_IP_DEFAULT;
+	}
+
+	/**
+	 * constructor of {@link SystemNode} with only {@link #node_ip} set
+	 * @param ip ip address of {@link SystemNode}
+	 */
+	public SystemNode(String ip)
+	{
+		this.node_id = SystemNode.NODE_ID_DEFAULT;
+		this.node_name = SystemNode.NODE_NAME_DEFAULT;
+		this.node_ip = ip;
 	}
 	
 	/**

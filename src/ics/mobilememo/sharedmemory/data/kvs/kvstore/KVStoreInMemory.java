@@ -31,9 +31,10 @@ public enum KVStoreInMemory implements IKVStore
 
 	// using the thread-safe ConcurrentHashMap to cope with the multi-thread concurrency.
 	private ConcurrentMap<Key, VersionValue> key_vval_map = new ConcurrentHashMap<Key, VersionValue>();
+	
 	/**
 	 * @author hengxin
-	 * @date 2013-9-2
+	 * @date 2013-9-2, 2014-05-15
 	 * @description multiple separate locks for concurrent reads and concurrent writes
 	 * 	when some write is synchronized such as in {@link #put(Key, VersionValue)} method
 	 * @see http://vanillajava.blogspot.com/2010/05/locking-concurrenthashmap-for-exclusive.html

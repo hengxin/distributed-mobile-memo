@@ -14,7 +14,6 @@ import ics.mobilememo.MobileMemoActivity;
 import ics.mobilememo.R;
 import ics.mobilememo.network.wifi.WifiAdmin;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -47,7 +46,7 @@ public class LoginActivity extends Activity
 		this.etxt_node_ip = (EditText) findViewById(R.id.etxt_node_ip);
 		
 		// fill the ip address if possible
-		this.etxt_node_ip.setText(new WifiAdmin(getApplicationContext()).getIP());
+		this.etxt_node_ip.setText(new WifiAdmin(MobileMemoActivity.MOBILEMEMO_ACTIVITY).getIP());
 
 		findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener()
 				{
@@ -119,9 +118,14 @@ public class LoginActivity extends Activity
 		else	// TODO: show a progress spinner and kick off a background task to perform the user login attempt
 		{
 			this.session.createLoginSession(node_id, node_name, node_ip);
-			// start the main activity {@link MobileMemoActivity}
-            Intent intent = new Intent(getApplicationContext(), MobileMemoActivity.class);
-            startActivity(intent);
+
+			/**
+			 * @author hengxin
+			 * @date May 15, 2014
+			 * 
+			 * Warning: don't use Intent here to start {@link MobileMemoActivity}
+			 * it has already been in the Activity stack
+			 */
             finish();
 		}
 	}

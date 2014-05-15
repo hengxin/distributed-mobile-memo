@@ -8,6 +8,7 @@
  */
 package ics.mobilememo.sharedmemory.architecture.communication;
 
+import ics.mobilememo.MobileMemoActivity;
 import ics.mobilememo.sharedmemory.architecture.config.NetworkConfig;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessagingService;
@@ -23,7 +24,9 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Singleton pattern with Java Enum which is simple and thread-safe
@@ -47,6 +50,8 @@ public enum MessagingService implements IReceiver
 	 */
 	public void sendOneWay(final String receiver_ip, final IPMessage msg)
 	{
+		Log.d(TAG, "Send to " + receiver_ip);
+		
 		Runnable send_task = new Runnable()
 		{
 			@Override
@@ -91,8 +96,7 @@ public enum MessagingService implements IReceiver
 	/**
 	 * start as a server to listen to socket connection requests
 	 *
-	 * @param server_ip
-	 *            ip of server
+	 * @param server_ip ip address of server
 	 */
 	public void start2Listen(String server_ip)
 	{
@@ -185,5 +189,25 @@ public enum MessagingService implements IReceiver
 //			default:
 //				break;
 //		}
+	}
+	
+	/**
+	 * establish socket to listen to requests in an asynchronous manner
+	 * 
+	 * It extends {@link AsyncTask} with String parameter "ip address".
+	 */
+	public class ServerTask extends AsyncTask<String, Void, Void>
+	{
+		/**
+		 * run as a server in the background
+		 * 
+		 * @param String format of ip address
+		 */
+		@Override
+		protected Void doInBackground(String... params)
+		{
+			MessagingService.INSTANCE.start2Listen(params[0]);
+			return null;
+		}
 	}
 }
