@@ -200,7 +200,7 @@ public class SessionManager
 		if (! this.isLoginInfoComplete())
 			return false;
 		// check whether the ip address is available 
-		return new WifiAdmin(this._context).isAvailable(this.system_node.getNodeIp());
+		return new WifiAdmin(this._context).isIPAvailable(this.system_node.getNodeIp());
 	}
 	
 	/**

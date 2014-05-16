@@ -18,12 +18,18 @@ import java.io.Serializable;
 public class Version implements Comparable<Version>, Serializable
 {
 	private static final long serialVersionUID = 5115680262452013498L;
+	
+	/**
+	 * default NULL_VERSION = (-1,-1)
+	 */
 	public static final Version NULL_VERSION = new Version(-1,-1);
 
 	private int seqno;	// sequence no.
 	private int pid;		// pid
 
 	/**
+	 * constructor of {@link Version} with {@link #seqno} and {@link #pid}
+	 * 
 	 * @param seqno sequence no
 	 * @param id pid
 	 */

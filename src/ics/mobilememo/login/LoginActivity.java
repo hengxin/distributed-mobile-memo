@@ -105,7 +105,7 @@ public class LoginActivity extends Activity
 			this.etxt_node_ip.setError(getString(R.string.error_field_required));
 			focusView = this.etxt_node_ip;
 			cancel = true;
-		} else if (! new WifiAdmin(getApplicationContext()).isAvailable(node_ip))	// check whether the ip address is available or not
+		} else if (! new WifiAdmin(getApplicationContext()).isIPAvailable(node_ip))	// check whether the ip address is available or not
 		{
 			this.etxt_node_ip.setError(getString(R.string.error_unavailable_ip));
 			focusView = etxt_node_ip;

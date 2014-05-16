@@ -73,7 +73,7 @@ public class WifiAdmin
 	 * @return <code>true</code> if the ip address is available;
 	 * 	<code>false</code>, otherwise. 
 	 */
-	public boolean isAvailable(String ip)
+	public boolean isIPAvailable(String ip)
 	{
 		String wifi_ip = this.getIP();
 		Log.d(TAG, "The wifi ip is now " + wifi_ip);

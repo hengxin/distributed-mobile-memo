@@ -58,7 +58,12 @@ public enum KVStoreInMemory implements IKVStore
 	@Override
 	public void put(Key key, VersionValue vval)
 	{
-		VersionValue current_vval = this.key_vval_map.get(key);
+		/**
+		 * instead of <code>VersionValue current_vval = this.key_vval_map.get(key);</code>
+		 * 
+		 * maybe return {@link VersionValue#NULL_VERSIONVALUE}
+		 */
+		VersionValue current_vval = this.getVersionValue(key);	
 
 		int hash = key.hashCode() & 0x7FFFFFFF;
 		synchronized (this.locks[hash % locks.length])	// lock the "if-then" pattern
