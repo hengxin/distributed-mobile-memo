@@ -89,7 +89,6 @@ public enum AtomicityRegisterServer implements IAtomicityMessageHandler
 	public void handleAtomicityMessage(AtomicityMessage atomicityMessage)
 	{
 		String from_ip = atomicityMessage.getSenderIP();
-//		String my_ip = SystemConfig.INSTANCE.getIP();
 		String my_ip = new SessionManager().getNodeIp();
 		int cnt = atomicityMessage.getCnt();
 		Key key = atomicityMessage.getKey();

@@ -8,7 +8,6 @@
  */
 package ics.mobilememo.sharedmemory.architecture.communication;
 
-import ics.mobilememo.MobileMemoActivity;
 import ics.mobilememo.sharedmemory.architecture.config.NetworkConfig;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessagingService;
@@ -26,7 +25,6 @@ import java.util.concurrent.Executors;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Singleton pattern with Java Enum which is simple and thread-safe
@@ -107,6 +105,8 @@ public enum MessagingService implements IReceiver
 			server_socket.bind(new InetSocketAddress(server_ip,
 					NetworkConfig.NETWORK_PORT));
 
+			Log.d(TAG, "The server " + server_ip + "is listening at port " + NetworkConfig.NETWORK_PORT);
+			
 			while (true)
 			{
 				final Socket connection = server_socket.accept();

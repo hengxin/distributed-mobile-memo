@@ -61,6 +61,8 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	{
 		this.op_cnt++;
 
+		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
+		
 		// read phase: contact a quorum of the server replicas for the latest value and version
 		Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
 

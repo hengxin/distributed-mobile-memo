@@ -20,14 +20,18 @@ import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
 public abstract class KVRequestDialog extends DialogFragment
 {
+	private static final String TAG = KVRequestDialog.class.getName();
+	
 	/**
 	 * {@link Key} in its String format
 	 */
@@ -82,6 +86,8 @@ public abstract class KVRequestDialog extends DialogFragment
 		View view = inflater.inflate(R.layout.layout_kv_dialog, null);
         this.etxt_key = (EditText) view.findViewById(R.id.etxt_kv_request_dialog_key);
         this.etxt_val = (EditText) view.findViewById(R.id.etxt_kv_request_dialog_value);
+        if (! this.is_val_required)
+        	this.etxt_val.setEnabled(false);
         
         builder.setTitle(this.dialog_title_id);
 		builder.setView(view)
@@ -110,8 +116,11 @@ public abstract class KVRequestDialog extends DialogFragment
 								 * and construct the {@link Key} from #key_str since it is fixed
 								 */
 								KVRequestDialog.this.key_str = KVRequestDialog.this.etxt_key.getText().toString();
-								KVRequestDialog.this.val_str = KVRequestDialog.this.etxt_val.getText().toString();
+								if (KVRequestDialog.this.is_val_required)
+									KVRequestDialog.this.val_str = KVRequestDialog.this.etxt_val.getText().toString();
 								KVRequestDialog.this.request_key = new Key(KVRequestDialog.this.key_str);
+								
+								Log.d(TAG, "Request key = " + KVRequestDialog.this.key_str);
 								
 								// invoke appropriate action for each request 
 								VersionValue vval = KVRequestDialog.this.onRequestPerformed();

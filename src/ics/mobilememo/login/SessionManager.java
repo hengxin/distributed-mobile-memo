@@ -124,10 +124,6 @@ public class SessionManager
 			this.redirect2Login();
 		}
 		
-		/**
-		 * start to listen to connections; ready to be a client or a server
-		 */
-		MessagingService.INSTANCE.new ServerTask().execute(this.getNodeIp());
 	}
 
 	/**

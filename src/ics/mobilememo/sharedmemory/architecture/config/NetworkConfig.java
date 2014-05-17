@@ -8,9 +8,9 @@ package ics.mobilememo.sharedmemory.architecture.config;
 public class NetworkConfig
 {
 	/**
-	 * default global port for communication: 1234
+	 * default global port for communication: 3000
 	 */
-	public static final int NETWORK_PORT = 1234;
+	public static final int NETWORK_PORT = 3000;
 	/**
 	 * timeout for connection
 	 */

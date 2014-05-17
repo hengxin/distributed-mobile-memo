@@ -13,6 +13,7 @@ package ics.mobilememo.login;
 import ics.mobilememo.MobileMemoActivity;
 import ics.mobilememo.R;
 import ics.mobilememo.network.wifi.WifiAdmin;
+import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -127,6 +128,11 @@ public class LoginActivity extends Activity
 			 * it has already been in the Activity stack
 			 */
             finish();
+            
+    		/**
+    		 * start to listen to connections; ready to be a client or a server
+    		 */
+    		MessagingService.INSTANCE.new ServerTask().execute(node_ip);
 		}
 	}
 }
