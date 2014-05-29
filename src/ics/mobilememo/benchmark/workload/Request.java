@@ -7,28 +7,27 @@ package ics.mobilememo.benchmark.workload;
 
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 
-public class Request
+public abstract class Request
 {
-	private int type = -1;
-	private Key key = null;
-	private String val = null;
+	public static final int WRITE_TYPE = 0;
+	public static final int READ_TYPE = 1;
+	
+	protected int type = -1;
+	protected Key key = null;
+	protected String val = null;
 	
 	/**
-	 * construct the request in workload
-	 * @param type W[0], R[1]
-	 * @param key key to write to or read from
-	 * @param val value to write if the request is of type W
+	 * constructor of {@link Request}
+	 * @param type type of the {@link Request}; @see {@link #READ_TYPE} and {@link #WRITE_TYPE} 
+	 * @param key
 	 */
-	public Request(int type, Key key, String val)
+	public Request(Key key)
 	{
-		this.type = type;
 		this.key = key;
-		this.val = val;
 	}
-
+	
 	/**
-	 * get the type of the request: W[0], R[1]
-	 * @return type of the request: W[0], R[1]
+	 * @return type of the request: {@link #WRITE_TYPE} or {@link #READ_TYPE}
 	 */
 	public int getType()
 	{
@@ -36,7 +35,6 @@ public class Request
 	}
 
 	/**
-	 * get the key of the request
 	 * @return key of the request
 	 */
 	public Key getKey()

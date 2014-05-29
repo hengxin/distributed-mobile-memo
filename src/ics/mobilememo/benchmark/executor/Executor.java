@@ -3,7 +3,7 @@
  * @date 2014-04-24
  * @description executor responsible for issuing the requests from workload benchmarks
  */
-package ics.mobilememo.executor;
+package ics.mobilememo.benchmark.executor;
 
 import ics.mobilememo.benchmark.workload.Request;
 import ics.mobilememo.benchmark.workload.RequestRecord;
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class Executor implements Runnable
 {
 //	private Logger log = Logger.getLogger(Executor.class);
-	static private final Logger LOG = LoggerFactory.getLogger(Executor.class);
+//	static private final Logger LOG = LoggerFactory.getLogger(Executor.class);
 	
 	private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
 	AtomicityRegisterClient client = AtomicityRegisterClient.INSTANCE;
@@ -54,7 +54,7 @@ public class Executor implements Runnable
 		
 		// the delay = response_time - invocation_time is calculated and recorded
 		RequestRecord rr = new RequestRecord(type, invocation_time, response_time, key, vvalue);
-		LOG.info(rr.toString());
+//		LOG.info(rr.toString());
 	}
 	
 	/**

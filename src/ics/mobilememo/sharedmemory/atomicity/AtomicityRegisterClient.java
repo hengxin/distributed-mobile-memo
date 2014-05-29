@@ -59,6 +59,8 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	@Override
 	public VersionValue get(Key key)
 	{
+		Log.d(TAG, "Client issues a Get request");
+		
 		this.op_cnt++;
 
 		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
@@ -83,6 +85,8 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	@Override
 	public VersionValue put(Key key, String val)
 	{
+		Log.d(TAG, "Client issues a Put request");
+		
 		this.op_cnt++;
 
 		// read phase: contact a quorum of the server replicas for the latest value and version

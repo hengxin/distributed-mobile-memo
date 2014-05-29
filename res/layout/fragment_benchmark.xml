@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+<RadioGroup android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:id="@+id/radio_grp_rw">
+    <RadioButton android:id="@+id/radio_writer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/radio_writer" />
+    <RadioButton android:id="@+id/radio_reader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/radio_reader" />
+</RadioGroup>
+
+<EditText
+    android:id="@+id/etxt_request_number"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/radio_grp_rw"
+    android:layout_marginTop="25dp"
+    android:hint="@string/prompt_request_number"
+    android:ems="10"
+    android:inputType="number" >
+
+    <requestFocus />
+</EditText>
+
+<EditText
+    android:id="@+id/etxt_rate"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/etxt_request_number"
+    android:layout_below="@+id/etxt_request_number"
+    android:layout_marginTop="25dp"
+    android:hint="@string/prompt_rate"
+    android:ems="10"
+    android:inputType="number" />
+
+<Button
+    android:id="@+id/btn_run"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_below="@+id/etxt_rate"
+    android:layout_marginRight="25dp"
+    android:layout_marginTop="25dp"
+    android:text="@string/run" />
+
+</RelativeLayout>

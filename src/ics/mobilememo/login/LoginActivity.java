@@ -17,6 +17,7 @@ import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -26,6 +27,8 @@ import android.widget.EditText;
  */
 public class LoginActivity extends Activity
 {
+	private final static String TAG = LoginActivity.class.getName();
+	
 	// UI references.
 	private EditText etxt_node_id;
 	private EditText etxt_node_name;
@@ -118,6 +121,8 @@ public class LoginActivity extends Activity
 			focusView.requestFocus();
 		else	// TODO: show a progress spinner and kick off a background task to perform the user login attempt
 		{
+			Log.d(TAG, "To Create Login Session");
+			
 			this.session.createLoginSession(node_id, node_name, node_ip);
 
 			/**
@@ -133,6 +138,7 @@ public class LoginActivity extends Activity
     		 * start to listen to connections; ready to be a client or a server
     		 */
     		MessagingService.INSTANCE.new ServerTask().execute(node_ip);
+    		Log.d(TAG, "Start as a server");
 		}
 	}
 }

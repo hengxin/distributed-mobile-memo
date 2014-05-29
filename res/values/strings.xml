@@ -59,4 +59,12 @@
 		
 		<!-- end: dialog for scanning server replicas -->
 	<!-- end: for the group fragment --> 
+	
+	<!-- begin: for the benchmark fragment -->
+	<string name="radio_reader">Reader</string>
+	<string name="radio_writer">Writer</string>
+	<string name="prompt_request_number">total number of requests</string>
+	<string name="prompt_rate">number per second</string>
+	<string name="run">Run</string>
+	<!-- end: for the benchmark fragment -->
 </resources>

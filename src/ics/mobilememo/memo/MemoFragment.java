@@ -60,11 +60,6 @@ public class MemoFragment extends Fragment implements
 	 */
 	public static final int FRAGMENT_REQUEST_CODE = 1;
 	
-	// title of MemoFragment; used in {@link FragmentPagerAdapter#getPageTitle(int)}
-	public static final String MEMO_FRAGMENT_TITLE = "MEMO";
-	
-//	private OnFragmentInteractionListener mListener;	// not used for the time being
-
 	/**
 	 * The fragment's ListView/GridView.
 	 */

@@ -1,5 +1,6 @@
 package ics.mobilememo;
 
+import ics.mobilememo.benchmark.ui.BenchmarkFragment;
 import ics.mobilememo.group.GroupFragment;
 import ics.mobilememo.login.SessionManager;
 import ics.mobilememo.memo.MemoFragment;
@@ -114,7 +115,7 @@ public class MobileMemoActivity extends ActionBarActivity implements
 		this.fragments.add(new MemoFragment());
 		this.frament_titles.add(getString(R.string.title_section_memo).toUpperCase(Locale.getDefault()));
 
-		this.fragments.add(new MemoFragment());
+		this.fragments.add(new BenchmarkFragment());
 		this.frament_titles.add(getString(R.string.title_section_benchmark).toUpperCase(Locale.getDefault()));
 		
 	    return this.fragments;

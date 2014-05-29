@@ -1,12 +1,12 @@
 /**
  * @author hengxin
- * @date 2014-04-22
+ * @date 2014-04-22; 2014-05-17
  * @description generate workload with different statistical distributions;
- *   Hope it will support real workload collected from open-source/commercial data stores 
+ *   Hope: it will support real workload collected from open-source/commercial data stores 
  */
 package ics.mobilememo.benchmark.workload;
 
-import ics.mobilememo.sharedmemory.data.kvs.Key;
+import ics.mobilememo.benchmark.executor.Executor;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -15,8 +15,13 @@ import org.uncommons.maths.number.NumberGenerator;
 import org.uncommons.maths.random.ExponentialGenerator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 
+import android.util.Log;
+
 public class PoissonWorkloadGenerator implements Runnable
 {
+	private static final String LOG = PoissonWorkloadGenerator.class.getName();
+	
+	// synchronous blocking queue between {@link PoissonWorkloadGenerator} and {@link Executor}
 	private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
 	
 	// role: writer [0], reader [1]
@@ -26,20 +31,31 @@ public class PoissonWorkloadGenerator implements Runnable
 	// arrival rate of requests (Poisson process)
 	private int rate = 0;
 	
-	private NumberGenerator<Double> gen = null;
-	private final long oneMinute = 60000;
+	// used to generate number sequence accordance with some specified distribution
+	private NumberGenerator<Double> exp_interarrival_gen = null;
+	private final long oneMinute = 1000;
 	
-	public PoissonWorkloadGenerator(BlockingQueue<Request> request_queue, int total_requests, int rate)
+	/**
+	 * constructor of {@link PoissonWorkloadGenerator}
+	 * 
+	 * @param request_queue {@link #request_queue}: synchronous blocking queue 
+	 * 	between {@link PoissonWorkloadGenerator} and {@link Executor}
+	 * @param total_requests {@link #total_requests}: total number of requests in the workload to generate
+	 * @param rate {@link #rate}: arrival rate of requests (Poisson process)
+	 */
+	public PoissonWorkloadGenerator(BlockingQueue<Request> request_queue, int role, int total_requests, int rate)
 	{
 		this.request_queue = request_queue;
+		this.role = role;
 		this.total_requests = total_requests;
 		this.rate = rate;
 		
-		this.gen = new ExponentialGenerator(rate, new MersenneTwisterRNG());
+		this.exp_interarrival_gen = new ExponentialGenerator(this.rate, new MersenneTwisterRNG());
+		
 	}
 	
 	/**
-	 * inter-arrival time
+	 * generate inter-arrival time
 	 * @return inter-arrival time
 	 * @throws InterruptedException thread is interrupted
 	 * 
@@ -47,10 +63,12 @@ public class PoissonWorkloadGenerator implements Runnable
 	 */
 	private Request generateNextRequest() throws InterruptedException
 	{
-		long interval = Math.round(gen.nextValue() * oneMinute);
+		long interval = Math.round(exp_interarrival_gen.nextValue() * oneMinute);
+		Log.d(LOG, "The inter-arrival time is " + interval);
+		
 		Thread.sleep(interval);
-		Request request = new Request(role, new Key("test"), null);
-		return request;
+		// TODO: generate requests randomly
+		return RequestFactory.INSTANCE.generateRequest(role);
 	}
 
 	/**
