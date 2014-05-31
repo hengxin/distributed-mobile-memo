@@ -14,6 +14,7 @@ import ics.mobilememo.R;
 import ics.mobilememo.group.member.SystemNode;
 import ics.mobilememo.network.wifi.WifiAdmin;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
+import ics.mobilememo.sharedmemory.architecture.communication.MessagingService.ServerTask;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -104,6 +105,12 @@ public class SessionManager
 				public void onClick(DialogInterface dialog, int which)
 				{
 					dialog.dismiss();
+					
+		    		/**
+		    		 * start to listen to connections; ready to be a client or a server
+		    		 */
+		    		MessagingService.INSTANCE.new ServerTask().execute(SessionManager.this.system_node.getNodeIp());
+		    		Log.d(TAG, "Start as a server");
 				}
 			})
 			

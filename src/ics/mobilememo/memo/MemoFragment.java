@@ -8,9 +8,7 @@ import ics.mobilememo.memo.request.KVRequestDialog;
 import ics.mobilememo.memo.request.KVRequestDialog.IRequestResultListener;
 import ics.mobilememo.sharedmemory.data.kvs.KVPair;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
-import ics.mobilememo.sharedmemory.data.kvs.Version;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
-import ics.mobilememo.test.unittest.UnitTestConfig;
 
 import java.util.ArrayList;
 
@@ -137,13 +135,6 @@ public class MemoFragment extends Fragment implements
 		 *  also of the main task of this app
 		 */
 		this.addButtonListener(view);
-		
-		/**
-		 * TODO: test of ListView; It is OK.
-		 */
-		if(UnitTestConfig.isUnittestEnabled)
-			this.kvpairs_list.add(new KVPair(new Key("TestKey"), 
-					new VersionValue(new Version(1, 1), "TestValue")));
 		
 		// Set the adapter
 		this.data_listview = (AbsListView) view.findViewById(android.R.id.list);

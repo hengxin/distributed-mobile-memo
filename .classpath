@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry excluding="ics/mobilememo/sharedmemory/atomicity/messagehandler/AtomicityReadPhaseAckMessageHandler.java|ics/mobilememo/sharedmemory/atomicity/messagehandler/AtomicityReadPhaseMessageHandler.java|ics/mobilememo/sharedmemory/atomicity/messagehandler/AtomicityWritePhaseAckMessageHandler.java|ics/mobilememo/sharedmemory/atomicity/messagehandler/AtomicityWritePhaseMessageHandler.java" kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="lib" path="D:/GitHub/PagerSlidingTabStrip/library"/>
@@ -12,5 +13,7 @@
 	<classpathentry kind="lib" path="D:/eclipse/thirdparty_lib/slf4j-api-1.7.6.jar"/>
 	<classpathentry kind="lib" path="D:/eclipse/thirdparty_lib/appcompat_v7.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry exported="true" kind="lib" path="D:/eclipse/thirdparty_lib/log4j-1.2.17/apache-log4j-1.2.17/log4j-1.2.17.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/eclipse/thirdparty_lib/android-logging-log4j-1.0.3.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

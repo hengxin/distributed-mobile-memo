@@ -14,13 +14,19 @@ import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import log4android.ConfigureLog4J;
+
+import org.apache.log4j.Logger;
 
 public class Executor implements Runnable
 {
-//	private Logger log = Logger.getLogger(Executor.class);
 //	static private final Logger LOG = LoggerFactory.getLogger(Executor.class);
+	
+	/**
+	 * use "android-logging-log4j"
+	 * <url>https://code.google.com/p/android-logging-log4j/</url>
+	 */
+	private final Logger log4android = Logger.getLogger(Executor.class);
 	
 	private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
 	AtomicityRegisterClient client = AtomicityRegisterClient.INSTANCE;
@@ -31,6 +37,8 @@ public class Executor implements Runnable
 	 */
 	public Executor(BlockingQueue<Request> request_queue)
 	{
+		ConfigureLog4J.configure();
+		
 		this.request_queue = request_queue;
 	}
 	
@@ -46,7 +54,7 @@ public class Executor implements Runnable
 		VersionValue vvalue = null;
 		
 		long invocation_time = System.currentTimeMillis();
-		if (type == 0)	// it is W[0]
+		if (type == Request.WRITE_TYPE)	// it is W[0]
 			vvalue = client.put(key, val);
 		else // it is R[1]
 			vvalue = client.get(key);
@@ -54,7 +62,7 @@ public class Executor implements Runnable
 		
 		// the delay = response_time - invocation_time is calculated and recorded
 		RequestRecord rr = new RequestRecord(type, invocation_time, response_time, key, vvalue);
-//		LOG.info(rr.toString());
+		log4android.info(rr.toString());
 	}
 	
 	/**
