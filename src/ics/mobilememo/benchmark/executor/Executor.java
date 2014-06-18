@@ -62,7 +62,7 @@ public class Executor implements Runnable
 		
 		// the delay = response_time - invocation_time is calculated and recorded
 		RequestRecord rr = new RequestRecord(type, invocation_time, response_time, key, vvalue);
-		log4android.info(rr.toString());
+		log4android.debug(rr.toString());
 	}
 	
 	/**

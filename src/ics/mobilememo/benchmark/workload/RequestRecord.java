@@ -12,7 +12,7 @@ import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 public class RequestRecord extends Request implements Comparable<RequestRecord>
 {
-	private VersionValue vvalue = null;
+//	private VersionValue vvalue = null;
 	private Version version = null;
 	
 	private long start_time = 0;
@@ -22,7 +22,7 @@ public class RequestRecord extends Request implements Comparable<RequestRecord>
 
 	/**
 	 * construct record for a request
-	 * @param type 0 for write; 1 for read
+	 * @param type {@value Request#WRITE_TYPE} or {@value Request#READ_TYPE}
 	 * @param start start time
 	 * @param finish finish time
 	 * @param vvalue value (with version number)
@@ -60,10 +60,13 @@ public class RequestRecord extends Request implements Comparable<RequestRecord>
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(this.type).append('\t').append(this.start_time).append('\t')
-			.append(this.finish_time).append('\t').append(this.delay).append('\t')
+		sb.append(this.type).append('\t')
+			.append(this.start_time).append('\t')
+			.append(this.finish_time).append('\t')
+			.append(this.delay).append('\t')
 			.append(this.key).append('\t')
-			.append(this.vvalue);
+			.append(this.version).append('\t')
+			.append("Value : ").append(super.val);
 		
 		return sb.toString();
 	}

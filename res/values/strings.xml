@@ -65,6 +65,8 @@
 	<string name="radio_writer">Writer</string>
 	<string name="prompt_request_number">total number of requests</string>
 	<string name="prompt_rate">number per second</string>
+	<string name="prompt_key_range">range of keys: from 0 to [input an positive integer]</string>
+	<string name="prompt_value_range">range of values: from 0 to [input an positive integer]</string>
 	<string name="run">Run</string>
 	<!-- end: for the benchmark fragment -->
 </resources>

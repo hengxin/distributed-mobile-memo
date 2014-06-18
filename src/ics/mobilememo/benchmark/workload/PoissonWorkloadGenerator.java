@@ -7,6 +7,7 @@
 package ics.mobilememo.benchmark.workload;
 
 import ics.mobilememo.benchmark.executor.Executor;
+import ics.mobilememo.benchmark.workload.RequestFactory.RequestTypeNotDefinedException;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -24,12 +25,16 @@ public class PoissonWorkloadGenerator implements Runnable
 	// synchronous blocking queue between {@link PoissonWorkloadGenerator} and {@link Executor}
 	private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
 	
-	// role: writer [0], reader [1]
+	/**
+	 *  role: {@value Request#WRITE_TYPE} or {@value Request#READ_TYPE}
+	 */
 	private int role = -1; 
 	// how many requests to generate
 	private int total_requests = 0;
 	// arrival rate of requests (Poisson process)
 	private int rate = 0;
+	private int key_range = -1;
+	private int value_range = -1;
 	
 	// used to generate number sequence accordance with some specified distribution
 	private NumberGenerator<Double> exp_interarrival_gen = null;
@@ -43,12 +48,14 @@ public class PoissonWorkloadGenerator implements Runnable
 	 * @param total_requests {@link #total_requests}: total number of requests in the workload to generate
 	 * @param rate {@link #rate}: arrival rate of requests (Poisson process)
 	 */
-	public PoissonWorkloadGenerator(BlockingQueue<Request> request_queue, int role, int total_requests, int rate)
+	public PoissonWorkloadGenerator(BlockingQueue<Request> request_queue, int role, int total_requests, int rate, int key_range, int value_range)
 	{
 		this.request_queue = request_queue;
 		this.role = role;
 		this.total_requests = total_requests;
 		this.rate = rate;
+		this.key_range = key_range;
+		this.value_range = value_range;
 		
 		this.exp_interarrival_gen = new ExponentialGenerator(this.rate, new MersenneTwisterRNG());
 		
@@ -60,15 +67,17 @@ public class PoissonWorkloadGenerator implements Runnable
 	 * @throws InterruptedException thread is interrupted
 	 * 
 	 * TODO: high-level api
+	 * @throws RequestTypeNotDefinedException 
 	 */
-	private Request generateNextRequest() throws InterruptedException
+	private Request generateNextRequest() throws InterruptedException, RequestTypeNotDefinedException
 	{
 		long interval = Math.round(exp_interarrival_gen.nextValue() * oneMinute);
 		Log.d(LOG, "The inter-arrival time is " + interval);
 		
 		Thread.sleep(interval);
-		// TODO: generate requests randomly
-		return RequestFactory.INSTANCE.generateRequest(role);
+		
+		// generate requests randomly
+		return RequestFactory.INSTANCE.generateRequest(this.role, this.key_range, this.value_range);
 	}
 
 	/**
@@ -85,6 +94,9 @@ public class PoissonWorkloadGenerator implements Runnable
 			} catch (InterruptedException ie)
 			{
 				ie.printStackTrace();
+			} catch (RequestTypeNotDefinedException rtnde)
+			{
+				rtnde.printStackTrace();
 			}
 		}
 		
