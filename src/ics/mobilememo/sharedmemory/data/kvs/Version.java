@@ -39,13 +39,13 @@ public class Version implements Comparable<Version>, Serializable
 		this.pid = id;
 	}
 
-//	/**
-//	 * @return {@link #seqno}: the sequence no.
-//	 */
-//	public int getSeqno()
-//	{
-//		return this.seqno;
-//	}
+	/**
+	 * @return {@link #seqno}: the sequence no.
+	 */
+	public int getSeqno()
+	{
+		return this.seqno;
+	}
 
 //	/**
 //	 * @return {@link #id}: the pid
@@ -98,7 +98,7 @@ public class Version implements Comparable<Version>, Serializable
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("Version : (").append(this.seqno).append(',').append(this.pid).append(')');
+		sb.append("Version: (").append(this.seqno).append(',').append(this.pid).append(')');
 		return sb.toString();
 	}
 

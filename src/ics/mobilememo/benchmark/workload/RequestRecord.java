@@ -21,7 +21,8 @@ public class RequestRecord extends Request implements Comparable<RequestRecord>
 	private long delay = 0;	
 
 	/**
-	 * construct record for a request
+	 * constructor of {@link RequestRecord}
+	 * 
 	 * @param type {@value Request#WRITE_TYPE} or {@value Request#READ_TYPE}
 	 * @param start start time
 	 * @param finish finish time
@@ -44,6 +45,30 @@ public class RequestRecord extends Request implements Comparable<RequestRecord>
 	}
 	
 	/**
+	 * constructor of {@link RequestRecord}
+	 * 
+	 * @param type {@value Request#WRITE_TYPE} or {@value Request#READ_TYPE}
+	 * @param start start time
+	 * @param finish finish time
+	 * @param delay delay
+	 * @param version {@link Version}
+	 * @param val value
+	 */
+	public RequestRecord(int type, long start, long finish, long delay, Key key, Version version, String val)
+	{
+		super(key);
+		
+		super.type = type;
+		
+		this.start_time = start;
+		this.finish_time = finish;
+		this.delay = delay;
+		
+		this.version = version;
+		super.val = val;
+	}
+	
+	/**
 	 * @return {@link #version} of type {@link Version}
 	 */
 	public Version getVersion()
@@ -60,13 +85,13 @@ public class RequestRecord extends Request implements Comparable<RequestRecord>
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(this.type).append('\t')
-			.append(this.start_time).append('\t')
-			.append(this.finish_time).append('\t')
-			.append(this.delay).append('\t')
+		sb.append("Type: ").append(this.type).append('\t')
+			.append("Start: ").append(this.start_time).append('\t')
+			.append("Finish: ").append(this.finish_time).append('\t')
+			.append("Delay: ").append(this.delay).append('\t')
 			.append(this.key).append('\t')
 			.append(this.version).append('\t')
-			.append("Value : ").append(super.val);
+			.append("Value: ").append(super.val);
 		
 		return sb.toString();
 	}

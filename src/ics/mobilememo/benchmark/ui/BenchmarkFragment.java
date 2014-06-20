@@ -8,8 +8,6 @@ import ics.mobilememo.benchmark.workload.Request;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.apache.log4j.Logger;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,17 +16,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 public class BenchmarkFragment extends Fragment
 {
-	private final Logger log4android = Logger.getLogger(Executor.class);
 	private static final String TAG = BenchmarkFragment.class.getName();
 	
 	private RadioGroup radio_grp_rw = null;
-	private RadioButton radio_role = null;
 	private EditText etxt_request_number = null;
 	private EditText etxt_rate = null;
 	private EditText etxt_key_range = null;

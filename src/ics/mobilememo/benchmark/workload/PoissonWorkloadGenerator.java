@@ -7,7 +7,6 @@
 package ics.mobilememo.benchmark.workload;
 
 import ics.mobilememo.benchmark.executor.Executor;
-import ics.mobilememo.benchmark.workload.RequestFactory.RequestTypeNotDefinedException;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;

@@ -27,7 +27,7 @@ public enum RequestFactory
 	public Request generateRequest(int type, int key_range, int value_range) throws RequestTypeNotDefinedException
 	{
 		int key_num = new Random().nextInt(key_range);
-		String key_str = "KEY_" + key_num;
+		String key_str = String.valueOf(key_num);
 		Key key = new Key(key_str);
 		
 		switch (type)
@@ -42,15 +42,5 @@ public enum RequestFactory
 				throw new RequestTypeNotDefinedException("Not such request type: " + type);
 		}
 			
-	}
-	
-	public class RequestTypeNotDefinedException extends Exception
-	{
-		private static final long serialVersionUID = -5325597649044168116L;
-
-		public RequestTypeNotDefinedException(String msg)
-		{
-			super(msg);
-		}
 	}
 }
