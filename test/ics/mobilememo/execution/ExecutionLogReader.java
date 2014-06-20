@@ -3,7 +3,7 @@
  * parse requests ( {@link RequestRecord} ) stored in log file 
  * and create instances for them 
  */
-package ics.mobilememo.verification;
+package ics.mobilememo.execution;
 
 import ics.mobilememo.benchmark.workload.RequestRecord;
 import ics.mobilememo.sharedmemory.data.kvs.Key;

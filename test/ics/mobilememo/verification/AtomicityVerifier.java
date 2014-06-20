@@ -35,90 +35,31 @@
  */
 package ics.mobilememo.verification;
 
-import ics.mobilememo.benchmark.workload.Request;
 import ics.mobilememo.benchmark.workload.RequestRecord;
-import ics.mobilememo.benchmark.workload.RequestTypeNotDefinedException;
+import ics.mobilememo.execution.Execution;
 import ics.mobilememo.sharedmemory.data.kvs.Version;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 
 public class AtomicityVerifier
 {
-	/**
-	 * the execution to be verified is represented by a list of {@link RequestRecord}s
-	 */
-	private List<RequestRecord> request_record_list = new ArrayList<>();
-	private List<RequestRecord> write_request_record_list = new ArrayList<>();
-	private List<RequestRecord> read_request_record_list = new ArrayList<>();
+	// execution to check
+	private Execution execution = null;
 	
-	/**
-	 * constructor of {@link AtomicityVerifier}
-	 * @param request_record_list
-	 */
-	public AtomicityVerifier(List<RequestRecord> request_record_list)
+	public AtomicityVerifier(Execution execution)
 	{
-		this.request_record_list = request_record_list;
-		
-		/**
-		 * sort the list of {@link RequestRecord}s by their start-time
-		 * @see RequestRecord#compareTo(RequestRecord)
-		 */
-		Collections.sort(this.request_record_list);
-		
-		try
-		{
-			this.splitByType();
-		} catch (RequestTypeNotDefinedException rtnde)
-		{
-			rtnde.printStackTrace();
-		}
+		this.execution = execution;
 	}
 	
 	/**
-	 * split the list of requests according to their types
-	 * @throws RequestTypeNotDefinedException 
-	 */
-	private void splitByType() throws RequestTypeNotDefinedException
-	{
-		Iterator<RequestRecord> iter = this.request_record_list.iterator();
-		RequestRecord request_record = null;
-		
-		while (iter.hasNext())
-		{
-			request_record = (RequestRecord) iter.next();
-			int type = request_record.getType();
-			switch (type)
-			{
-				case Request.WRITE_TYPE:
-					this.write_request_record_list.add(request_record);
-					break;
-				case Request.READ_TYPE:
-					this.read_request_record_list.add(request_record);
-					break;
-				default:
-					throw new RequestTypeNotDefinedException("No such request type: " + type);
-			}
-		}
-	}
-	
-	/**
-	 * verify atomicity against execution represented by {@link #request_record_list}
-	 * @return <code>true</code> if the execution (represented by {@link #request_record_list}) satisfies atomicity;
+	 * verify atomicity against the {@link #execution}
+	 * @return <code>true</code> if the {@link #execution} satisfies atomicity;
 	 * 	<code>false</code>, otherwise.
 	 */
 	public boolean verifyAtomicity()
 	{
-		Iterator<RequestRecord> read_iter = this.read_request_record_list.iterator();
-		RequestRecord cur_read_request_record = null;
-		
-		while (read_iter.hasNext())
+		for (RequestRecord cur_read_request_record : this.execution.getReadRequestRecordList())
 		{
-			// for each read operation
-			cur_read_request_record = (RequestRecord) read_iter.next();
-			
 			// no read operation can return some value out of thin air
 			if (this.isValueFromNowhere(cur_read_request_record))
 			{	
@@ -145,20 +86,14 @@ public class AtomicityVerifier
 	}
 	
 	/**
-	 * verify 2-atomicity against an execution represented by {@link #request_record_list}
-	 * @return <code>true</code>, if such execution satisfies 2-atomicity;
+	 * verify 2-atomicity against the {@link #execution}
+	 * @return <code>true</code>, if such {@link #execution} satisfies 2-atomicity;
 	 * 	<code>false</code>, otherwise.
 	 */
 	public boolean verify2Atomicity()
 	{
-		Iterator<RequestRecord> read_iter = this.read_request_record_list.iterator();
-		RequestRecord cur_read_request_record = null;
-		
-		while (read_iter.hasNext())
+		for (RequestRecord cur_read_request_record : this.execution.getReadRequestRecordList())
 		{
-			// for each read operation
-			cur_read_request_record = (RequestRecord) read_iter.next();
-			
 			// no read operation can return some value out of thin air
 			if (this.isValueFromNowhere(cur_read_request_record))
 			{	
@@ -201,13 +136,8 @@ public class AtomicityVerifier
 	 */
 	private boolean isValueFromNowhere(RequestRecord cur_read_request_record)
 	{
-		Iterator<RequestRecord> write_iter = this.write_request_record_list.iterator();
-		RequestRecord pre_write_request_record = null;
-		
-		while (write_iter.hasNext())
+		for (RequestRecord pre_write_request_record : this.execution.getWriteRequestRecordList())
 		{
-			pre_write_request_record = write_iter.next();
-			
 			/**
 			 * no read operation returns a value from the future:
 			 * it is never the case that r^{i} precede w^{i}
@@ -239,7 +169,7 @@ public class AtomicityVerifier
 	 */
 	private boolean isValueOverwritten(RequestRecord cur_read_request_record)
 	{
-		Iterator<RequestRecord> write_iter = this.write_request_record_list.iterator();
+		Iterator<RequestRecord> write_iter = this.execution.getWriteRequestRecordList().iterator();
 		RequestRecord pre_write_request_record = null;
 		
 		while (write_iter.hasNext())
@@ -282,14 +212,8 @@ public class AtomicityVerifier
 	 */
 	private boolean hasOldNewInversion(RequestRecord cur_read_request_record)
 	{
-		// check the read operations
-		Iterator<RequestRecord> read_iter = this.read_request_record_list.iterator();
-		RequestRecord pre_read_request_record = null;
-		
-		while (read_iter.hasNext())
+		for (RequestRecord pre_read_request_record : this.execution.getReadRequestRecordList())
 		{
-			pre_read_request_record = (RequestRecord) read_iter.next();
-			
 			// only need to check the requests which start before it 
 			if (pre_read_request_record == cur_read_request_record)
 				break;
@@ -320,17 +244,11 @@ public class AtomicityVerifier
 	 */
 	private boolean hasBadOldNewInversion(RequestRecord cur_read_request_record)
 	{
-		// check the read operations
-		Iterator<RequestRecord> read_iter = this.read_request_record_list.iterator();
-		RequestRecord pre_read_request_record = null;
-		
 		Version cur_read_version = null;
 		Version pre_read_version = null;
 		
-		while (read_iter.hasNext())
+		for (RequestRecord pre_read_request_record : this.execution.getReadRequestRecordList())
 		{
-			pre_read_request_record = (RequestRecord) read_iter.next();
-			
 			// only need to check the requests which start before it 
 			if (pre_read_request_record == cur_read_request_record)
 				break;

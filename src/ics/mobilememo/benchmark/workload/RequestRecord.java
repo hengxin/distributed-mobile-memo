@@ -76,7 +76,22 @@ public class RequestRecord extends Request implements Comparable<RequestRecord>
 		return version;
 	}
 
-
+	/**
+	 * @return {@link #start_time}
+	 */
+	public long getStartTime()
+	{
+		return this.start_time;
+	}
+	
+	/**
+	 * @return {@link #finish_time}
+	 */
+	public long getFinishTime()
+	{
+		return this.finish_time;
+	}
+	
 	/**
 	 * String of RequestRecord: type \t start_time \t finish_time \t delay \t key \t vvalue
 	 */
