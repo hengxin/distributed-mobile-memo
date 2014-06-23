@@ -4,11 +4,19 @@ import ics.mobilememo.R;
 import ics.mobilememo.benchmark.executor.Executor;
 import ics.mobilememo.benchmark.workload.PoissonWorkloadGenerator;
 import ics.mobilememo.benchmark.workload.Request;
+import ics.mobilememo.execution.ExecutionLogHandler;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import log4android.ConfigureLog4J;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,11 +71,14 @@ public class BenchmarkFragment extends Fragment
 		return view;
 	}
 	
-    /**
-     * run the benchmark
-     */
+
     private void addButtonListener(final View view)
     {
+        /**
+         * click the "Run Benchmark" button:
+         * (1) configure a benchmark
+         * (2) run the benchmark
+         */
     	view.findViewById(R.id.btn_run).setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -96,6 +107,60 @@ public class BenchmarkFragment extends Fragment
 				(new Thread(new PoissonWorkloadGenerator(request_queue, role, total_requests, rate, key_range, value_range))).start();
 			}
 		});
+    	
+    	/**
+    	 * pre-processing the execution of benchmark for further use:
+    	 * adjust the timestamps (i.e., start_time, finish_time) of operations
+    	 * according to the offset of the system time of device to the prescribed "perfect time" (e.g., of a PC)
+    	 */
+    	view.findViewById(R.id.btn_exec_sync).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				// (1) get the time offset
+				long offset = getTimeDiff();
+				
+				// (2) sync. the execution
+				new ExecutionLogHandler(ConfigureLog4J.INSTANCE.getFileName()).sync(offset);
+			}
+		});
+    }
+    
+    /**
+     * retrieve "time diff value" from the sync_time.txt file 
+     * @return time diff value in millisecond
+     */
+    private long getTimeDiff()
+    {
+		String sync_time_file_name = Environment.getExternalStorageDirectory() + File.separator + "sync_time.txt";
+		BufferedReader br = null;
+		long diff = 0;
+		
+		try
+		{
+			br = new BufferedReader(new FileReader(sync_time_file_name));
+			// the first line reads like "diff 1000"
+			String diff_line = br.readLine();
+			diff = Integer.parseInt(diff_line.substring(5));
+		} catch (FileNotFoundException fnfe)
+		{
+			fnfe.printStackTrace();
+		} catch (IOException ioe)
+		{
+			ioe.printStackTrace();
+		} finally
+		{
+			try
+			{
+				br.close();
+			} catch (IOException ioe)
+			{
+				ioe.printStackTrace();
+			}
+		}
+		
+		return diff;
     }
     
     /**

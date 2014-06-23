@@ -37,7 +37,7 @@ public class Executor implements Runnable
 	 */
 	public Executor(BlockingQueue<Request> request_queue)
 	{
-		ConfigureLog4J.configure();
+		ConfigureLog4J.INSTANCE.configure();
 		
 		this.request_queue = request_queue;
 	}

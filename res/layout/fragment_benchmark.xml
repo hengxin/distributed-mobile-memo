@@ -2,77 +2,107 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-<RadioGroup android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:orientation="horizontal"
-    android:id="@+id/radio_grp_rw">
-    <RadioButton android:id="@+id/radio_writer"
+
+    <RadioGroup
+        android:id="@+id/radio_grp_rw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/radio_writer" />
-    <RadioButton android:id="@+id/radio_reader"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radio_writer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_writer" />
+
+        <RadioButton
+            android:id="@+id/radio_reader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_reader" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/etxt_request_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/radio_reader" />
-</RadioGroup>
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/radio_grp_rw"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:hint="@string/prompt_request_number"
+        android:inputType="number" >
 
-<EditText
-    android:id="@+id/etxt_request_number"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_below="@+id/radio_grp_rw"
-    android:layout_marginTop="25dp"
-    android:hint="@string/prompt_request_number"
-    android:ems="10"
-    android:inputType="number" >
+        <requestFocus />
+    </EditText>
 
-    <requestFocus />
-</EditText>
+    <EditText
+        android:id="@+id/etxt_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etxt_request_number"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:hint="@string/prompt_rate"
+        android:inputType="number" />
 
-<EditText
-    android:id="@+id/etxt_rate"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_below="@+id/etxt_request_number"
-    android:layout_marginTop="25dp"
-    android:hint="@string/prompt_rate"
-    android:ems="10"
-    android:inputType="number" />
+    <EditText
+        android:id="@+id/etxt_key_range"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etxt_rate"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:hint="@string/prompt_key_range"
+        android:inputType="number" />
 
-<EditText
-    android:id="@+id/etxt_key_range"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_below="@+id/etxt_rate"
-    android:layout_marginTop="25dp"
-    android:hint="@string/prompt_key_range"
-    android:ems="10"
-    android:inputType="number" />
+    <EditText
+        android:id="@+id/etxt_value_range"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etxt_key_range"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:hint="@string/prompt_value_range"
+        android:inputType="number" />
 
-<EditText
-    android:id="@+id/etxt_value_range"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_below="@+id/etxt_key_range"
-    android:layout_marginTop="25dp"
-    android:hint="@string/prompt_value_range"
-    android:ems="10"
-    android:inputType="number" />
+    <Button
+        android:id="@+id/btn_run"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/run" />
 
-<Button
-    android:id="@+id/btn_run"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:layout_below="@+id/etxt_value_range"
-    android:layout_marginRight="30dp"
-    android:layout_marginTop="25dp"
-    android:text="@string/run" />
+    <View
+        android:id="@+id/sep_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/etxt_value_range"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/txt_exec_ready"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/sep_line"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/txt_exec_ready" />
+
+    <Button
+        android:id="@+id/btn_exec_sync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txt_exec_ready"
+        android:layout_marginRight="0dp"
+        android:text="@string/btn_exec_sync" />
 
 </RelativeLayout>

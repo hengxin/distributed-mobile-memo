@@ -10,22 +10,25 @@ import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.Version;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExecutionLogReader
+public class ExecutionLogHandler
 {
+	// name of file in which {@link RequestRecord}s are stored
 	private String file_name = null;
 	
 	/**
-	 * constructor of {@link ExecutionLogReader}
+	 * constructor of {@link ExecutionLogHandler}
 	 * @param file 
 	 *  the file in which {@link RequestRecord}s are stored
 	 */
-	public ExecutionLogReader(String file)
+	public ExecutionLogHandler(String file)
 	{
 		this.file_name = file;
 	}
@@ -70,6 +73,47 @@ public class ExecutionLogReader
 		}
 		
 		return request_record_list;
+	}
+	
+	/**
+     * adjust the timestamps (i.e., start_time, finish_time) of operations
+     * according to the offset of the system time of device to 
+     * the prescribed "perfect time" (e.g., of a PC)
+     * 
+	 * @param offset time offset of the system time of device to 
+	 *   the prescribed "perfect time" (e.g., of a PC)
+	 */
+	public void sync(long offset)
+	{
+		String sync_file_name = this.file_name.replace(".txt", "_sync.txt");
+		
+		List<RequestRecord> rr_list = this.loadRequestRecords();
+		
+		BufferedWriter bw = null;
+		try
+		{
+			bw = new BufferedWriter(new FileWriter(sync_file_name));
+			
+			for (RequestRecord rr : rr_list)
+			{
+				rr.setStartTime(rr.getStartTime() - offset);
+				rr.setFinishTime(rr.getFinishTime() - offset);
+				
+				bw.write(rr.toString() + '\n');
+			}
+		} catch (IOException ioe)
+		{
+			ioe.printStackTrace();
+		} finally
+		{
+			try
+			{
+				bw.close();
+			} catch (IOException ioe)
+			{
+				ioe.printStackTrace();
+			}
+		}
 	}
 	
 	/**

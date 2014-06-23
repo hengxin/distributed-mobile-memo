@@ -63,10 +63,14 @@
 	<!-- begin: for the benchmark fragment -->
 	<string name="radio_reader">Reader</string>
 	<string name="radio_writer">Writer</string>
-	<string name="prompt_request_number">total number of requests</string>
+	<string name="prompt_request_number">number of requests</string>
 	<string name="prompt_rate">number per second</string>
-	<string name="prompt_key_range">range of keys: from 0 to [input an positive integer]</string>
-	<string name="prompt_value_range">range of values: from 0 to [input an positive integer]</string>
-	<string name="run">Run</string>
+	<string name="prompt_key_range">key range: [0, INPUT)</string>
+	<string name="prompt_value_range">value range: [0, INPUT)</string>
+	<string name="run">Run Benchmark</string>
+	
+	<string name="txt_exec_not_ready">No execution ready.</string>
+	<string name="txt_exec_ready">Execution has been stored in the file: /sdcard/execution.txt</string>
+	<string name="btn_exec_sync">Sync Time</string>
 	<!-- end: for the benchmark fragment -->
 </resources>

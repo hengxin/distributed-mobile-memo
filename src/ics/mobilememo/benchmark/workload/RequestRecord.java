@@ -85,11 +85,29 @@ public class RequestRecord extends Request implements Comparable<RequestRecord>
 	}
 	
 	/**
+	 * set {@link #start_time}
+	 * @param start_time 
+	 */
+	public void setStartTime(long start_time)
+	{
+		this.start_time = start_time;
+	}
+	
+	/**
 	 * @return {@link #finish_time}
 	 */
 	public long getFinishTime()
 	{
 		return this.finish_time;
+	}
+	
+	/**
+	 * set {@link #finish_time}
+	 * @param finish_time
+	 */
+	public void setFinishTime(long finish_time)
+	{
+		this.finish_time = finish_time;
 	}
 	
 	/**
