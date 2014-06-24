@@ -23,8 +23,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 public class BenchmarkFragment extends Fragment
 {
@@ -35,6 +37,10 @@ public class BenchmarkFragment extends Fragment
 	private EditText etxt_rate = null;
 	private EditText etxt_key_range = null;
 	private EditText etxt_value_range = null;
+	private Button btn_run_benchmark = null;
+	
+	private TextView txt_exec_ready = null;
+	private Button btn_exec_sync = null;
 	
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,6 +70,12 @@ public class BenchmarkFragment extends Fragment
 		this.etxt_rate = (EditText) view.findViewById(R.id.etxt_rate);
 		this.etxt_key_range = (EditText) view.findViewById(R.id.etxt_key_range);
 		this.etxt_value_range = (EditText) view.findViewById(R.id.etxt_value_range);
+		this.btn_run_benchmark = (Button) view.findViewById(R.id.btn_run);
+		
+		this.txt_exec_ready = (TextView) view.findViewById(R.id.txt_exec_ready);
+		this.btn_exec_sync = (Button) view.findViewById(R.id.btn_exec_sync);
+		// run the benchmark to generate execution first
+		this.btn_exec_sync.setEnabled(false);
 		
 		// handle with the click of the "Run the benchmark" button
 		this.addButtonListener(view);
@@ -79,11 +91,14 @@ public class BenchmarkFragment extends Fragment
          * (1) configure a benchmark
          * (2) run the benchmark
          */
-    	view.findViewById(R.id.btn_run).setOnClickListener(new OnClickListener()
+    	this.btn_run_benchmark.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
+				btn_run_benchmark.setEnabled(false);
+				
+				// collect the configurations of this benchmark
 				int role = BenchmarkFragment.this.getRoleChosen(v);
 				int total_requests = Integer.parseInt(BenchmarkFragment.this.etxt_request_number.getText().toString());
 				int rate = Integer.parseInt(BenchmarkFragment.this.etxt_rate.getText().toString());
@@ -94,17 +109,38 @@ public class BenchmarkFragment extends Fragment
 				BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
 				
 				// start executor {@link Executor}
-				(new Thread(new Executor(request_queue))).start();
+				Thread executor_thread = new Thread(new Executor(request_queue, total_requests));
+				executor_thread.start();
+				
 				// block the {@link Executor} for a while
 				try
 				{
 					Thread.sleep(5000);
-				} catch (InterruptedException e)
+				} catch (InterruptedException ie)
 				{
-					e.printStackTrace();
+					ie.printStackTrace();
 				}
+				
 				// start workload {@link PoissonWorkload}
-				(new Thread(new PoissonWorkloadGenerator(request_queue, role, total_requests, rate, key_range, value_range))).start();
+				Thread workload_thread = new Thread(new PoissonWorkloadGenerator(request_queue, role, total_requests, rate, key_range, value_range));
+				workload_thread.start();
+				
+				// wait for the completion of this benchmark 
+				try
+				{
+					workload_thread.join();
+					executor_thread.join();
+				} catch (InterruptedException ie)
+				{
+					ie.printStackTrace();
+				}
+				
+				// another benchmark can be configured and run
+				btn_run_benchmark.setEnabled(true);
+				
+				// the pre-processing can be performed on the generated execution
+				txt_exec_ready.setText(R.string.txt_exec_ready);
+				btn_exec_sync.setEnabled(true);
 			}
 		});
     	
@@ -113,7 +149,7 @@ public class BenchmarkFragment extends Fragment
     	 * adjust the timestamps (i.e., start_time, finish_time) of operations
     	 * according to the offset of the system time of device to the prescribed "perfect time" (e.g., of a PC)
     	 */
-    	view.findViewById(R.id.btn_exec_sync).setOnClickListener(new OnClickListener()
+    	this.btn_exec_sync.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)

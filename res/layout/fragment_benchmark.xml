@@ -94,7 +94,7 @@
         android:layout_below="@+id/sep_line"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
-        android:text="@string/txt_exec_ready" />
+        android:text="@string/txt_exec_not_ready" />
 
     <Button
         android:id="@+id/btn_exec_sync"

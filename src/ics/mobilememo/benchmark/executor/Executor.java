@@ -18,6 +18,8 @@ import log4android.ConfigureLog4J;
 
 import org.apache.log4j.Logger;
 
+import android.R.integer;
+
 public class Executor implements Runnable
 {
 //	static private final Logger LOG = LoggerFactory.getLogger(Executor.class);
@@ -28,18 +30,25 @@ public class Executor implements Runnable
 	 */
 	private final Logger log4android = Logger.getLogger(Executor.class);
 	
+	// number of requests to execute
+	private int request_number = -1;
 	private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
 	AtomicityRegisterClient client = AtomicityRegisterClient.INSTANCE;
 	
 	/**
+	 * constructor of {@link Executor}
+	 * 
 	 * using the producer-consumer synchronization mechanism
-	 * @param request_queue queue of RequestRecord (s) between producer and consumer (Executor)
+	 * @param request_queue {@link #request_queue}: queue of {@link RequestRecord}s 
+	 *  between producer {@link PoissonWorkloadGenerator} and consumer {@link Executor}
+	 * @param request_number {@link #request_number}: number of requests to execute
 	 */
-	public Executor(BlockingQueue<Request> request_queue)
+	public Executor(BlockingQueue<Request> request_queue, int request_number)
 	{
 		ConfigureLog4J.INSTANCE.configure();
 		
 		this.request_queue = request_queue;
+		this.request_number = request_number;
 	}
 	
 	/**
@@ -66,21 +75,23 @@ public class Executor implements Runnable
 	}
 	
 	/**
-	 * take requests from workload benchmarks, issue them, and record statistical information
+	 * take requests from workload benchmarks one by one and issue them
 	 */
 	@Override
 	public void run()
 	{
-		while(true)
+		int count = 0;
+		while(count < this.request_number)
 		{
 			try
 			{
 				this.issue(request_queue.take());
 			} catch (InterruptedException ie)
 			{
-				// TODO
 				ie.printStackTrace();
 			}
+			
+			count++;
 		}
 	}
 }

@@ -125,8 +125,8 @@ public class GroupFragment extends Fragment implements
 			{
 				// TODO: pre-install two server replicas; misuse the button click for test
 //				GroupConfig.INSTANCE.addReplica(new SystemNode("172.25.147.2"));	// tablet
-				GroupConfig.INSTANCE.addReplica(new SystemNode("172.25.147.244"));	// WHF phone
-				GroupConfig.INSTANCE.addReplica(new SystemNode("172.25.146.199"));	// nexus-3
+				GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.84.134"));	// WHF phone
+				GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.84.166"));	// nexus-3
 				server_replica_list_adapter.notifyDataSetChanged();
 			}
 		});
