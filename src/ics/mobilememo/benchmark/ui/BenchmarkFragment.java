@@ -154,6 +154,8 @@ public class BenchmarkFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
+				btn_exec_sync.setEnabled(false);
+				
 				// (1) get the time offset
 				long offset = getTimeDiff();
 				

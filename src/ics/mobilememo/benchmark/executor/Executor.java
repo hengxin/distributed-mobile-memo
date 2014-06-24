@@ -5,6 +5,7 @@
  */
 package ics.mobilememo.benchmark.executor;
 
+import ics.mobilememo.benchmark.workload.PoissonWorkloadGenerator;
 import ics.mobilememo.benchmark.workload.Request;
 import ics.mobilememo.benchmark.workload.RequestRecord;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClient;
@@ -17,8 +18,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import log4android.ConfigureLog4J;
 
 import org.apache.log4j.Logger;
-
-import android.R.integer;
 
 public class Executor implements Runnable
 {
