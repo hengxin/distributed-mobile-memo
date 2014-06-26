@@ -29,4 +29,10 @@ public class AtomicityWritePhaseMessage extends AtomicityMessage
 	{
 		super(ip, cnt, key, vval);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "WRITE_PHASE" + super.toString();
+	}
 }

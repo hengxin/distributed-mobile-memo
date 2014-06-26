@@ -26,4 +26,10 @@ public class AtomicityReadPhaseMessage extends AtomicityMessage
 	{
 		super(ip, cnt, key, null);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "READ_PHASE" + super.toString();
+	}
 }

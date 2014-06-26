@@ -18,7 +18,6 @@ import log4android.ConfigureLog4J;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,6 +70,14 @@ public class BenchmarkFragment extends Fragment
 		this.etxt_key_range = (EditText) view.findViewById(R.id.etxt_key_range);
 		this.etxt_value_range = (EditText) view.findViewById(R.id.etxt_value_range);
 		this.btn_run_benchmark = (Button) view.findViewById(R.id.btn_run);
+		
+		/**
+		 * default values for test
+		 */
+		this.etxt_request_number.setText("50");
+		this.etxt_rate.setText("2");
+		this.etxt_key_range.setText("1");
+		this.etxt_value_range.setText("5");
 		
 		this.txt_exec_ready = (TextView) view.findViewById(R.id.txt_exec_ready);
 		this.btn_exec_sync = (Button) view.findViewById(R.id.btn_exec_sync);
@@ -208,7 +215,6 @@ public class BenchmarkFragment extends Fragment
     private int getRoleChosen(View v)
     {
     	int roleId = this.radio_grp_rw.getCheckedRadioButtonId();
-		Log.d(TAG, "Role: " + roleId);
 		
 		switch (roleId)
 		{

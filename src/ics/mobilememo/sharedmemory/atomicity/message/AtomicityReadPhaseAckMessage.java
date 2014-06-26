@@ -29,4 +29,10 @@ public class AtomicityReadPhaseAckMessage extends AtomicityMessage
 	{
 		super(ip, cnt, key, vval);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "READ_PHASE_ACK: " + super.toString();
+	}
 }

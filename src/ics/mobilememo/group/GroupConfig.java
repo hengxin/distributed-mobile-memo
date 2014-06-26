@@ -44,4 +44,17 @@ public enum GroupConfig
 	{
 		this.replica_list.add(replica);
 	}
+	
+	/**
+	 * @return list of ip addresses of server replicas
+	 */
+	public List<String> getReplicaIPList()
+	{
+		List<String> replica_ip_list = new ArrayList<>();
+		
+		for (SystemNode replica : this.replica_list)
+			replica_ip_list.add(replica.getNodeIp());
+		
+		return replica_ip_list;
+	}
 }

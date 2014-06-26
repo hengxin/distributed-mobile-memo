@@ -105,8 +105,6 @@ public enum MessagingService implements IReceiver
 			server_socket.bind(new InetSocketAddress(server_ip,
 					NetworkConfig.NETWORK_PORT));
 
-			Log.d(TAG, "The server " + server_ip + "is listening at port " + NetworkConfig.NETWORK_PORT);
-			
 			while (true)
 			{
 				final Socket connection = server_socket.accept();

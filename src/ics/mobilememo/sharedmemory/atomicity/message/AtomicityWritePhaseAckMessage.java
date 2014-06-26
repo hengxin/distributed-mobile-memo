@@ -26,4 +26,10 @@ public class AtomicityWritePhaseAckMessage extends AtomicityMessage
 	{
 		super(ip, cnt, null, null);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "WRITE_PHASE_ACK" + super.toString();
+	}
 }

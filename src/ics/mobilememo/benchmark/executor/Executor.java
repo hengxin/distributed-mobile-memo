@@ -90,6 +90,7 @@ public class Executor implements Runnable
 				ie.printStackTrace();
 			}
 			
+			System.out.println("The number of request: " + count);
 			count++;
 		}
 	}

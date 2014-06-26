@@ -60,4 +60,17 @@ public class AtomicityMessage extends IPMessage
 			vvals[i] = atomicity_messages[i].vval;
 		return vvals;
 	}
+	
+	/**
+	 * show {@link #key} and {@link #vval}
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(super.toString()).append('\t').append(this.key).append('\t').append(this.vval);
+		
+		return sb.toString();
+	}
 }
