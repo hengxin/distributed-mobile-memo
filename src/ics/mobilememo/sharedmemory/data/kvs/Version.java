@@ -55,10 +55,17 @@ public class Version implements Comparable<Version>, Serializable
 //		return this.id;
 //	}
 
+//	public Version incrementSeqNo()
+//	{
+//		
+//	}
+	
 	/**
-	 * increment the sequence no and set the pid
+	 * increment the {@link #seqno}
 	 * @param pid pid to set
-	 * @return the new Version (the old version is unchanged)
+	 * @return the new incremented Version (leaving the old {@link Version} unchanged)
+	 * 
+	 * TODO: check the method calls
 	 */
 	public Version increment(int pid)
 	{

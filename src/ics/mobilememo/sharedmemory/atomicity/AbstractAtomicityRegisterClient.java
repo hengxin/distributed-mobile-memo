@@ -1,12 +1,7 @@
 /**
  * @author hengxin
- * @creation 2013-8-8; 2014-05-08
- * @file AtomicRegisterClient.java
- *
- * @description {@link AtomicRegisterClient}, together with {@link AtomicRegisterServer}
- *  implements the atomicity consistency protocol.
- *  it can issue put/get/remove requests on {@link AtomicRegisterServer} 
- *  and handle with the messages from the latter.
+ * @date Jun 27, 2014
+ * @description Abstract implementations 
  */
 package ics.mobilememo.sharedmemory.atomicity;
 
@@ -36,72 +31,45 @@ import java.util.concurrent.CountDownLatch;
 import android.content.res.Configuration;
 import android.util.Log;
 
-/**
- * @author hengxin
- * @description the client is responsible for handling the invocation of
- * 	operations on simulated registers
- *
- * Singleton design pattern with Java Enum which is simple and thread-safe
- */
-public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessageHandler //, IClientReceiver
+public abstract class AbstractAtomicityRegisterClient implements IRegisterClient, IAtomicityMessageHandler
 {
-	INSTANCE;
-
-	private static final String TAG = AtomicityRegisterClient.class.getName();
 
 	private Communication comm;	// Communication instance for read phase/write phase
-	private int op_cnt;	// counter of operations invoked by this client
-
-	/*
-	 * @see ics.mobilesharedmemory.register.client.IAtomicRegisterClient#read(ics.mobilesharedmemory.register.Key)
-	 * "get" operation: read phase + local computation + write phase
-	 */
+	protected int op_cnt;	// counter of operations invoked by this client
+	
+	
 	@Override
-	public VersionValue get(Key key)
+	public abstract VersionValue get(Key key);
+	
+	@Override
+	public abstract VersionValue put(Key key, String val);
+	
+	/**
+	 * read phase: contact a quorum of the processors, querying for the latest value and version
+	 *
+	 * @param key {@link Key} to identify
+	 * @return an array of messages of type {@link AtomicityMessage} 
+	 * (actually {@link AtomicityReadPhaseAckMessage}) each of which comes from
+	 * a server replica specified by its ip address
+	 */
+	public Map<String, AtomicityMessage> readPhase(Key key)
 	{
-		Log.d(TAG, "Client issues a Get request ...");
-		
-		this.op_cnt++;
-
-		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
-		
-		// read phase: contact a quorum of the server replicas for the latest value and version
-		Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
-
-		// local computation: extract the latest VersionValue (value and its version)
-		VersionValue max_vval = this.extractMaxVValFromAcks(read_phase_acks);
-
-		// write phase: write-back the VersionValue into a quorum of the server replicas
-		this.writePhase(key, max_vval);
-
-		// return the latest VersionValue
-		return max_vval;
+		AtomicityMessage atomicity_read_phase_message = new AtomicityReadPhaseMessage(/** SystemConfig.INSTANCE.getIP(), **/ new SessionManager().getNodeIp(), this.op_cnt, key);
+		this.comm = new Communication(atomicity_read_phase_message);
+		return this.comm.communicate();
 	}
 
-	/*
-	 * @see IAtomicRegisterClient#write(Key, String)
-	 * "put" operation: read phase + local computation + write phase
+	/**
+	 * write phase: write a {@link Key} + {@link VersionValue} pair into a quorum of the server replicas
+	 * 
+	 * @param key {@link Key} to identify
+	 * @param vval {@link VersionValue} associated with the {@link Key} to be written
 	 */
-	@Override
-	public VersionValue put(Key key, String val)
+	public void writePhase(Key key, VersionValue vval)
 	{
-		Log.d(TAG, "Client issues a Put request ...");
-		
-		this.op_cnt++;
-
-		// read phase: contact a quorum of the server replicas for the latest value and version
-		Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
-
-		// local computation: extract the latest VersionValue; increment the version; construct the new VersionValue to write
-		VersionValue max_vval = this.extractMaxVValFromAcks(read_phase_acks);
-
-		Version max_version = max_vval.getVersion();
-		VersionValue new_vval = new VersionValue(this.getNextVersion(max_version), val);
-
-		// write phase: write-back the VersionValue into a quorum of the server replicas
-		this.writePhase(key, new_vval);
-
-		return new_vval;
+		AtomicityMessage atomicity_write_phase_message = new AtomicityWritePhaseMessage(/** SystemConfig.INSTANCE.getIP(), **/ new SessionManager().getNodeIp(), this.op_cnt, key, vval);
+		this.comm = new Communication(atomicity_write_phase_message);
+		this.comm.communicate();
 	}
 
 	/**
@@ -109,7 +77,7 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	 * @param acks acks which is a map of {@link Key}-{@link RegisterMessage} pairs
 	 * @return max VersionValue contained in the acks
 	 */
-	private VersionValue extractMaxVValFromAcks(Map<String, AtomicityMessage> acks)
+	public VersionValue extractMaxVValFromAcks(Map<String, AtomicityMessage> acks)
 	{
 		VersionValue[] vvals = AtomicityMessage.extractVersionValues(acks.values().toArray(new AtomicityMessage[acks.size()]));
 		VersionValue max_vval = VersionValue.max(vvals);
@@ -122,7 +90,7 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 	 * @return next new Version for the client
 	 * Note: this method should be called after @see {@link Configuration#setPid(int)} has finished
 	 */
-	private Version getNextVersion(Version old_ver)
+	public Version getNextVersion(Version old_ver)
 	{
 //		return old_ver.increment(SystemConfig.INSTANCE.getPid());
 		return old_ver.increment(new SessionManager().getNodeId());
@@ -141,34 +109,6 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 		this.comm.onReceive(atomicityMessage);
 	}
 	
-	/**
-	 * read phase: contact a quorum of the processors, querying for the latest value and version
-	 *
-	 * @param key {@link Key} to identify
-	 * @return an array of messages of type {@link AtomicityMessage} 
-	 * (actually {@link AtomicityReadPhaseAckMessage}) each of which comes from
-	 * a server replica specified by its ip address
-	 */
-	private Map<String, AtomicityMessage> readPhase(Key key)
-	{
-		AtomicityMessage atomicity_read_phase_message = new AtomicityReadPhaseMessage(/** SystemConfig.INSTANCE.getIP(), **/ new SessionManager().getNodeIp(), this.op_cnt, key);
-		this.comm = new Communication(atomicity_read_phase_message);
-		return this.comm.communicate();
-	}
-
-	/**
-	 * write phase: write a {@link Key} + {@link VersionValue} pair into a quorum of the server replicas
-	 * 
-	 * @param key {@link Key} to identify
-	 * @param vval {@link VersionValue} associated with the {@link Key} to be written
-	 */
-	private void writePhase(Key key, VersionValue vval)
-	{
-		AtomicityMessage atomicity_write_phase_message = new AtomicityWritePhaseMessage(/** SystemConfig.INSTANCE.getIP(), **/ new SessionManager().getNodeIp(), this.op_cnt, key, vval);
-		this.comm = new Communication(atomicity_write_phase_message);
-		this.comm.communicate();
-	}
-
 	/**
 	 *
 	 * @author hengxin
@@ -347,5 +287,4 @@ public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessag
 //					 );
 		}
 	}
-
 }
