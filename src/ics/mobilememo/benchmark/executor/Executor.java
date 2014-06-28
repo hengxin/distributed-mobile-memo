@@ -8,7 +8,9 @@ package ics.mobilememo.benchmark.executor;
 import ics.mobilememo.benchmark.workload.PoissonWorkloadGenerator;
 import ics.mobilememo.benchmark.workload.Request;
 import ics.mobilememo.benchmark.workload.RequestRecord;
+import ics.mobilememo.sharedmemory.atomicity.AbstractAtomicityRegisterClient;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClient;
+import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
@@ -32,7 +34,11 @@ public class Executor implements Runnable
 	// number of requests to execute
 	private int request_number = -1;
 	private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
-	AtomicityRegisterClient client = AtomicityRegisterClient.INSTANCE;
+//	AtomicityRegisterClient client = AtomicityRegisterClient.INSTANCE;
+	/**
+	 * the appropriate client has been set when logging in. @see LoginActivity
+	 */
+	AbstractAtomicityRegisterClient client = AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient();
 	
 	/**
 	 * constructor of {@link Executor}

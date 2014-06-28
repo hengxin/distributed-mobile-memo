@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<resources>
 	    <string-array name="spinner_algs_array">
-	        <item>SWMR-ATOMICITY</item>
-	        <item>SWMR-2ATOMICITY</item>
-	        <item>MWMR-ATOMICITY</item>
+	        <item>SWMR_ATOMICITY</item>
+	        <item>SWMR_2ATOMICITY</item>
+	        <item>MWMR_ATOMICITY</item>
 	    </string-array>
     </resources>

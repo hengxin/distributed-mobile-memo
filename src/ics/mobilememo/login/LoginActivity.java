@@ -15,6 +15,8 @@ import ics.mobilememo.R;
 import ics.mobilememo.network.wifi.WifiAdmin;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
+import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupported;
+import android.R.integer;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,7 +32,7 @@ import android.widget.Spinner;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class LoginActivity extends Activity implements OnItemSelectedListener
+public class LoginActivity extends Activity // implements OnItemSelectedListener
 {
 	private final static String TAG = LoginActivity.class.getName();
 	
@@ -42,7 +44,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener
 	
 	private SessionManager session;
 
-	private int alg_type = -1;
+//	private int alg_type = -1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -70,7 +72,8 @@ public class LoginActivity extends Activity implements OnItemSelectedListener
 		algs_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		this.spinner_algs.setAdapter(algs_adapter);
 		
-		findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener()
+		// click the "Sign in" button
+		findViewById(R.id.btn_sign_in).setOnClickListener(new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View view)
@@ -78,6 +81,16 @@ public class LoginActivity extends Activity implements OnItemSelectedListener
 						LoginActivity.this.attemptLogin();
 					}
 				});
+		
+		// TODO: click the "Exit System" button
+		findViewById(R.id.btn_exit).setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View arg0)
+			{
+				
+			}
+		});
 	}
 
 	/**
@@ -91,6 +104,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener
 		int node_id = -1;
 		String node_name;
 		String node_ip; 
+		int alg_type = -1;
 		
 		// Reset errors.
 		this.etxt_node_id.setError(null);
@@ -135,7 +149,12 @@ public class LoginActivity extends Activity implements OnItemSelectedListener
 		}
 
 		// TODO: check algorithm type
-		
+		alg_type = this.getAlgType();
+		if (alg_type == AtomicityRegisterClientFactory.NO_SUCH_ATOMICITY)
+		{
+			focusView = this.spinner_algs;
+			cancel = true;
+		}
 		
 		// an error here. don't attempt to login
 		if (cancel)
@@ -144,7 +163,7 @@ public class LoginActivity extends Activity implements OnItemSelectedListener
 		{
 			Log.d(TAG, "To Create Login Session");
 			
-			this.session.createLoginSession(node_id, node_name, node_ip, this.alg_type);
+			this.session.createLoginSession(node_id, node_name, node_ip, alg_type);
 
 			/**
 			 * @author hengxin
@@ -155,11 +174,18 @@ public class LoginActivity extends Activity implements OnItemSelectedListener
 			 */
             finish();
             
-    		/**
-    		 * start to listen to connections; ready to be a client or a server
-    		 */
+    		// start to listen to connections; ready to be a server
     		MessagingService.INSTANCE.new ServerTask().execute(node_ip);
     		Log.d(TAG, "Start as a server");
+    		// ready to be a client
+    		try
+			{
+				AtomicityRegisterClientFactory.INSTANCE.setAtomicityRegisterClient(alg_type);
+			} catch (NoSuchAtomicAlgorithmSupported nsaase)
+			{
+				nsaase.printStackTrace();
+			}
+    		
 		}
 	}
 	
@@ -167,25 +193,47 @@ public class LoginActivity extends Activity implements OnItemSelectedListener
      * the following two methods are from the interface @link AdapterView.OnItemSelectedListener
      */
     
-    /**
-     * get the selected algorithm 
-     */
-	@Override
-	public void onItemSelected(AdapterView<?> parent, View view, int position,
-			long id)
+	/**
+	 * get the type of the chosen algorithm
+	 */
+	public int getAlgType()
 	{
-		String spinner_alg = parent.getItemAtPosition(position).toString();
+		String spinner_alg = this.spinner_algs.getSelectedItem().toString();
+		int alg_type;
+		System.out.println("The chosen algorithm is: " + spinner_alg);
 		if (spinner_alg.equals("SWMR_ATOMICITY"))
-			this.alg_type  = AtomicityRegisterClientFactory.SWMR_ATOMICITY;
+			alg_type  = AtomicityRegisterClientFactory.SWMR_ATOMICITY;
 		else if (spinner_alg.equals("SWMR_2ATOMICITY"))
-			this.alg_type = AtomicityRegisterClientFactory.SWMR_2ATOMICITY;
+			alg_type = AtomicityRegisterClientFactory.SWMR_2ATOMICITY;
 		else 
-			this.alg_type = AtomicityRegisterClientFactory.MWMR_ATOMICITY;
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> parent)
-	{
+			alg_type = AtomicityRegisterClientFactory.MWMR_ATOMICITY;
 		
+		return alg_type;
 	}
+	
+//    /**
+//     * get the selected algorithm 
+//     */
+//	@Override
+//	public void onItemSelected(AdapterView<?> parent, View view, int position,
+//			long id)
+//	{
+//		String spinner_alg = parent.getItemAtPosition(position).toString();
+//		System.out.println("The chosen algorithm is: " + spinner_alg);
+//		if (spinner_alg.equals("SWMR_ATOMICITY"))
+//			this.alg_type  = AtomicityRegisterClientFactory.SWMR_ATOMICITY;
+//		else if (spinner_alg.equals("SWMR_2ATOMICITY"))
+//			this.alg_type = AtomicityRegisterClientFactory.SWMR_2ATOMICITY;
+//		else 
+//			this.alg_type = AtomicityRegisterClientFactory.MWMR_ATOMICITY;
+//	}
+//
+//	/**
+//	 * set default algorithm to run
+//	 */
+//	@Override
+//	public void onNothingSelected(AdapterView<?> parent)
+//	{
+//		this.alg_type = AtomicityRegisterClientFactory.SWMR_ATOMICITY;
+//	}
 }

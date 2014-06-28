@@ -9,6 +9,7 @@ import android.widget.Toast;
 import ics.mobilememo.MobileMemoActivity;
 import ics.mobilememo.R;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClient;
+import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 public class KVPutRequestDialog extends KVRequestDialog
@@ -28,13 +29,14 @@ public class KVPutRequestDialog extends KVRequestDialog
 	}
 
 	/**
-	 * perform the "put" request
+	 * perform the "PUT" request
 	 */
 	@Override
 	public VersionValue onRequestPerformed()
 	{
 		Toast.makeText(MobileMemoActivity.MOBILEMEMO_ACTIVITY, "Put " + super.request_key.toString() + '[' + val_str + ']', Toast.LENGTH_SHORT).show();
-		return AtomicityRegisterClient.INSTANCE.put(super.request_key, val_str);
+//		return AtomicityRegisterClient.INSTANCE.put(super.request_key, val_str);
+		return AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient().put(super.request_key, val_str);
 	}
 
 }

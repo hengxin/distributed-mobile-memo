@@ -37,12 +37,19 @@ import android.content.res.Configuration;
 import android.util.Log;
 
 /**
+ * @author deprecated by hengxin
+ * @date Jun 28, 2014
+ * @description This is replaced by a hierarchy of {@link AbstractAtomicityRegisterClient}
+ *  and {@link AtomicityRegisterClientFactory}.
+ * 
  * @author hengxin
+ * @date 2013-8-8; 2014-05-08
  * @description the client is responsible for handling the invocation of
  * 	operations on simulated registers
  *
  * Singleton design pattern with Java Enum which is simple and thread-safe
  */
+@Deprecated
 public enum AtomicityRegisterClient implements IRegisterClient, IAtomicityMessageHandler //, IClientReceiver
 {
 	INSTANCE;

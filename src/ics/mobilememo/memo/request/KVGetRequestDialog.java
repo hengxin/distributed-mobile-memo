@@ -7,6 +7,7 @@ package ics.mobilememo.memo.request;
 
 import ics.mobilememo.R;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClient;
+import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 public class KVGetRequestDialog extends KVRequestDialog
@@ -29,7 +30,8 @@ public class KVGetRequestDialog extends KVRequestDialog
 	@Override
 	public VersionValue onRequestPerformed()
 	{
-		return AtomicityRegisterClient.INSTANCE.get(super.request_key);
+//		return AtomicityRegisterClient.INSTANCE.get(super.request_key);
+		return AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient().get(super.request_key);
 	}
 
 }

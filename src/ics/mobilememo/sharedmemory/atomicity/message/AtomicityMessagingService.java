@@ -10,6 +10,7 @@ package ics.mobilememo.sharedmemory.atomicity.message;
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.architecture.communication.IReceiver;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClient;
+import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterServer;
 
 public enum AtomicityMessagingService implements IReceiver
@@ -36,7 +37,8 @@ public enum AtomicityMessagingService implements IReceiver
 		if (msg instanceof AtomicityReadPhaseMessage || msg instanceof AtomicityWritePhaseMessage)
 			AtomicityRegisterServer.INSTANCE.handleAtomicityMessage((AtomicityMessage) msg);
 		else // (msg instanceof AtomicityReadAckPhaseMessage || msg instanceof AtomicityWriteAckPhaseMessage)
-			AtomicityRegisterClient.INSTANCE.handleAtomicityMessage((AtomicityMessage) msg);
+//			AtomicityRegisterClient.INSTANCE.handleAtomicityMessage((AtomicityMessage) msg);
+			AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient().handleAtomicityMessage((AtomicityMessage) msg);
 	}
 
 }

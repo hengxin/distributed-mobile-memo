@@ -88,7 +88,7 @@
             
             <!-- click this button to sign in -->
             <Button
-                android:id="@+id/sign_in_button"
+                android:id="@+id/btn_sign_in"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/spinner_algs"
@@ -98,12 +98,12 @@
 
             <!-- click this button to exit -->
             <Button
-                android:id="@+id/exit_button"
+                android:id="@+id/btn_exit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/sign_in_button"
+                android:layout_toLeftOf="@+id/btn_sign_in"
                 android:layout_marginRight="15dp"
-                android:layout_alignBottom="@+id/sign_in_button"
+                android:layout_alignBottom="@+id/btn_sign_in"
                 android:text="@string/action_exit_system" />
                         
         </RelativeLayout>

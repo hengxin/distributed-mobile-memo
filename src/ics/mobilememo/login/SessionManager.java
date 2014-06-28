@@ -14,6 +14,8 @@ import ics.mobilememo.R;
 import ics.mobilememo.group.member.SystemNode;
 import ics.mobilememo.network.wifi.WifiAdmin;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
+import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
+import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupported;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,7 +41,6 @@ public class SessionManager
 	
 	// pid [required]
 	public static final String KEY_NODE_ID = "PID";
-	public static final int DEFAULT_PID = -1;
 	
 	// name [required]
 	public static final String KEY_NODE_NAME = "NAME";
@@ -99,8 +100,7 @@ public class SessionManager
 			AlertDialog.Builder builder = new AlertDialog.Builder(this._context);
 			
 			builder.setTitle("Login Info")
-				.setMessage("You have logged in as: \n " + this.system_node.toString() + 
-						"\n and will run the algorithm " + this.system_node.getAlgType())
+				.setMessage("You have logged in as: \n " + this.system_node.toString())
 				.setIcon(R.drawable.success)
 
 			// confirm the login information and then continue 
@@ -111,11 +111,17 @@ public class SessionManager
 				{
 					dialog.dismiss();
 					
-		    		/**
-		    		 * start to listen to connections; ready to be a client or a server
-		    		 */
+		    		// start to listen to connections; ready to be a server
 		    		MessagingService.INSTANCE.new ServerTask().execute(SessionManager.this.system_node.getNodeIp());
 		    		Log.d(TAG, "Start as a server");
+		    		// ready to be a client
+		    		try
+					{
+						AtomicityRegisterClientFactory.INSTANCE.setAtomicityRegisterClient(SessionManager.this.system_node.getAlgType());
+					} catch (NoSuchAtomicAlgorithmSupported nsaase)
+					{
+						nsaase.printStackTrace();
+					}
 				}
 			})
 			
@@ -241,6 +247,8 @@ public class SessionManager
 		
 		// check algorithm type
 		int alg_type = this.pref.getInt(KEY_ALG_TYPE, SystemNode.ALG_TYPE_DEFAULT);
+		System.out.println(alg_type);
+		System.out.println(SystemNode.ALG_TYPE_DEFAULT);
 		if (alg_type == SystemNode.ALG_TYPE_DEFAULT)
 			return false;
 		this.system_node.setAlgType(alg_type);

@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Configuration of benchmark workload
@@ -187,6 +188,8 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 				
 				// (2) sync. the execution
 				new ExecutionLogHandler(ConfigureLog4J.INSTANCE.getFileName()).sync(offset);
+				
+				Toast.makeText(getActivity(), "Sync. is finished.", Toast.LENGTH_SHORT).show();
 			}
 		});
     }
