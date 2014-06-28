@@ -8,6 +8,7 @@
         android:id="@+id/radio_grp_rw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5pt"
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
@@ -32,8 +33,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/spinner_algs"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/radio_grp_rw"
+        android:layout_marginTop="15dp"
         android:ems="10"
         android:hint="@string/prompt_request_number"
         android:inputType="number" >
