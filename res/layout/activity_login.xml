@@ -36,10 +36,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <LinearLayout
+        <RelativeLayout
             style="@style/LoginFormContainer"
             android:orientation="vertical" >
 
+            <!-- node id: this should be unique globally (and now manually) -->
             <EditText
                 android:id="@+id/etxt_node__id"
                 android:layout_width="match_parent"
@@ -49,10 +50,12 @@
                 android:maxLines="1"
                 android:singleLine="true" />
 
+            <!-- node name: it is not necessary to be unique globally -->
             <EditText
                 android:id="@+id/etxt_node_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/etxt_node__id"
                 android:hint="@string/prompt_node_name"
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
@@ -61,10 +64,12 @@
                 android:maxLines="1"
                 android:singleLine="true" />
 
+            <!-- ip address of node which must be avaiable -->
             <EditText
                 android:id="@+id/etxt_node_ip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/etxt_node_name"
                 android:hint="@string/prompt_node_ip"
                 android:inputType="text"
                 android:imeActionId="@+id/login"
@@ -72,27 +77,36 @@
                 android:imeOptions="actionUnspecified"
                 android:maxLines="1"
                 android:singleLine="true" />
-                        
+            
+            <!-- a drop-down list to choose the algorithm to run -->
+            <Spinner
+			    android:id="@+id/spinner_algs"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_below="@+id/etxt_node_ip"
+			    android:layout_marginTop="15dp" />
+            
+            <!-- click this button to sign in -->
             <Button
                 android:id="@+id/sign_in_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginTop="16dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
+                android:layout_below="@+id/spinner_algs"
+                android:layout_marginTop="20dp"
+                android:layout_alignParentRight="true"
                 android:text="@string/action_sign_in_register" />
-            
-             <Button
+
+            <!-- click this button to exit -->
+            <Button
                 android:id="@+id/exit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
+                android:layout_toLeftOf="@+id/sign_in_button"
+                android:layout_marginRight="15dp"
+                android:layout_alignBottom="@+id/sign_in_button"
                 android:text="@string/action_exit_system" />
                         
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 
 </merge>

@@ -6,6 +6,8 @@
  */
 package ics.mobilememo.group.member;
 
+import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
+
 import java.io.Serializable;
 
 public class SystemNode implements Serializable
@@ -36,6 +38,13 @@ public class SystemNode implements Serializable
 	public static String NODE_IP_DEFAULT = null;
 
 	/**
+	 * algorithm type (to run) of the {@link SystemNode}
+	 * its default value is @link AtomicityRegisterClientFactory#NO_SUCH_ATOMICITY
+	 */
+	private int alg_type;
+	public static int ALG_TYPE_DEFAULT = AtomicityRegisterClientFactory.NO_SUCH_ATOMICITY;
+	
+	/**
 	 * default constructor of {@link SystemNode}
 	 * set all the fields to their default values
 	 */
@@ -44,6 +53,7 @@ public class SystemNode implements Serializable
 		this.node_id = SystemNode.NODE_ID_DEFAULT;
 		this.node_name = SystemNode.NODE_NAME_DEFAULT;
 		this.node_ip = SystemNode.NODE_IP_DEFAULT;
+		this.alg_type = SystemNode.ALG_TYPE_DEFAULT;
 	}
 
 	/**
@@ -89,12 +99,14 @@ public class SystemNode implements Serializable
 	 * @param node_id {@link #node_id}: identifier of the system node
 	 * @param name {@link #node_name}: name of the system node 
 	 * @param ip {@link #node_ip}: ip address of the system node
+	 * @param alg_type {@link #alg_type}: type of the algorithm to run
 	 */
-	public SystemNode(int node_id, String name, String ip)
+	public SystemNode(int node_id, String name, String ip, int alg_type)
 	{
 		this.node_id = node_id;
 		this.node_ip = ip;
 		this.node_name = name;
+		this.alg_type = alg_type;
 	}
 
 	/**
@@ -146,6 +158,23 @@ public class SystemNode implements Serializable
 	public void setNodeIP(String node_ip)
 	{
 		this.node_ip = node_ip;
+	}
+	
+	/**
+	 * @return {@link #alg_type}: type of the algorithm to run
+	 */
+	public int getAlgType()
+	{
+		return this.alg_type;
+	}
+	
+	/**
+	 * set the type of the algorithm to run
+	 * @param alg_type type of algorithm. @see AtomicityRegisterClientFactory
+	 */
+	public void setAlgType(int alg_type)
+	{
+		this.alg_type = alg_type;
 	}
 	
 	/**

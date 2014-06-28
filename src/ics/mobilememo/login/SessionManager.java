@@ -14,7 +14,6 @@ import ics.mobilememo.R;
 import ics.mobilememo.group.member.SystemNode;
 import ics.mobilememo.network.wifi.WifiAdmin;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
-import ics.mobilememo.sharedmemory.architecture.communication.MessagingService.ServerTask;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,14 +38,17 @@ public class SessionManager
 	private SystemNode system_node = new SystemNode();
 	
 	// pid [required]
-	public static final String KEY_NODE_ID = "pid";
+	public static final String KEY_NODE_ID = "PID";
 	public static final int DEFAULT_PID = -1;
 	
 	// name [required]
-	public static final String KEY_NODE_NAME = "name";
+	public static final String KEY_NODE_NAME = "NAME";
 	
 	// ip [required]
-	public static final String KEY_NODE_IP = "ip"; 
+	public static final String KEY_NODE_IP = "IP"; 
+	
+	// algorithm type [required]
+	public static final String KEY_ALG_TYPE = "ALG_TYPE";
 	
 	/**
 	 * constructor of {@link SessionManager}
@@ -64,20 +66,22 @@ public class SessionManager
 
 	/**
 	 * Create login session:
-	 * store login value as <code>true</code>;
-	 * store pid, name, and ip information in {@link #pref}.
+	 * set login value as <code>true</code>;
+	 * store pid, name, ip, and algorithm type in {@link #pref}.
 	 * 
 	 * @param pid pid (an integer) associated with {@link #KEY_NODE_ID}
 	 * @param name name (a string) associated with {@link #KEY_NODE_NAME}
 	 * @param ip ip address (ip format) associated with {@link #KEY_NODE_IP}
+	 * @param alg_type algorithm to run ({@link #KEY_ALG_TYPE})
 	 */
-	public void createLoginSession(int pid, String name, String ip)
+	public void createLoginSession(int pid, String name, String ip, int alg_type)
 	{
-		editor.putInt(KEY_NODE_ID, pid);
+		this.editor.putInt(KEY_NODE_ID, pid);
 		this.editor.putString(KEY_NODE_NAME, name);
-		editor.putString(KEY_NODE_IP, ip);
+		this.editor.putString(KEY_NODE_IP, ip);
+		this.editor.putInt(KEY_ALG_TYPE, alg_type);
 		
-		editor.commit();
+		this.editor.commit();
 	}
 
 	/**
@@ -95,7 +99,8 @@ public class SessionManager
 			AlertDialog.Builder builder = new AlertDialog.Builder(this._context);
 			
 			builder.setTitle("Login Info")
-				.setMessage("You have logged in as: \n " + this.system_node.toString())
+				.setMessage("You have logged in as: \n " + this.system_node.toString() + 
+						"\n and will run the algorithm " + this.system_node.getAlgType())
 				.setIcon(R.drawable.success)
 
 			// confirm the login information and then continue 
@@ -216,20 +221,29 @@ public class SessionManager
 	 */
 	private boolean isLoginInfoComplete()
 	{
+		// check node id
 		int node_id = this.pref.getInt(KEY_NODE_ID, SystemNode.NODE_ID_DEFAULT);
 		if (node_id == SystemNode.NODE_ID_DEFAULT) 
 			return false;
 		this.system_node.setNodeId(node_id);
 
+		// check node name
 		String node_name = this.pref.getString(KEY_NODE_NAME, SystemNode.NODE_NAME_DEFAULT);
 		if (node_name.equals(SystemNode.NODE_NAME_DEFAULT))
 			return false;
 		this.system_node.setNodeName(node_name);
 		
+		// check node ip
 		String node_ip = this.pref.getString(KEY_NODE_IP, SystemNode.NODE_IP_DEFAULT);
 		if (node_ip.equals(SystemNode.NODE_IP_DEFAULT))
 			return false;
 		this.system_node.setNodeIP(node_ip);
+		
+		// check algorithm type
+		int alg_type = this.pref.getInt(KEY_ALG_TYPE, SystemNode.ALG_TYPE_DEFAULT);
+		if (alg_type == SystemNode.ALG_TYPE_DEFAULT)
+			return false;
+		this.system_node.setAlgType(alg_type);
 		
 		return true;
 	}

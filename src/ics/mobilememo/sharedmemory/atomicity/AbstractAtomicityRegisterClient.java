@@ -37,7 +37,6 @@ public abstract class AbstractAtomicityRegisterClient implements IRegisterClient
 	private Communication comm;	// Communication instance for read phase/write phase
 	protected int op_cnt;	// counter of operations invoked by this client
 	
-	
 	@Override
 	public abstract VersionValue get(Key key);
 	

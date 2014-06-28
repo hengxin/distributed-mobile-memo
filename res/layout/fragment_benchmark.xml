@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <!-- Choose the role of the client: reader or writer -->
     <RadioGroup
         android:id="@+id/radio_grp_rw"
         android:layout_width="wrap_content"
@@ -23,13 +24,16 @@
             android:text="@string/radio_reader" />
     </RadioGroup>
 
+    <!-- configuration of this benchmark workload -->
+    
+    <!-- total number of requests -->
     <EditText
         android:id="@+id/etxt_request_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/radio_grp_rw"
-        android:layout_marginTop="25dp"
+        android:layout_below="@+id/spinner_algs"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/prompt_request_number"
         android:inputType="number" >
@@ -37,39 +41,43 @@
         <requestFocus />
     </EditText>
 
+    <!-- number of requrests issued per seconds -->
     <EditText
         android:id="@+id/etxt_rate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/etxt_request_number"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/prompt_rate"
         android:inputType="number" />
 
+    <!-- range of keys -->
     <EditText
         android:id="@+id/etxt_key_range"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/etxt_rate"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/prompt_key_range"
         android:inputType="number" />
 
+    <!-- range of values -->
     <EditText
         android:id="@+id/etxt_value_range"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/etxt_key_range"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/prompt_value_range"
         android:inputType="number" />
 
+    <!-- click this button to run this benchmark -->
     <Button
         android:id="@+id/btn_run"
         android:layout_width="wrap_content"
@@ -78,6 +86,7 @@
         android:layout_alignParentTop="true"
         android:text="@string/run" />
 
+    <!-- separation line between the above workload configuration UI and the following execution processing UI -->
     <View
         android:id="@+id/sep_line"
         android:layout_width="match_parent"
@@ -86,6 +95,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/darker_gray" />
 
+    <!-- text to notify whether the benchmark has been finished and the exeuction has been stored -->
     <TextView
         android:id="@+id/txt_exec_ready"
         android:layout_width="wrap_content"
@@ -96,6 +106,7 @@
         android:layout_marginTop="15dp"
         android:text="@string/txt_exec_not_ready" />
 
+    <!-- sync. times of the execution -->
     <Button
         android:id="@+id/btn_exec_sync"
         android:layout_width="wrap_content"

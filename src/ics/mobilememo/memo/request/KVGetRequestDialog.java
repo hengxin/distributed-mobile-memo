@@ -24,7 +24,7 @@ public class KVGetRequestDialog extends KVRequestDialog
 	}
 	
 	/**
-	 * perform the "get" request
+	 * perform the "GET" request
 	 */
 	@Override
 	public VersionValue onRequestPerformed()
