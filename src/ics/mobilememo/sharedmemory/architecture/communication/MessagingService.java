@@ -186,7 +186,7 @@ public enum MessagingService implements IReceiver
 	 */
 	public void exit()
 	{
-		if (this.server_socket != null & ! this.server_socket.isClosed())
+		if (this.server_socket != null && ! this.server_socket.isClosed())
 		{
 			try
 			{
