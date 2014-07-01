@@ -18,7 +18,9 @@ public enum ConfigureLog4J
 	INSTANCE;
 	
 	private LogConfigurator log_config = null;
-	private String file_name = Environment.getExternalStorageDirectory() + File.separator + "execution.txt";
+	
+	private final String directory = Environment.getExternalStorageDirectory() + File.separator + "/single_execution";
+	private final String file_name = this.directory + "/execution.txt";
 	
     public void configure() 
     {
@@ -36,6 +38,14 @@ public enum ConfigureLog4J
 	        
 	        log_config.configure();
     	}
+    }
+    
+    /**
+     * @return {@link #directory}: directory containing all the execution-related files
+     */
+    public String getDirectory()
+    {
+    	return this.directory;
     }
     
     /**

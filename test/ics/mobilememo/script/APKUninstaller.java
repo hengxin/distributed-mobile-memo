@@ -5,9 +5,17 @@ package ics.mobilememo.script;
  * @author hengxin
  * @date Jul 1, 2014
  */
-public class UninstallAPK
+public class APKUninstaller
 {
-	public static void main(String[] args)
+	public APKUninstaller()
+	{
+		
+	}
+	
+	/**
+	 * uninstall "ics.android_usb_computer" and "ics.mobilememo"
+	 */
+	public void uninstall()
 	{
 		ADBExecutor adb_executor = new ADBExecutor("D:\\AndroidSDK\\platform-tools\\adb.exe ");
 		
@@ -18,5 +26,10 @@ public class UninstallAPK
 		adb_executor.uninstall("ics.android_usb_computer");
 		// uninstall apk "ics.mobilememo"
 		adb_executor.uninstall("ics.mobilememo");
+	}
+	
+	public static void main(String[] args)
+	{
+		new APKUninstaller().uninstall();
 	}
 }

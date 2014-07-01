@@ -19,6 +19,8 @@ public class ADBExecutor
 	public static final int ANDROID_PORT = 30000;
 	public static final int HOST_BASE_PORT = 35000;
 	
+	private final Map<String, String> deviceid_hostname_map = new HashMap<>();
+	
 	/**
 	 * directory of "adb.exe"
 	 */
@@ -31,6 +33,10 @@ public class ADBExecutor
 	public ADBExecutor(String adb_directory)
 	{
 		this.adb_directory = adb_directory;
+		
+		this.deviceid_hostname_map.put("429a40a2", "S4");
+		this.deviceid_hostname_map.put("06701c69f0ec9b5b", "Nexus0");
+		this.deviceid_hostname_map.put("067125a40acc819e", "Nexus3");
 	}
 	
 	/**
@@ -166,6 +172,91 @@ public class ADBExecutor
 		
 		String uninstall_result = this.collectResultFromProcess(proc);
 		System.out.println(uninstall_result);
+	}
+	
+	/**
+	 * copy a file or directory (and its sub-directories) (specified by @param src_path)
+	 * from the device specified by @param device_id
+	 * to the destination directory in computer specified by @param dest_path
+	 * @param device_id the device from which the file/directory is copied
+	 * @param src_path path of the file or directory to copy
+	 * @param dest_path path of directory in which copied file/directory is stored
+	 */
+	public void copy(String device_id, String src_path, String dest_path)
+	{
+		System.out.println("adb -s " + device_id + " pull " + src_path + " " + dest_path);
+		
+		Process proc = null;
+		try
+		{
+			proc = new ProcessBuilder(this.adb_directory, "-s", device_id, "pull", src_path, dest_path).start();
+			proc.waitFor();
+		} catch (InterruptedException ire)
+		{
+			ire.printStackTrace();
+		} catch (IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+		
+		String result = this.collectResultFromProcess(proc);
+		System.out.println(result);
+	}
+	
+	/**
+	 * For each device, copy a file or directory (and its sub-directories) 
+	 * specified by @param src_path to the destination directory in computer
+	 * specified by @param dest_path
+	 * 
+	 * @param src_path path of the file or directory to copy
+	 * @param dest_path path of directory in which copied file/directory is stored
+	 */
+	public void copyFromAll(String src_path, String dest_path)
+	{
+		String sub_directory = null;
+		for (String device : this.execAdbDevices())
+		{
+			sub_directory = this.deviceid_hostname_map.get(device);
+			this.copy(device, src_path, dest_path + "\\" + sub_directory);
+		}
+	}
+	
+	/**
+	 * remove file or directory (and its sub-directories recursively)
+	 * from all attached devices
+	 * @param path specified file or directory to remove
+	 */
+	public void removeFromAll(String path)
+	{
+		for (String device : this.execAdbDevices())
+			this.remove(device, path);
+	}
+	
+	/**
+	 * remove file or directory (and its sub-directories recursively)
+	 * specified by @param path from device specified by @param device_id 
+	 * @param device_id device from which the file or directory is removed
+	 * @param path file or directory to remove
+	 */
+	public void remove(String device_id, String path)
+	{
+		System.out.println("adb -s " + device_id + " shell rm -r " + path);
+		
+		Process proc = null;
+		try
+		{
+			proc = new ProcessBuilder(this.adb_directory, "-s", device_id, "shell", "rm", "-r", path).start();
+			proc.waitFor();
+		} catch (InterruptedException ire)
+		{
+			ire.printStackTrace();
+		} catch (IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+		
+		String result = this.collectResultFromProcess(proc);
+		System.out.println(result);
 	}
 	
 	/**
