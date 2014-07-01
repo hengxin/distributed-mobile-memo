@@ -88,7 +88,7 @@ public enum KVStoreInMemory implements IKVStore
 	{
 		VersionValue vval = this.key_vval_map.get(key);
 		if (vval == null)	// no synchronization is needed
-			return VersionValue.NULL_VERSIONVALUE;
+			return VersionValue.RESERVED_VERSIONVALUE;
 		return vval;
 	}
 

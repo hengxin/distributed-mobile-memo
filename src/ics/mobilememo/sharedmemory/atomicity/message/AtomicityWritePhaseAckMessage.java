@@ -9,6 +9,7 @@
 package ics.mobilememo.sharedmemory.atomicity.message;
 
 import ics.mobilememo.sharedmemory.data.kvs.Key;
+import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 public class AtomicityWritePhaseAckMessage extends AtomicityMessage
 {
@@ -16,20 +17,25 @@ public class AtomicityWritePhaseAckMessage extends AtomicityMessage
 
 	/**
 	 * constructor: {@link AtomicityReadPhaseMessage} with a specified {@link Key};
-	 * the {@link AtomicityMessage#key} field is useless and is set to be null,
-	 * the {@link AtomicityMessage#vval} field is useless and is set to be null.
+	 * the {@link AtomicityMessage#key} field is useless 
+	 * and is set to be {@link Key#RESERVED_KEY};
+	 * the {@link AtomicityMessage#vval} field is useless 
+	 * and is set to be {@link VersionValue#RESERVED_VERSIONVALUE}.
 	 * 
 	 * @param ip IPMessage
 	 * @param cnt @see IPMessage#cnt
 	 */	
 	public AtomicityWritePhaseAckMessage(String ip, int cnt)
 	{
-		super(ip, cnt, null, null);
+		super(ip, cnt, Key.RESERVED_KEY, VersionValue.RESERVED_VERSIONVALUE);
 	}
 	
+	/**
+	 * Show the WRITE_PHASE_ACK message
+	 */
 	@Override
 	public String toString()
 	{
-		return "WRITE_PHASE_ACK" + super.toString();
+		return "[WRITE_PHASE_ACK]: " + super.toString();
 	}
 }

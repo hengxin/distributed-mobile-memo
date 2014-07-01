@@ -52,7 +52,7 @@ public class SWMR2AtomicityRegisterClient extends
 	/* 
 	 * @see ics.mobilememo.sharedmemory.atomicity.AbstractAtomicityRegisterClient#get(ics.mobilememo.sharedmemory.data.kvs.Key)
 	 * 
-	 * Get method of \link SWMR2AtomicityRegisterClient.
+	 * Get method of {@link SWMR2AtomicityRegisterClient}.
 	 * It consists of only the read_phase and local computation.
 	 * Compared with that in \link SWMRAtomicityRegisterClient and \link MWMRAtomicityRegisterClient,
 	 * it does not need the write_phase, reducing operation latency while preserving almost atomicity.

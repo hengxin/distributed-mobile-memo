@@ -23,9 +23,9 @@ public class VersionValue implements Comparable<VersionValue>, Serializable
 	private static final long serialVersionUID = -6258082960233438012L;
 
 	/**
-	 * default NULL_VERSIONVALUE = (NULL_VERSION = (-1,-1), "")
+	 * Reserved versioned value: RESERVED_VERSIONVALUE = (RESERVED_VERSION = (-1,-1), "")
 	 */
-	public static final VersionValue NULL_VERSIONVALUE = new VersionValue(Version.NULL_VERSION, "");
+	public static final VersionValue RESERVED_VERSIONVALUE = new VersionValue(Version.RESERVED_VERSION, "");
 
 	private Version ver = null;
 	private String val = null;

@@ -16,8 +16,8 @@ public class AtomicityWritePhaseMessage extends AtomicityMessage
 	private static final long serialVersionUID = -1324534020658757819L;
 
 	/**
-	 * constructor: {@link AtomicityReadPhaseMessage} with a specified {@link Key};
-	 * the {@link AtomicityReadPhaseMessage#vval} field is useless and is set to be null
+	 * constructor: {@link AtomicityReadPhaseMessage} with 
+	 * the specified {@link Key} and {@link VersionValue} 
 	 * 
 	 * @param ip IPMessage
 	 * @param cnt @see IPMessage#cnt
@@ -30,9 +30,12 @@ public class AtomicityWritePhaseMessage extends AtomicityMessage
 		super(ip, cnt, key, vval);
 	}
 	
+	/**
+	 * Show the WRITE_PHASE message
+	 */
 	@Override
 	public String toString()
 	{
-		return "WRITE_PHASE" + super.toString();
+		return "[WRITE_PHASE]: " + super.toString();
 	}
 }

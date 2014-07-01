@@ -268,6 +268,8 @@ public abstract class AbstractAtomicityRegisterClient implements IRegisterClient
 		}
 
 		/**
+		 * @FIXME check this method!!!
+		 * 
 		 * to check whether the received message is a delayed one (and should be discarded)
 		 * 
 		 * @param received_rmsg received message of type {@link AtomicityMessage}

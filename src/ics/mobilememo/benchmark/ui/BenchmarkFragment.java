@@ -37,10 +37,6 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 {
 	private static final String TAG = BenchmarkFragment.class.getName();
 	
-	// choose which algorithm to run
-//	private Spinner spinner_algs = null;
-//	private int alg_type = -1;
-	
 	// as a reader or a writer
 	private RadioGroup radio_grp_rw = null;
 	
@@ -76,13 +72,6 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 	{
 		View view = inflater.inflate(R.layout.fragment_benchmark, container, false);
 
-//		// set adapter for Spinner
-//		this.spinner_algs = (Spinner) view.findViewById(R.id.spinner_algs);
-//		ArrayAdapter<CharSequence> algs_adapter = ArrayAdapter.createFromResource(this.getActivity(),
-//		        R.array.spinner_algs_array, android.R.layout.simple_spinner_item);
-//		algs_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		this.spinner_algs.setAdapter(algs_adapter);
-		
 		this.radio_grp_rw = (RadioGroup) view.findViewById(R.id.radio_grp_rw);
 		this.etxt_request_number = (EditText) view.findViewById(R.id.etxt_request_number);
 		this.etxt_rate = (EditText) view.findViewById(R.id.etxt_rate);
@@ -251,29 +240,4 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 		}
     }
 
-//    /**
-//     * the following two methods are from the interface @link AdapterView.OnItemSelectedListener
-//     */
-//    
-//    /**
-//     * get the selected algorithm 
-//     */
-//	@Override
-//	public void onItemSelected(AdapterView<?> parent, View view, int position,
-//			long id)
-//	{
-//		String spinner_alg = parent.getItemAtPosition(position).toString();
-//		if (spinner_alg.equals("SWMR_ATOMICITY"))
-//			this.alg_type = AtomicityRegisterClientFactory.SWMR_ATOMICITY;
-//		else if (spinner_alg.equals("SWMR_2ATOMICITY"))
-//			this.alg_type = AtomicityRegisterClientFactory.SWMR_2ATOMICITY;
-//		else 
-//			this.alg_type = AtomicityRegisterClientFactory.MWMR_ATOMICITY;
-//	}
-//
-//	@Override
-//	public void onNothingSelected(AdapterView<?> arg0)
-//	{
-//		
-//	}
 }

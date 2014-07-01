@@ -114,6 +114,8 @@ public class SWMRAtomicityRegisterClient extends
 	{
 		Log.d(TAG, TAG + " issues a PUT request ...");
 		
+		this.op_cnt++;
+		
 		// get the version to use
 		Version max_version = this.incrementAndGetCachedVersion();
 		

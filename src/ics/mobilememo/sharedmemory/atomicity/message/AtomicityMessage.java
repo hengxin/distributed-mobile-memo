@@ -5,6 +5,7 @@
  */
 package ics.mobilememo.sharedmemory.atomicity.message;
 
+import android.util.Log;
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
@@ -13,8 +14,21 @@ public class AtomicityMessage extends IPMessage
 {
 	private static final long serialVersionUID = 851435561377468450L;
 
-	protected Key key;	// key (representing the simulated register) to put/get/remove
-	protected VersionValue vval;	// versioned value carried with the message
+	private static final String TAG = AtomicityMessage.class.getName();
+	
+	/**
+	 * {@link Key} (representing the simulated register) on which 
+	 * the operations PUT/GET/REMOVE are performed
+	 * 
+	 * its default value is {@link Key#RESERVED_KEY}
+	 */
+	protected Key key = Key.RESERVED_KEY;	
+	
+	/**
+	 * versioned value carried with the message
+	 * its default value is {@link VersionValue#RESERVED_VERSIONVALUE}
+	 */
+	protected VersionValue vval = VersionValue.RESERVED_VERSIONVALUE;	
 	
 	/**
 	 * constructor of {@link AtomicityMesssage}
@@ -55,9 +69,15 @@ public class AtomicityMessage extends IPMessage
 	 */
 	public static VersionValue[] extractVersionValues(AtomicityMessage[] atomicity_messages)
 	{
-		VersionValue[] vvals = new VersionValue[atomicity_messages.length];
-		for (int i = 0; i < atomicity_messages.length; i++)
+		int len = atomicity_messages.length;
+		VersionValue[] vvals = new VersionValue[len];
+		
+		for (int i = 0; i < len; i++)
+		{
+			Log.d(TAG, atomicity_messages[i].toString());
 			vvals[i] = atomicity_messages[i].vval;
+		}
+		
 		return vvals;
 	}
 	
@@ -69,7 +89,7 @@ public class AtomicityMessage extends IPMessage
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(super.toString()).append('\t').append(this.key).append('\t').append(this.vval);
+		sb.append(super.toString()).append("\t").append(this.key.toString()).append("\t").append(this.vval.toString());
 		
 		return sb.toString();
 	}

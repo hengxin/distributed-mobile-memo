@@ -9,6 +9,7 @@
 package ics.mobilememo.sharedmemory.atomicity.message;
 
 import ics.mobilememo.sharedmemory.data.kvs.Key;
+import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 public class AtomicityReadPhaseMessage extends AtomicityMessage
 {
@@ -16,7 +17,8 @@ public class AtomicityReadPhaseMessage extends AtomicityMessage
 
 	/**
 	 * constructor: {@link AtomicityReadPhaseMessage} with a specified {@link Key};
-	 * the {@link AtomicityReadPhaseMessage#vval} field is useless and is set to be null
+	 * the {@link AtomicityReadPhaseMessage#vval} field is useless
+	 * and is set to be {@link VersionValue#RESERVED_VERSIONVALUE}
 	 * 
 	 * @param ip IPMessage
 	 * @param cnt @see IPMessage#cnt
@@ -24,12 +26,15 @@ public class AtomicityReadPhaseMessage extends AtomicityMessage
 	 */
 	public AtomicityReadPhaseMessage(String ip, int cnt, Key key)
 	{
-		super(ip, cnt, key, null);
+		super(ip, cnt, key, VersionValue.RESERVED_VERSIONVALUE);
 	}
 	
+	/**
+	 * Show the READ_PHASE message
+	 */
 	@Override
 	public String toString()
 	{
-		return "READ_PHASE" + super.toString();
+		return "[READ_PHASE]: " + super.toString();
 	}
 }

@@ -38,6 +38,11 @@ public enum MessagingService implements IReceiver
 	private static final Executor exec = Executors.newCachedThreadPool();
 
 	/**
+	 * server socket on which the server replica is listening to and accept messages
+	 */
+	private ServerSocket server_socket = null;
+	
+	/**
 	 * send the message to the designated receiver and return immediately
 	 * without waiting for response
 	 *
@@ -98,7 +103,14 @@ public enum MessagingService implements IReceiver
 	 */
 	public void start2Listen(String server_ip)
 	{
-		ServerSocket server_socket = null;
+		/**
+		 * @author added by hengxin
+		 * @date Jul 1, 2014
+		 */
+//		ServerSocket server_socket = null;
+		if (this.server_socket != null)
+			return;
+		
 		try
 		{
 			server_socket = new ServerSocket();
@@ -166,27 +178,24 @@ public enum MessagingService implements IReceiver
 			AtomicityMessagingService.INSTANCE.onReceive(msg);
 		else // TODO: other messages
 			return;
-		
-//		switch (msg.getType())
-//		{
-//			case PING:
-//			case PONG:
-//				GroupService.INSTANCE.onReceive(msg);	// dispatch to the group service component
-//				break;
-//
-//			case READ_PHASE:
-//			case WRITE_PHASE:
-//				AtomicRegisterServer.INSTANCE.onReceive(msg);	// dispatch them to the server replica
-//				break;
-//
-//			case READ_PHASE_ACK:
-//			case WRITE_PHASE_ACK:
-//				AtomicRegisterClient.INSTANCE.onReceive(msg);	// dispatch them to the client
-//				break;
-//
-//			default:
-//				break;
-//		}
+	}
+	
+
+	/**
+	 * exit the messaging service: close the server socket
+	 */
+	public void exit()
+	{
+		if (this.server_socket != null & ! this.server_socket.isClosed())
+		{
+			try
+			{
+				this.server_socket.close();
+			} catch (IOException ioe)
+			{
+				ioe.printStackTrace();
+			}
+		}
 	}
 	
 	/**

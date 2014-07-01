@@ -4,6 +4,7 @@ import ics.mobilememo.benchmark.ui.BenchmarkFragment;
 import ics.mobilememo.group.GroupFragment;
 import ics.mobilememo.login.SessionManager;
 import ics.mobilememo.memo.MemoFragment;
+import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,6 +169,15 @@ public class MobileMemoActivity extends ActionBarActivity implements
 	{
 	}
 
+	/**
+	 * exit the messaging service: close the running server socket
+	 */
+	@Override
+	public void onDestroy()
+	{
+		MessagingService.INSTANCE.exit();
+	}
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.

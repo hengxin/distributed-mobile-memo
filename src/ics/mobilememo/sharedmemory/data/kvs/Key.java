@@ -21,6 +21,11 @@ public class Key implements Serializable
 	private String key_str;	// key to identify (String format)
 
 	/**
+	 * Reserved key with string literal "RESERVED_KEY"
+	 */
+	public static final Key RESERVED_KEY = new Key("RESERVED_KEY");
+			
+	/**
 	 * Constructor for Key: it is just a String now
 	 * @param key key in String
 	 */
