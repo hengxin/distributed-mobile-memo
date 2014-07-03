@@ -108,6 +108,7 @@
         android:text="@string/txt_exec_not_ready" />
 
     <!-- sync. times of the execution -->
+    <!-- the sync. pre-processing step has been moved to the side of computer
     <Button
         android:id="@+id/btn_exec_sync"
         android:layout_width="wrap_content"
@@ -116,5 +117,5 @@
         android:layout_below="@+id/txt_exec_ready"
         android:layout_marginRight="0dp"
         android:text="@string/btn_exec_sync" />
-
+ 	-->
 </RelativeLayout>

@@ -29,7 +29,7 @@ public enum KVStoreInMemory implements IKVStore
 
 	private static final String TAG = KVStoreInMemory.class.getName();
 
-	// using the thread-safe ConcurrentHashMap to cope with the multi-thread concurrency.
+	// Using the thread-safe ConcurrentHashMap to cope with the multi-thread concurrency.
 	private ConcurrentMap<Key, VersionValue> key_vval_map = new ConcurrentHashMap<Key, VersionValue>();
 	
 	/**

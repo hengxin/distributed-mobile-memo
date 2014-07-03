@@ -4,19 +4,11 @@ import ics.mobilememo.R;
 import ics.mobilememo.benchmark.executor.Executor;
 import ics.mobilememo.benchmark.workload.PoissonWorkloadGenerator;
 import ics.mobilememo.benchmark.workload.Request;
-import ics.mobilememo.execution.ExecutionLogHandler;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import log4android.ConfigureLog4J;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,10 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
- * Configuration of benchmark workload
+ * Configure the benchmark workloads and run them
  * @author hengxin
  * @date Jun 02, Jun 28, 2014
  */
@@ -46,8 +37,9 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 	private EditText etxt_value_range = null;
 	private Button btn_run_benchmark = null;
 	
+	// TextView to show whether the execution has been generated or not
 	private TextView txt_exec_ready = null;
-	private Button btn_exec_sync = null;
+//	private Button btn_exec_sync = null;
 	
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -88,9 +80,8 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 		this.etxt_value_range.setText("5");
 		
 		this.txt_exec_ready = (TextView) view.findViewById(R.id.txt_exec_ready);
-		this.btn_exec_sync = (Button) view.findViewById(R.id.btn_exec_sync);
-		// run the benchmark to generate execution first
-		this.btn_exec_sync.setEnabled(false);
+//		this.btn_exec_sync = (Button) view.findViewById(R.id.btn_exec_sync);
+//		this.btn_exec_sync.setEnabled(false);
 		
 		// handle with the click of the "Run the benchmark" button
 		this.addButtonListener(view);
@@ -111,6 +102,7 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 			@Override
 			public void onClick(View v)
 			{
+				txt_exec_ready.setText(R.string.txt_exec_not_ready);
 				btn_run_benchmark.setEnabled(false);
 				
 				// collect the configurations of this benchmark
@@ -154,70 +146,70 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 				// another benchmark can be configured and run
 				btn_run_benchmark.setEnabled(true);
 				
-				// the pre-processing can be performed on the generated execution
+				// the pre-processing can now be performed on the generated execution
 				txt_exec_ready.setText(R.string.txt_exec_ready);
-				btn_exec_sync.setEnabled(true);
+//				btn_exec_sync.setEnabled(true);
 			}
 		});
     	
-    	/**
-    	 * pre-processing the execution of benchmark for further use:
-    	 * adjust the timestamps (i.e., start_time, finish_time) of operations
-    	 * according to the offset of the system time of device to the prescribed "perfect time" (e.g., of a PC)
-    	 */
-    	this.btn_exec_sync.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				btn_exec_sync.setEnabled(false);
-				
-				// (1) get the time offset
-				long offset = getTimeDiff();
-				
-				// (2) sync. the execution
-				new ExecutionLogHandler(ConfigureLog4J.INSTANCE.getFileName()).sync(offset);
-				
-				Toast.makeText(getActivity(), "Sync. is finished.", Toast.LENGTH_SHORT).show();
-			}
-		});
+//    	/**
+//    	 * pre-processing the execution of benchmark for further use:
+//    	 * adjust the timestamps (i.e., start_time, finish_time) of operations
+//    	 * according to the offset of the system time of device to the prescribed "perfect time" (e.g., of a PC)
+//    	 */
+//    	this.btn_exec_sync.setOnClickListener(new OnClickListener()
+//		{
+//			@Override
+//			public void onClick(View v)
+//			{
+//				btn_exec_sync.setEnabled(false);
+//				
+//				// (1) get the time offset
+//				long offset = getTimeDiff();
+//				
+//				// (2) sync. the execution
+//				new ExecutionLogHandler(ConfigureLog4J.INSTANCE.getFileName()).sync(offset);
+//				
+//				Toast.makeText(getActivity(), "Sync. is finished.", Toast.LENGTH_SHORT).show();
+//			}
+//		});
     }
     
-    /**
-     * retrieve "time diff value" from the sync_time.txt file 
-     * @return time diff value in millisecond
-     */
-    private long getTimeDiff()
-    {
-		String sync_time_file_name = Environment.getExternalStorageDirectory() + File.separator + "sync_time.txt";
-		BufferedReader br = null;
-		long diff = 0;
-		
-		try
-		{
-			br = new BufferedReader(new FileReader(sync_time_file_name));
-			// the first line reads like "diff 1000"
-			String diff_line = br.readLine();
-			diff = Integer.parseInt(diff_line.substring(5));
-		} catch (FileNotFoundException fnfe)
-		{
-			fnfe.printStackTrace();
-		} catch (IOException ioe)
-		{
-			ioe.printStackTrace();
-		} finally
-		{
-			try
-			{
-				br.close();
-			} catch (IOException ioe)
-			{
-				ioe.printStackTrace();
-			}
-		}
-		
-		return diff;
-    }
+//    /**
+//     * retrieve "time diff value" from the sync_time.txt file 
+//     * @return time diff value in millisecond
+//     */
+//    private long getTimeDiff()
+//    {
+//		String sync_time_file_name = Environment.getExternalStorageDirectory() + File.separator + "sync_time.txt";
+//		BufferedReader br = null;
+//		long diff = 0;
+//		
+//		try
+//		{
+//			br = new BufferedReader(new FileReader(sync_time_file_name));
+//			// the first line reads like "diff 1000"
+//			String diff_line = br.readLine();
+//			diff = Integer.parseInt(diff_line.substring(5));
+//		} catch (FileNotFoundException fnfe)
+//		{
+//			fnfe.printStackTrace();
+//		} catch (IOException ioe)
+//		{
+//			ioe.printStackTrace();
+//		} finally
+//		{
+//			try
+//			{
+//				br.close();
+//			} catch (IOException ioe)
+//			{
+//				ioe.printStackTrace();
+//			}
+//		}
+//		
+//		return diff;
+//    }
     
     /**
      * @param v view

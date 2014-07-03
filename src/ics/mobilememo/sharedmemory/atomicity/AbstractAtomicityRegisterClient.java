@@ -1,8 +1,3 @@
-/**
- * @author hengxin
- * @date Jun 27, 2014
- * @description Abstract implementations 
- */
 package ics.mobilememo.sharedmemory.atomicity;
 
 import ics.mobilememo.group.GroupConfig;
@@ -26,13 +21,28 @@ import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
 import android.content.res.Configuration;
 import android.util.Log;
 
+/**
+ * @author hengxin
+ * @date Jun 27, 2014 
+ * @date Jul 3, 2014
+ * 
+ * @description Abstract implementation of clients of atomic register.
+ * All the implementations of clients performing on atomic registers
+ * involve both READ_PHASE ( {@link #readPhase(Key)} ) and 
+ * WRITE_PHASE ( {@link #writePhase(Key, VersionValue)} ) .
+ * 
+ * Furthermore, both READ_PHASE and WRITE_PHASE 
+ * rely on the {@link Communication} sub-procedure.
+ */
 public abstract class AbstractAtomicityRegisterClient implements IRegisterClient, IAtomicityMessageHandler
 {
+	private static final String TAG = AbstractAtomicityRegisterClient.class.getName();
 
 	private Communication comm;	// Communication instance for read phase/write phase
 	protected int op_cnt;	// counter of operations invoked by this client
@@ -138,10 +148,25 @@ public abstract class AbstractAtomicityRegisterClient implements IRegisterClient
 //		int[] turn = new int[replicas_num];	// to implement the ping-pong communication mechanism
 //		RegisterMessage[] info = new RegisterMessage[replicas_num];	// to store the ack messages
 //		int[] status = new int[replicas_num];	// to control the sending of messages
-		Map<String, Integer> turn = new HashMap<String, Integer>();
-		Map<String, Integer> status = new HashMap<String, Integer>();
-		Map<String, AtomicityMessage> info = new HashMap<String, AtomicityMessage>();
+		
+		/**
+		 * Using thread-safe {@link HashMap}: Collections.synchronizedMap(new HashMap<,>())
+		 * @author hengxin
+		 * @date Jun 27, 2014
+		 */
+//		Map<String, Integer> turn = Collections.synchronizedMap(new HashMap<String, Integer>());
+//		Map<String, Integer> status = Collections.synchronizedMap(new HashMap<String, Integer>());
+//		Map<String, AtomicityMessage> info = Collections.synchronizedMap(new HashMap<String, AtomicityMessage>());
 
+		/**
+		 * Using thread-safe counterpart to {@link HashMap}: {@link ConcurrentHashMap}
+		 * @author hengxin
+		 * @date Jul 3, 2014 
+		 */
+		Map<String, Integer> turn = new ConcurrentHashMap<String, Integer>();
+		Map<String, Integer> status = new ConcurrentHashMap<String, Integer>();
+		Map<String, AtomicityMessage> info = new ConcurrentHashMap<String, AtomicityMessage>();
+		
 		public Communication(AtomicityMessage rmsg)
 		{
 			this.atomicity_message = rmsg;
@@ -149,6 +174,7 @@ public abstract class AbstractAtomicityRegisterClient implements IRegisterClient
 //			this.ack_num = 0;	// number of acks collected
 			this.replicas_num = GroupConfig.INSTANCE.getGroupSize();	// number of processors in the system
 			this.proc_majority = replicas_num / 2 + 1;	// counter indicating a majority of processors
+			Log.d(TAG, "The majority number is: " + this.proc_majority);
 			this.latch_majority = new CountDownLatch(proc_majority);	// wait for a majority of acks
 
 			// initialization
@@ -159,7 +185,14 @@ public abstract class AbstractAtomicityRegisterClient implements IRegisterClient
 				String ip = replica_list.get(i).getNodeIp();
 				turn.put(ip, Communication.HERE);
 				status.put(ip, Communication.NOT_SENT);
-				info.put(ip, null);
+				
+				/**
+				 * {@link ConcurrentHashMap} does not accept <code>null<code> value (nor <code>null<code> key).
+				 * @author hengxin
+				 * @date Jul 3, 2014
+				 */
+//				info.put(ip, null);
+				
 //				info[i] = null;
 //				turn[i] = Communication.HERE;
 //				status[i] = Communication.NOT_SENT;
@@ -205,6 +238,8 @@ public abstract class AbstractAtomicityRegisterClient implements IRegisterClient
 				ie.printStackTrace();
 			}
 
+			Log.d(TAG, "Collecting a majority of ACKs: " + this.info.size());
+			
 			// TODO: the communication instance is done. do something.
 			if (this.atomicity_message instanceof AtomicityReadPhaseMessage)
 				Log.i(TAG, "Read phase finished.");
@@ -245,14 +280,21 @@ public abstract class AbstractAtomicityRegisterClient implements IRegisterClient
 					 * modified to use the "CountDownLatch" mechanism to coordinate the threads,
 					 * replacing the wait/notifyAll approach
 					 */
-					this.latch_majority.countDown();
+					
+					/**
+					 * Don't count ack of an old message
+					 * @author commented out by hengxin
+					 * @date Jul 2, 2014
+					 */
+//					this.latch_majority.countDown();
 					break;
 
 				case Communication.NOT_ACK:
 					this.status.put(from_ip, Communication.ACK);
-					info.put(from_ip, (AtomicityMessage) msg);
+					this.info.put(from_ip, (AtomicityMessage) msg);
 //					info[from_id] = msg;
-
+					
+					Log.d(TAG, "Receiving an ACK message from: " + from_ip + "; It is " + msg.toString());
 					/**
 					 * @author hengxin
 					 * @date 2013-8-14

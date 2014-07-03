@@ -10,7 +10,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**
- * combine the separately synchronized executions into one
+ * combine the separately synchronized sub-executions into one
  * 
  * @author hengxin
  * @date Jul 1, 2014
@@ -19,13 +19,24 @@ public class SyncedExecutionCombiner
 {
 	private String execution_directory = null;
 
+	// file containing sub-execution
 	private final String execution_sync_file = "execution_sync.txt";
+	// file to store the combined execution
+	private final String execution_file = "execution.txt";
 	
+	/**
+	 * constructor of {@link SyncedExecutionCombiner}
+	 * with directory path
+	 * @param directory directory on which the combination is performed
+	 */
 	public SyncedExecutionCombiner(String directory)
 	{
 		this.execution_directory = directory;
 	}
 
+	/**
+	 * combine the separately synchronized sub-executions into one
+	 */
 	public void combine()
 	{
 		System.out.println("Combine executions in this directory: " + this.execution_directory);
@@ -34,7 +45,7 @@ public class SyncedExecutionCombiner
 		try
 		{
 			bw = new BufferedWriter(new FileWriter(this.execution_directory
-					+ "\\" + "execution.txt"));
+					+ "\\" + this.execution_file));
 		} catch (IOException ioe)
 		{
 			ioe.printStackTrace();

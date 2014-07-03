@@ -24,6 +24,11 @@ public class ExecutionTimeSynchronizer
 	private final String execution_file_name = "execution.txt";
 	private final String sync_time_file_name = "sync_time.txt";
 	
+	/**
+	 * constructor of {@link ExecutionTimeSynchronizer}
+	 * with directory path
+	 * @param path directory on which the synchronization is performed
+	 */
 	public ExecutionTimeSynchronizer(String path)
 	{
 		this.destination_directory = path;
@@ -94,7 +99,6 @@ public class ExecutionTimeSynchronizer
      */
     private long getTimeDiff(String sync_time_file)
     {
-//		String sync_time_file_name = Environment.getExternalStorageDirectory() + File.separator + "sync_time.txt";
 		BufferedReader br = null;
 		long diff = 0;
 		

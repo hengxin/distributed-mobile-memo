@@ -23,7 +23,7 @@ public class AllInOne
 		new ExecutionTimeSynchronizer(destination_directory).sync();
 		
 		// (3) combine
-		new SyncedExecutionCombiner(destination_directory);
+		new SyncedExecutionCombiner(destination_directory).combine();
 		
 		// (4) remove
 		new ExecutionsRemover().remove();

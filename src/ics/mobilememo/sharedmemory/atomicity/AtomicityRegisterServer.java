@@ -96,7 +96,8 @@ public enum AtomicityRegisterServer implements IAtomicityMessageHandler
 		/**
 		 * responds to the message of type {@link AtomicityReadPhaseMessage} 
 		 * with message of type {@link AtomicityReadAckPhaseMessage},
-		 * including the {@link Key} and the {@link VersionValue} (may be null) found
+		 * including the {@link Key} and the {@link VersionValue} 
+		 * (it may be {@link RESERVED_VERSIONVALUE}) found
 		 * in the server replica
 		 */
 		if (atomicityMessage instanceof AtomicityReadPhaseMessage)

@@ -175,7 +175,7 @@ public class MobileMemoActivity extends ActionBarActivity implements
 	@Override
 	public void onDestroy()
 	{
-		MessagingService.INSTANCE.exit();
+//		MessagingService.INSTANCE.exit();
 	}
 	
 	/**

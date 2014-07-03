@@ -108,8 +108,8 @@ public enum MessagingService implements IReceiver
 		 * @date Jul 1, 2014
 		 */
 //		ServerSocket server_socket = null;
-		if (this.server_socket != null)
-			return;
+//		if (this.server_socket != null)
+//			return;
 		
 		try
 		{

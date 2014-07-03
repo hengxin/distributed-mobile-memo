@@ -43,6 +43,8 @@ public class ExecutionsRemover
 	 */
 	public void remove()
 	{
+		System.out.println("Remove files in " + this.single_execution_directory);
+		
 		ADBExecutor adb_executor = new ADBExecutor("D:\\AndroidSDK\\platform-tools\\adb.exe ");
 		
 		// "adb -s [device] forward tcp: tcp: "
