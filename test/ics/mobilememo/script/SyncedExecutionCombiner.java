@@ -25,8 +25,8 @@ public class SyncedExecutionCombiner
 	private final String execution_file = "execution.txt";
 	
 	/**
-	 * constructor of {@link SyncedExecutionCombiner}
-	 * with directory path
+	 * Constructor of {@link SyncedExecutionCombiner}
+	 *
 	 * @param directory directory on which the combination is performed
 	 */
 	public SyncedExecutionCombiner(String directory)
@@ -35,17 +35,20 @@ public class SyncedExecutionCombiner
 	}
 
 	/**
-	 * combine the separately synchronized sub-executions into one
+	 * Combine the separately synchronized sub-executions into one
+	 * 
+	 * @return the (absolute) path of the execution file containing combined execution
 	 */
-	public void combine()
+	public String combine()
 	{
 		System.out.println("Combine executions in this directory: " + this.execution_directory);
 		
 		BufferedWriter bw = null;
+		String combined_execution_file = this.execution_directory + "\\" + this.execution_file;
+		
 		try
 		{
-			bw = new BufferedWriter(new FileWriter(this.execution_directory
-					+ "\\" + this.execution_file));
+			bw = new BufferedWriter(new FileWriter(combined_execution_file));
 		} catch (IOException ioe)
 		{
 			ioe.printStackTrace();
@@ -93,6 +96,7 @@ public class SyncedExecutionCombiner
 		}
 		
 		System.out.println("Combination Finished.");
+		return combined_execution_file;
 	}
 	
 	/**
