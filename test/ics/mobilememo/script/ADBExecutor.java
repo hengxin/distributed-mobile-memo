@@ -37,6 +37,8 @@ public class ADBExecutor
 		this.deviceid_hostname_map.put("429a40a2", "S4");
 		this.deviceid_hostname_map.put("06701c69f0ec9b5b", "Nexus0");
 		this.deviceid_hostname_map.put("067125a40acc819e", "Nexus3");
+		this.deviceid_hostname_map.put("064839200acc763d", "Nexus33");
+		this.deviceid_hostname_map.put("c1607e301251d4f", "Tablet");
 	}
 	
 	/**

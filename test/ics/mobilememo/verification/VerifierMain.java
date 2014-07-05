@@ -52,4 +52,10 @@ public class VerifierMain
 		return verify_result;
 	}
 	
+	public static void main(String[] args)
+	{
+		new VerifierMain("C:\\Users\\ics-ant\\Desktop\\executions\\SWMR\\execution-0703-2108\\execution.txt").verifyAtomicity();
+		new VerifierMain("C:\\Users\\ics-ant\\Desktop\\executions\\SWMR\\execution-0703-2108\\execution.txt").verify2Atomicity();
+	}
+	
 }

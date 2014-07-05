@@ -1,14 +1,14 @@
+package ics.mobilememo.statistic.atomicity;
+
+import ics.mobilememo.benchmark.workload.RequestRecord;
+import ics.mobilememo.execution.Execution;
+
 /**
  * Given an execution satisfying 2-atomicity, the
  * statistics for 2-atomicity including:
  * (1) number of occurrences of "concurrency pattern" (CP)
  * (2) number of occurrences of "old-new inversion" (ONI)
  */
-package ics.mobilememo.statistic;
-
-import ics.mobilememo.benchmark.workload.RequestRecord;
-import ics.mobilememo.execution.Execution;
-
 public class Quantifying2Atomicity
 {
 	private Execution execution = null;
