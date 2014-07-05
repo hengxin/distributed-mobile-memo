@@ -17,13 +17,14 @@ import javax.swing.JPanel;
  * 
  * The directory hierarchy:
  * SyncTime
- *   - Nexus0
- *     - sync_time.txt
- *   - Nexus3
- *     - sync_time.txt
- *   - Nexus33
- *     - sync_time.txt
- *   - ...
+ *   - SyncTime###
+ *     - Nexus0
+ *       - sync_time.txt
+ *     - Nexus3
+ *       - sync_time.txt
+ *     - Nexus33
+ *       - sync_time.txt
+ *     - ...
  *   
  * @author hengxin
  * @date Jul 5, 2014

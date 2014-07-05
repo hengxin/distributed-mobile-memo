@@ -111,6 +111,14 @@ public class RequestRecord extends Request implements Comparable<RequestRecord>
 	}
 	
 	/**
+	 * @return {@link #delay}
+	 */
+	public long getDelay()
+	{
+		return this.delay;
+	}
+	
+	/**
 	 * String of RequestRecord: type \t start_time \t finish_time \t delay \t key \t vvalue
 	 */
 	@Override
