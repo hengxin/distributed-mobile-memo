@@ -39,9 +39,10 @@ public class ExecutionCollector extends JPanel
 		// "adb -s [device] forward tcp: tcp: "
 		adb_executor.execAdbOnlineDevicesPortForward();
 		// copy execution-related files from mobile phones to computer
-		adb_executor.copyFromAll(this.single_execution_directory, this.chooseDestDirectory());
+		String dest_directory = this.chooseDestDirectory();
+		adb_executor.copyFromAll(this.single_execution_directory, dest_directory);
 		
-		return this.chooseDestDirectory();
+		return dest_directory;
 	}
 	
 	/**
