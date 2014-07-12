@@ -5,6 +5,7 @@ import ics.mobilememo.benchmark.executor.Executor;
 import ics.mobilememo.benchmark.workload.PoissonWorkloadGenerator;
 import ics.mobilememo.benchmark.workload.Request;
 
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -74,8 +75,8 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 		/**
 		 * default values for test
 		 */
-		this.etxt_request_number.setText("50");
-		this.etxt_rate.setText("2");
+		this.etxt_request_number.setText("1000");
+		this.etxt_rate.setText("10");
 		this.etxt_key_range.setText("1");
 		this.etxt_value_range.setText("5");
 		
@@ -123,7 +124,7 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 				// block the {@link Executor} for a while
 				try
 				{
-					Thread.sleep(5000);
+					Thread.sleep((int )(Math.random() * 100 + 1));
 				} catch (InterruptedException ie)
 				{
 					ie.printStackTrace();

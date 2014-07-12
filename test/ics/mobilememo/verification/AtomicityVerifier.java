@@ -20,7 +20,7 @@
  *   
  * For the 2-atomicity verifier ( @see method verify2Atomicity() ):
  * For an execution to be 2-atomicity, 
- * (1) the first condition mentioned above must still be hold.
+ * (1) the first condition mentioned above must still be held.
  * (2) for general executions, a read operation (r^{i}) satisfying 2-atomicity is allowed 
  *   to return an overwritten value, provided that there is only one Write operation between
  *   r^{i} and its corresponding Write w^{i}. However, due to the quorum-implementation

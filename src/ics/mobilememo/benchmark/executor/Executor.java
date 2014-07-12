@@ -21,9 +21,11 @@ import log4android.ConfigureLog4J;
 
 import org.apache.log4j.Logger;
 
+import android.util.Log;
+
 public class Executor implements Runnable
 {
-//	static private final Logger LOG = LoggerFactory.getLogger(Executor.class);
+	private static final String TAG = Executor.class.getName();
 	
 	/**
 	 * use "android-logging-log4j"
@@ -96,7 +98,7 @@ public class Executor implements Runnable
 				ie.printStackTrace();
 			}
 			
-			System.out.println("The number of request: " + count);
+			Log.d(TAG, "The number of request: " + count);
 			count++;
 		}
 	}

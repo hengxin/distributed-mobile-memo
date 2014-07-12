@@ -54,8 +54,9 @@ public class VerifierMain
 	
 	public static void main(String[] args)
 	{
-		new VerifierMain("C:\\Users\\ics-ant\\Desktop\\executions\\SWMR\\execution-0703-2108\\execution.txt").verifyAtomicity();
-		new VerifierMain("C:\\Users\\ics-ant\\Desktop\\executions\\SWMR\\execution-0703-2108\\execution.txt").verify2Atomicity();
+//		new VerifierMain("C:\\Users\\ics-ant\\Desktop\\executions\\SWMR\\execution-0703-2108\\execution.txt").verifyAtomicity();
+//		new VerifierMain("C:\\Users\\ics-ant\\Desktop\\executions\\SWMR\\execution-0703-2108\\execution.txt").verify2Atomicity();
+		new VerifierMain("C:\\Users\\ics-ant\\Desktop\\executions\\SWMR-2Atomicity\\execution-0712-1713\\execution.txt").verify2Atomicity();
 	}
 	
 }

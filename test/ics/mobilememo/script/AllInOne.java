@@ -26,29 +26,38 @@ public class AllInOne
 		 */
 		
 		// (1) collect sub-executions on separate mobile phones and store them in computer disk
+		System.out.println("[[[ 1. Collecting. ]]]");
 		String destination_directory = new ExecutionCollector().collect();
 		
 		// (2) sync. separate sub-executions
+		System.out.println("[[[ 2. Sync. ]]]");
 		new ExecutionTimeSynchronizer(destination_directory).sync();
 		
 		// (3) extract "delay" values from separate sub-executions
+		System.out.println("[[[ 3. Extracting delay. ]]]");
 		new ExecutionDelayExtractor(destination_directory).extract();
 		
 		// (4) combine sub-executions into one
+		System.out.println("[[[ 4. Combine. ]]]");
 		String combined_execution_file = new SyncedExecutionCombiner(destination_directory).combine();
 		
 		// (5) verify atomicity and 2-atomicity against the combined execution
-		System.out.println("Verifiying atomicity: " + new VerifierMain(combined_execution_file).verifyAtomicity());
-		System.out.println("Verifiying 2-atomicity: " + new VerifierMain(combined_execution_file).verifyAtomicity());
+		System.out.println("[[[ 5. Verifying atomicity. ]]]");
+		System.out.println("Verifying atomicity: " + new VerifierMain(combined_execution_file).verifyAtomicity());
+		
+		System.out.println("[[[ 6. Verifying 2-atomicity. ]]]");
+		System.out.println("Verifying 2-atomicity: " + new VerifierMain(combined_execution_file).verify2Atomicity());
 		
 		/**
 		 * clean up
 		 */
 		
 		// (6) remove sub-executions in separate mobile phones
+		System.out.println("[[[ 7. Remove files. ]]]");
 		new ExecutionsRemover().remove();
 		
 		// (7) uninstall apks
+		System.out.println("[[[ 8. Uninstall apks. ]]]");
 		new APKUninstaller().uninstall();
 	}
 }
