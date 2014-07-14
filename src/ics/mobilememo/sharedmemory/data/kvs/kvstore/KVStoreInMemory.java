@@ -32,18 +32,19 @@ public enum KVStoreInMemory implements IKVStore
 	// Using the thread-safe ConcurrentHashMap to cope with the multi-thread concurrency.
 	private ConcurrentMap<Key, VersionValue> key_vval_map = new ConcurrentHashMap<Key, VersionValue>();
 	
-//	/**
-//	 * @author hengxin
-//	 * @date 2013-9-2, 2014-05-15
-//	 * @description multiple separate locks for concurrent reads and concurrent writes
-//	 * 	when some write is synchronized such as in {@link #put(Key, VersionValue)} method
-//	 * @see http://vanillajava.blogspot.com/2010/05/locking-concurrenthashmap-for-exclusive.html
-//	 */
-//	private final Object[] locks = new Object[10];
-//	{
-//		for(int i = 0; i < locks.length; i++) 
-//			locks[i] = new Object();
-//	}
+	/**
+	 * @author hengxin
+	 * @date 2013-9-2, 2014-05-15
+	 * @description multiple separate locks for concurrent reads and concurrent writes
+	 * 	when some write is synchronized such as in {@link #put(Key, VersionValue)} method
+	 * 
+	 * @see http://vanillajava.blogspot.com/2010/05/locking-concurrenthashmap-for-exclusive.html
+	 */
+	private final Object[] locks = new Object[10];
+	{
+		for(int i = 0; i < locks.length; i++) 
+			locks[i] = new Object();
+	}
 
 	/**
 	 * multi-thread access:
@@ -63,9 +64,9 @@ public enum KVStoreInMemory implements IKVStore
 		 * 
 		 * maybe return {@link VersionValue#NULL_VERSIONVALUE}
 		 */
-//		int hash = key.hashCode() & 0x7FFFFFFF;
+		final int hash = key.hashCode() & 0x7FFFFFFF;
 		
-		synchronized (key)
+		synchronized (locks[hash % locks.length])	// allowing concurrent writers
 		{
 			VersionValue current_vval = this.getVersionValue(key);	
 
@@ -75,10 +76,7 @@ public enum KVStoreInMemory implements IKVStore
 	}
 
 	/**
-	 * multi-thread access:
-	 * 	concurrent reads are not necessarily synchronized.
-	 *
-	 * given Key, return the VersionValue associated;
+	 * Given Key, return the VersionValue associated;
 	 * if no mapping for the specified key is found, return NULL_VERSIONVALUE
 	 *
 	 * @param key Key to identify
@@ -87,10 +85,12 @@ public enum KVStoreInMemory implements IKVStore
 	@Override
 	public VersionValue getVersionValue(Key key)
 	{
-		synchronized (key)
+		final int hash = key.hashCode() & 0x7FFFFFFF;
+		
+		synchronized (locks[hash % locks.length])	// I am not sure whether the synchronization is needed.
 		{
 			VersionValue vval = this.key_vval_map.get(key);
-			if (vval == null)	// no synchronization is needed
+			if (vval == null)	
 				return VersionValue.RESERVED_VERSIONVALUE;
 			return vval;
 		}
@@ -103,7 +103,9 @@ public enum KVStoreInMemory implements IKVStore
 	@Override
 	public void remove(Key key)
 	{
-		synchronized (key)
+		int hash = key.hashCode() & 0x7FFFFFFF;
+		
+		synchronized (locks[hash % locks.length])
 		{
 			this.key_vval_map.remove(key);
 		}

@@ -5,6 +5,7 @@
  */
 package ics.mobilememo.benchmark.executor;
 
+import ics.mobilememo.benchmark.ui.BenchmarkFragment;
 import ics.mobilememo.benchmark.workload.PoissonWorkloadGenerator;
 import ics.mobilememo.benchmark.workload.Request;
 import ics.mobilememo.benchmark.workload.RequestRecord;
@@ -21,6 +22,7 @@ import log4android.ConfigureLog4J;
 
 import org.apache.log4j.Logger;
 
+import android.R.integer;
 import android.util.Log;
 
 public class Executor implements Runnable
@@ -75,7 +77,7 @@ public class Executor implements Runnable
 		else // it is R[1]
 			vvalue = client.get(key);
 		long response_time = System.currentTimeMillis();
-		
+
 		// the delay = response_time - invocation_time is calculated and recorded
 		RequestRecord rr = new RequestRecord(type, invocation_time, response_time, key, vvalue);
 		log4android.debug(rr.toString());
@@ -87,8 +89,8 @@ public class Executor implements Runnable
 	@Override
 	public void run()
 	{
-		int count = 0;
-		while(count < this.request_number)
+		int index = 0;
+		while(index < this.request_number)
 		{
 			try
 			{
@@ -98,8 +100,8 @@ public class Executor implements Runnable
 				ie.printStackTrace();
 			}
 			
-			Log.d(TAG, "The number of request: " + count);
-			count++;
+			Log.d(TAG, "The number of request: " + index);
+			index++;
 		}
 	}
 }

@@ -44,7 +44,9 @@ public class Key implements Serializable
 	}
 
 	/**
-	 * override the hashCode for HashMap
+	 * Override the hashCode() method for HashMap
+	 * 
+	 * Guarantee: Two {@link Key}s regarded equal semantically hold the same hash code.
 	 */
 	@Override
 	public int hashCode()
@@ -55,7 +57,7 @@ public class Key implements Serializable
 	}
 
 	/**
-	 * for serializable interface (necessary for network communication)
+	 * For serializable interface (necessary for network communication)
 	 */
 	@Override
 	public boolean equals(Object obj)

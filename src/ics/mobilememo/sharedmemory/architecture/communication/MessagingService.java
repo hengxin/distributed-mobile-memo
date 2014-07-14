@@ -24,7 +24,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 /**
  * Singleton pattern with Java Enum which is simple and thread-safe
@@ -33,7 +32,7 @@ public enum MessagingService implements IReceiver
 {
 	INSTANCE;
 
-	private static final String TAG = MessagingService.class.getName();
+//	private static final String TAG = MessagingService.class.getName();
 
 	private static final Executor exec = Executors.newCachedThreadPool();
 
@@ -53,7 +52,7 @@ public enum MessagingService implements IReceiver
 	 */
 	public void sendOneWay(final String receiver_ip, final IPMessage msg)
 	{
-		Log.d(TAG, "Send to " + receiver_ip);
+//		Log.d(TAG, "Send to " + receiver_ip);
 		
 		Runnable send_task = new Runnable()
 		{
@@ -70,13 +69,12 @@ public enum MessagingService implements IReceiver
 							socket.getOutputStream());
 					oos.writeObject(msg);
 					oos.flush();
-					Log.i(TAG, "Sending message: " + msg.toString());
+//					Log.i(TAG, "Sending message: " + msg.toString());
 				} catch (SocketTimeoutException stoe)
 				{
-					Log.i(TAG, stoe.getMessage());
+					stoe.printStackTrace();
 				} catch (IOException ioe)
 				{
-					Log.e(TAG, ioe.getMessage());
 					ioe.printStackTrace();
 				} finally
 				{
@@ -85,7 +83,6 @@ public enum MessagingService implements IReceiver
 						socket.close();
 					} catch (IOException ioe)
 					{
-						Log.e(TAG, ioe.getMessage());
 						ioe.printStackTrace();
 					}
 				}
@@ -103,14 +100,6 @@ public enum MessagingService implements IReceiver
 	 */
 	public void start2Listen(String server_ip)
 	{
-		/**
-		 * @author added by hengxin
-		 * @date Jul 1, 2014
-		 */
-//		ServerSocket server_socket = null;
-//		if (this.server_socket != null)
-//			return;
-		
 		try
 		{
 			server_socket = new ServerSocket();
@@ -129,19 +118,16 @@ public enum MessagingService implements IReceiver
 						{
 							ObjectInputStream ois = new ObjectInputStream(connection.getInputStream());
 							IPMessage msg = (IPMessage) ois.readObject();
-							Log.i(TAG, "Receiving message: " + msg.toString());
+//							Log.i(TAG, "Receiving message: " + msg.toString());
 							MessagingService.this.onReceive(msg);
 						} catch (StreamCorruptedException sce)
 						{
-							Log.e(TAG, sce.getMessage());
 							sce.printStackTrace();
 						} catch (IOException ioe)
 						{
-							Log.e(TAG, ioe.getMessage());
 							ioe.printStackTrace();
 						} catch (ClassNotFoundException cnfe)
 						{
-							Log.e(TAG, cnfe.getMessage());
 							cnfe.printStackTrace();
 						}
 					}
@@ -150,7 +136,7 @@ public enum MessagingService implements IReceiver
 			}
 		} catch (IOException ioe)
 		{
-			Log.e(TAG, ioe.getMessage());
+			ioe.printStackTrace();
 		} finally
 		{
 			try
@@ -158,7 +144,6 @@ public enum MessagingService implements IReceiver
 				server_socket.close();
 			} catch (IOException ioe)
 			{
-				Log.e(TAG, ioe.getMessage());
 				ioe.printStackTrace();
 			}
 		}
