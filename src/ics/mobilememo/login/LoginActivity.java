@@ -16,14 +16,14 @@ import ics.mobilememo.network.wifi.WifiAdmin;
 import ics.mobilememo.sharedmemory.architecture.communication.MessagingService;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupported;
-import android.R.integer;
+
+import org.apache.commons.lang3.RandomStringUtils;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -59,12 +59,19 @@ public class LoginActivity extends Activity // implements OnItemSelectedListener
 		 */
 		// node id: this should be unique globally.
 		this.etxt_node_id = (EditText) findViewById(R.id.etxt_node__id);
+		final String default_random_id = RandomStringUtils.randomNumeric(1);
+		this.etxt_node_id.setText(default_random_id);
+		
 		// node name: it is not necessary to be unique globally
 		this.etxt_node_name = (EditText) findViewById(R.id.etxt_node_name);
+		final String default_random_name = RandomStringUtils.randomAlphabetic(4);
+		this.etxt_node_name.setText(default_random_name);
+		
 		// ip address of node: it must be available
 		this.etxt_node_ip = (EditText) findViewById(R.id.etxt_node_ip);
 		// fill the ip address if possible
 		this.etxt_node_ip.setText(new WifiAdmin(MobileMemoActivity.MOBILEMEMO_ACTIVITY).getIP());
+		
 		// set adapter for Spinner
 		this.spinner_algs = (Spinner) findViewById(R.id.spinner_algs);
 		ArrayAdapter<CharSequence> algs_adapter = ArrayAdapter.createFromResource(this,

@@ -66,11 +66,7 @@ public abstract class AbstractAtomicityRegisterClient implements
 	 */
 	public Map<String, AtomicityMessage> readPhase(Key key)
 	{
-		AtomicityMessage atomicity_read_phase_message = new AtomicityReadPhaseMessage(/**
-		 * 
-		 * SystemConfig.INSTANCE.getIP(),
-		 **/
-		new SessionManager().getNodeIp(), this.op_cnt, key);
+		AtomicityMessage atomicity_read_phase_message = new AtomicityReadPhaseMessage(new SessionManager().getNodeIp(), this.op_cnt, key);
 		this.comm = new Communication(atomicity_read_phase_message);
 		return this.comm.communicate();
 	}
@@ -87,11 +83,7 @@ public abstract class AbstractAtomicityRegisterClient implements
 	 */
 	public void writePhase(Key key, VersionValue vval)
 	{
-		AtomicityMessage atomicity_write_phase_message = new AtomicityWritePhaseMessage(/**
-		 * 
-		 * SystemConfig.INSTANCE.getIP(),
-		 **/
-		new SessionManager().getNodeIp(), this.op_cnt, key, vval);
+		AtomicityMessage atomicity_write_phase_message = new AtomicityWritePhaseMessage(new SessionManager().getNodeIp(), this.op_cnt, key, vval);
 		this.comm = new Communication(atomicity_write_phase_message);
 		this.comm.communicate();
 	}
@@ -104,11 +96,9 @@ public abstract class AbstractAtomicityRegisterClient implements
 	 *            pairs
 	 * @return max VersionValue contained in the acks
 	 */
-	public VersionValue extractMaxVValFromAcks(
-			Map<String, AtomicityMessage> acks)
+	public VersionValue extractMaxVValFromAcks(Map<String, AtomicityMessage> acks)
 	{
-		VersionValue[] vvals = AtomicityMessage.extractVersionValues(acks
-				.values().toArray(new AtomicityMessage[acks.size()]));
+		VersionValue[] vvals = AtomicityMessage.extractVersionValues(acks.values().toArray(new AtomicityMessage[acks.size()]));
 		VersionValue max_vval = VersionValue.max(vvals);
 		return max_vval;
 	}
@@ -131,12 +121,12 @@ public abstract class AbstractAtomicityRegisterClient implements
 	 * it receives messages of type {@link AtomicityMessage} from
 	 * {@link AtomicityMessagingService} and dispatch them to its inner/private
 	 * {@link Communication} instance.
+	 * 
+	 * assert (atomicityMessage instanceof AtomicityReadPhaseAckMessage || atomicityMessage instanceof AtomicityWritePhaseAckMessage);
 	 */
 	@Override
 	public void handleAtomicityMessage(AtomicityMessage atomicityMessage)
 	{
-		assert (atomicityMessage instanceof AtomicityReadPhaseAckMessage || atomicityMessage instanceof AtomicityWritePhaseAckMessage);
-
 		this.comm.onReceive(atomicityMessage);
 	}
 
