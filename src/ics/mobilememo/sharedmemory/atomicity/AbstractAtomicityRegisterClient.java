@@ -45,8 +45,16 @@ public abstract class AbstractAtomicityRegisterClient implements
 {
 	private static final String TAG = AbstractAtomicityRegisterClient.class.getName();
 
-	private Communication comm = null; // Communication instance for read phase/write phase
-	protected int op_cnt; // counter of operations invoked by this client
+	private Communication comm = null; // {@link Communication} instance for read phase/write phase
+	
+	/**
+	 * Counter of operations invoked by this client
+	 * 
+	 * This field is only accessed (read/written) by this client.
+	 * It is communicated via {@link IPMessage}.
+	 * No synchronization needed.
+	 */
+	protected int op_cnt; 
 
 	@Override
 	public abstract VersionValue get(Key key);
@@ -113,7 +121,6 @@ public abstract class AbstractAtomicityRegisterClient implements
 	 */
 	public Version getNextVersion(Version old_ver)
 	{
-		// return old_ver.increment(SystemConfig.INSTANCE.getPid());
 		return old_ver.increment(new SessionManager().getNodeId());
 	}
 

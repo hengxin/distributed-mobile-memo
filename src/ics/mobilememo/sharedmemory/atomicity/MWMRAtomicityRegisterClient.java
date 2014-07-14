@@ -45,11 +45,11 @@ public class MWMRAtomicityRegisterClient extends
 	@Override
 	public VersionValue get(Key key)
 	{
-		Log.d(TAG, "Client issues a GET request ...");
+//		Log.d(TAG, "Client issues a GET request ...");
 		
 		this.op_cnt++;
 
-		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
+//		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
 		
 		// read phase: contact a quorum of the server replicas for the latest value and version
 		Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
@@ -71,7 +71,7 @@ public class MWMRAtomicityRegisterClient extends
 	@Override
 	public VersionValue put(Key key, String val)
 	{
-		Log.d(TAG, "Client issues a PUT request ...");
+//		Log.d(TAG, "Client issues a PUT request ...");
 		
 		this.op_cnt++;
 

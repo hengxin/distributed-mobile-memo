@@ -30,7 +30,7 @@ public enum KVStoreInMemory implements IKVStore
 	private static final String TAG = KVStoreInMemory.class.getName();
 
 	// Using the thread-safe ConcurrentHashMap to cope with the multi-thread concurrency.
-	private ConcurrentMap<Key, VersionValue> key_vval_map = new ConcurrentHashMap<Key, VersionValue>();
+	private final ConcurrentMap<Key, VersionValue> key_vval_map = new ConcurrentHashMap<Key, VersionValue>();
 	
 	/**
 	 * @author hengxin
@@ -39,6 +39,8 @@ public enum KVStoreInMemory implements IKVStore
 	 * 	when some write is synchronized such as in {@link #put(Key, VersionValue)} method
 	 * 
 	 * @see http://vanillajava.blogspot.com/2010/05/locking-concurrenthashmap-for-exclusive.html
+	 * 
+	 * OR, to use this method: http://stackoverflow.com/q/24732585/1833118
 	 */
 	private final Object[] locks = new Object[10];
 	{
@@ -81,19 +83,17 @@ public enum KVStoreInMemory implements IKVStore
 	 *
 	 * @param key Key to identify
 	 * @return VersionValue associated
+	 * 
+	 * Note: Synchronization like that in {@link #put(Key, VersionValue)} is not necessary.
+	 * See <a href>http://stackoverflow.com/a/24732809/1833118</a>
 	 */
 	@Override
 	public VersionValue getVersionValue(Key key)
 	{
-		final int hash = key.hashCode() & 0x7FFFFFFF;
-		
-		synchronized (locks[hash % locks.length])	// I am not sure whether the synchronization is needed.
-		{
-			VersionValue vval = this.key_vval_map.get(key);
-			if (vval == null)	
-				return VersionValue.RESERVED_VERSIONVALUE;
-			return vval;
-		}
+		VersionValue vval = this.key_vval_map.get(key);
+		if (vval == null)	
+			return VersionValue.RESERVED_VERSIONVALUE;
+		return vval;
 	}
 
 	/**

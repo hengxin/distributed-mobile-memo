@@ -8,12 +8,11 @@
  */
 package ics.mobilememo.sharedmemory.atomicity;
 
-import java.util.Map;
-
-import android.util.Log;
 import ics.mobilememo.sharedmemory.atomicity.message.AtomicityMessage;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
+
+import java.util.Map;
 
 /**
  * @author hengxin
@@ -60,11 +59,11 @@ public class SWMR2AtomicityRegisterClient extends
 	@Override
 	public VersionValue get(Key key)
 	{
-		Log.d(TAG, TAG + " issues a GET request ...");
+//		Log.d(TAG, TAG + " issues a GET request ...");
 		
 		this.op_cnt++;
 
-		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
+//		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
 		
 		// read phase: contact a quorum of the server replicas for the latest value and version
 		Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);

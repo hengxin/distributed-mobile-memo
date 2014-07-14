@@ -32,7 +32,7 @@ public class IPMessage implements Serializable
 	 * @param ip {@link #sender_ip}
 	 * @param cnt {@link #cnt}: the order of the message in which the client issues
 	 */
-	public IPMessage(String ip, int cnt)
+	public IPMessage(final String ip, final int cnt)
 	{
 		this.sender_ip = ip;
 		this.cnt = cnt;

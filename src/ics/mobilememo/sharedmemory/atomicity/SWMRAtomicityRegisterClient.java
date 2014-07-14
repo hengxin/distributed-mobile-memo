@@ -80,7 +80,7 @@ public class SWMRAtomicityRegisterClient extends
 	@Override
 	public VersionValue get(Key key)
 	{
-		Log.d(TAG, TAG + " issues a GET request ...");
+//		Log.d(TAG, TAG + " issues a GET request ...");
 		
 		this.op_cnt++;
 
