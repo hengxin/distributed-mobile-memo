@@ -5,7 +5,7 @@
  *   (1) port forwarding
  *   (2)
  */
-package ics.mobilememo.service.timingservice;
+package ics.mobilememo.service.timingservice.pc;
 
 import ics.mobilememo.script.ADBExecutor;
 import ics.mobilememo.service.timingservice.message.AuthMsg;
@@ -166,7 +166,7 @@ public class PCHost
 			{
 				// wait for {@link RequestTimeMsg} from Android device
 				msg = waitForRequestTimeMsg(host_socket);
-				System.out.println("Receiving RequestTimeMsg: " + msg.toString());
+//				System.out.println("Receiving RequestTimeMsg: " + msg.toString());
 				// send {@link ResponseTimeMsg} with current system time to Android device
 				sendResponseTimeMsg(host_socket);
 			}

@@ -4,7 +4,6 @@ import ics.mobilememo.R;
 import ics.mobilememo.script.ADBExecutor;
 import ics.mobilememo.service.timingservice.message.AuthMsg;
 import ics.mobilememo.service.timingservice.message.Message;
-import ics.mobilememo.service.timingservice.message.RequestTimeMsg;
 import ics.mobilememo.service.timingservice.message.ResponseTimeMsg;
 import ics.mobilememo.utility.socket.SocketUtil;
 
@@ -45,11 +44,6 @@ public class TimePollingFragment extends Fragment implements OnClickListener
 	 * ServerSocket on the side of Android device
 	 */
 	private ServerSocket server_socket = null;
-	
-	/**
-	 * Socket connecting Android device and PC host
-	 */
-	private Socket host_socket = null;
 	
 	// UI elements 
 	private Button btn_start_time_poll = null;
@@ -101,7 +95,7 @@ public class TimePollingFragment extends Fragment implements OnClickListener
 				break;
 				
 			case R.id.btn_time_polling:
-				this.pollHostTime();
+				TimingService.INSTANCE.pollingTime();
 				break;
 				
 			default:
@@ -109,6 +103,15 @@ public class TimePollingFragment extends Fragment implements OnClickListener
 		}
 	}
 
+	// Daemon thread for establishing and maintaining the time polling connection
+	private Runnable TimePollingDaemon = new Runnable()
+	{
+		public void run()
+		{
+			establishDeviceHostConnection();
+		}
+	};
+	
 	/**
 	 * Starting as a ServerSocket. 
 	 * Listen to client Socket, accept, and store it for further communication.
@@ -125,34 +128,24 @@ public class TimePollingFragment extends Fragment implements OnClickListener
 		{
 			this.server_socket = new ServerSocket();
 			this.server_socket.bind(new InetSocketAddress("localhost", ADBExecutor.ANDROID_PORT));
-			Log.d(TAG, "Localhost serversocket for time polling: " + server_socket.toString());
 			
-			this.host_socket = server_socket.accept();
+			TimingService.INSTANCE.setHostSocket(server_socket.accept());
 			
 			// receive (and consume) {@link AuthMsg} from PC and enable the time-polling functionality.
-			this.receiveAuthMsg();
+			TimingService.INSTANCE.receiveAuthMsg();
+			this.afterPermissionGranted();
 		} catch (IOException ioe)
 		{
 			ioe.printStackTrace();
 		}
 	}
 
-	// Daemon thread for establishing and maintaining the time polling connection
-	private Runnable TimePollingDaemon = new Runnable()
-	{
-		public void run()
-		{
-			establishDeviceHostConnection();
-		}
-	};
-	
 	/**
-	 * Receive {@link AuthMsg} from PC; Enable the time-polling functionality.
+	 * Change states of UI elements to indicate that {@link AuthMsg} has been received
+	 * and permission of polling time has been granted.
 	 */
-	private void receiveAuthMsg()
+	private void afterPermissionGranted()
 	{
-		SocketUtil.INSTANCE.receiveMsg(host_socket);
-		
 		getActivity().runOnUiThread(new Runnable()
 		{
 			@Override
@@ -162,45 +155,6 @@ public class TimePollingFragment extends Fragment implements OnClickListener
 				txt_timing_log.setText(getString(R.string.txt_timing_log_polling));
 			}
 		});
-	}
-	
-	/**
-	 * Wait for and receive {@link ResponseTimeMsg} from PC.
-	 * @param host_socket the message is sent via this specified socket
-	 * @return {@link ResponseTimeMsg} from PC
-	 */
-	private ResponseTimeMsg receiveResponseTimeMsgInNewThread(final Socket host_socket)
-	{
-		Message msg = SocketUtil.INSTANCE.receiveMsgInNewThread(host_socket);
-		assert msg.getType() == Message.RESPONSE_TIME_MSG;
-		return (ResponseTimeMsg) msg;
-	}
-	
-	/**
-	 * Poll system time of PC
-	 * @return system time of PC
-	 */
-	public long pollHostTime()
-	{
-		/**
-		 * Send {@link RequestTimeMsg} to PC in a new thread.
-		 * You cannot use network connection on the Main UI thread.
-		 * Otherwise you will get {@link NetworkOnMainThreadException}
-		 */
-		SocketUtil.INSTANCE.sendMsgInNewThread(new RequestTimeMsg(), host_socket);
-		
-		ResponseTimeMsg responseTimeMsg = this.receiveResponseTimeMsgInNewThread(host_socket);
-		final long time = responseTimeMsg.getHostPCTime();
-		
-		getActivity().runOnUiThread(new Runnable()
-		{
-			public void run()
-			{
-				Toast.makeText(getActivity(), String.valueOf(time), Toast.LENGTH_SHORT).show();
-			}
-		});
-		
-		return time;
 	}
 	
 	/**

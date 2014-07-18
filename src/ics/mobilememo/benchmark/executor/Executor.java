@@ -3,6 +3,7 @@ package ics.mobilememo.benchmark.executor;
 import ics.mobilememo.benchmark.workload.PoissonWorkloadGenerator;
 import ics.mobilememo.benchmark.workload.Request;
 import ics.mobilememo.benchmark.workload.RequestRecord;
+import ics.mobilememo.service.timingservice.TimingService;
 import ics.mobilememo.sharedmemory.atomicity.AbstractAtomicityRegisterClient;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
@@ -69,12 +70,16 @@ public class Executor implements Runnable
 		String val = request.getValue();
 		VersionValue vvalue = null;
 		
-		long invocation_time = System.currentTimeMillis();
+//		long invocation_time = System.currentTimeMillis();
+		
+		long invocation_time = TimingService.INSTANCE.pollingTime();
 		if (type == Request.WRITE_TYPE)	// it is W[0]
 			vvalue = client.put(key, val);
 		else // it is R[1]
 			vvalue = client.get(key);
-		long response_time = System.currentTimeMillis();
+		long response_time = TimingService.INSTANCE.pollingTime();
+		
+//		long response_time = System.currentTimeMillis();
 
 		// the delay = response_time - invocation_time is calculated and recorded
 		RequestRecord rr = new RequestRecord(type, invocation_time, response_time, key, vvalue);
