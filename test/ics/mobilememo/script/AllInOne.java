@@ -30,8 +30,8 @@ public class AllInOne
 		String destination_directory = new ExecutionCollector().collect();
 		
 		// (2) sync. separate sub-executions
-		System.out.println("[[[ 2. Sync. ]]]");
-		new ExecutionTimeSynchronizer(destination_directory).sync();
+//		System.out.println("[[[ 2. Sync. ]]]");
+//		new ExecutionTimeSynchronizer(destination_directory).sync();
 		
 		// (3) extract "delay" values from separate sub-executions
 		System.out.println("[[[ 3. Extracting delay. ]]]");
@@ -39,7 +39,7 @@ public class AllInOne
 		
 		// (4) combine sub-executions into one
 		System.out.println("[[[ 4. Combine. ]]]");
-		String combined_execution_file = new SyncedExecutionCombiner(destination_directory).combine();
+		String combined_execution_file = new ExecutionCombiner(destination_directory, false).combine();
 		
 		// (5) verify atomicity and 2-atomicity against the combined execution
 		System.out.println("[[[ 5. Verifying atomicity. ]]]");

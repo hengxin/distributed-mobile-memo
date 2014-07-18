@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * 
+ * Utility class for sending and waiting for messages via socket
  * @author hengxin
  * @date Jul 15, 2014
  */

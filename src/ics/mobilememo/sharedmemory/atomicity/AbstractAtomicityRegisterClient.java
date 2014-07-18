@@ -295,7 +295,7 @@ public abstract class AbstractAtomicityRegisterClient implements
 		@Override
 		public void onReceive(final IPMessage msg)
 		{
-			Log.i(TAG, "Who is in charge of onReceive in Communication: " + Thread.currentThread().getName());
+//			Log.i(TAG, "Who is in charge of onReceive in Communication: " + Thread.currentThread().getName());
 
 			// discard the delayed message
 			if (this.isDeprecated((AtomicityMessage) msg)) 

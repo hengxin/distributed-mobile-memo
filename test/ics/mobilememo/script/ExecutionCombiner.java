@@ -10,28 +10,38 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**
- * combine the separately synchronized sub-executions into one
+ * combine the separately (synchronized or not) sub-executions into one
  * 
  * @author hengxin
  * @date Jul 1, 2014
  */
-public class SyncedExecutionCombiner
+public class ExecutionCombiner
 {
-	private String execution_directory = null;
+	private final String execution_directory;
 
 	// file containing sub-execution
 	private final String execution_sync_file = "execution_sync.txt";
-	// file to store the combined execution
 	private final String execution_file = "execution.txt";
+	private final String EXECUTION_FILE_BE_COMBINED;
+	
+	// file to store the combined execution
+	private final String execution_file_combined = "execution.txt";
 	
 	/**
-	 * Constructor of {@link SyncedExecutionCombiner}
+	 * Constructor of {@link ExecutionCombiner}
 	 *
 	 * @param directory directory on which the combination is performed
+	 * @param isSynced To combine the synchronized sub-executions (isSynced = true)
+	 * 	or the original ones (isSynced = false) 
 	 */
-	public SyncedExecutionCombiner(String directory)
+	public ExecutionCombiner(final String directory, final boolean isSynced)
 	{
 		this.execution_directory = directory;
+		
+		if (isSynced)
+			this.EXECUTION_FILE_BE_COMBINED = this.execution_sync_file;
+		else
+			this.EXECUTION_FILE_BE_COMBINED = this.execution_file;
 	}
 
 	/**
@@ -44,7 +54,7 @@ public class SyncedExecutionCombiner
 		System.out.println("Combine executions in this directory: " + this.execution_directory);
 		
 		BufferedWriter bw = null;
-		String combined_execution_file = this.execution_directory + "\\" + this.execution_file;
+		String combined_execution_file = this.execution_directory + "\\" + this.execution_file_combined;
 		
 		try
 		{
@@ -64,10 +74,10 @@ public class SyncedExecutionCombiner
 			
 			for (File file : files)
 			{
-				// find the "execution_sync.txt" file
-				if (file.getName().equals(this.execution_sync_file))
+				// find the file containing the sub-execution to be combined
+				if (file.getName().equals(this.EXECUTION_FILE_BE_COMBINED))
 				{
-					// read from "execution_sync.txt" and write them to "execution.txt"
+					// read its requests and write them to "execution.txt"
 					try
 					{
 						br = new BufferedReader(new FileReader(file.getAbsoluteFile()));
@@ -121,6 +131,6 @@ public class SyncedExecutionCombiner
 	
 	public static void main(String[] args)
 	{
-		new SyncedExecutionCombiner("C:\\Users\\ics-ant\\Desktop\\executions\\allinonetest").combine();
+		new ExecutionCombiner("C:\\Users\\ics-ant\\Desktop\\executions\\allinonetest", false).combine();
 	}
 }
