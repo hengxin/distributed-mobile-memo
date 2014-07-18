@@ -2,13 +2,14 @@
  * @author hengxin
  * @date May 29, 2014
  * @description to configure "android-logging-log4j"
- *  <url>https://code.google.com/p/android-logging-log4j/</url>
+ *  <a href>https://code.google.com/p/android-logging-log4j/</a>
  */
 package log4android;
 
 import java.io.File;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 
 import android.os.Environment;
 import de.mindpipe.android.logging.log4j.LogConfigurator;
@@ -34,6 +35,13 @@ public enum ConfigureLog4J
 	        log_config.setFilePattern("%m%n");
 	        log_config.setUseLogCatAppender(false);
 	        
+	        /**
+	         * for <i>possible</i> performance improvement
+	         * @author hengxin
+	         * @date Jul 15, 2014
+	         */
+	        log_config.setImmediateFlush(false);
+	        
 	        // Set log level of a specific logger
 	        log_config.setLevel("ics.mobilememo", Level.DEBUG);
 	        
@@ -55,5 +63,14 @@ public enum ConfigureLog4J
     public String getFileName()
     {
     	return this.file_name;
+    }
+    
+    /**
+     * Shut down the logger and let all buffered logs get flushed.
+     * See http://stackoverflow.com/a/3078377/1833118
+     */
+    public void shutdown()
+    {
+    	LogManager.shutdown();
     }
 }

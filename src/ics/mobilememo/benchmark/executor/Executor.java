@@ -1,16 +1,9 @@
-/**
- * @author hengxin
- * @date 2014-04-24
- * @description executor responsible for issuing the requests from workload benchmarks
- */
 package ics.mobilememo.benchmark.executor;
 
-import ics.mobilememo.benchmark.ui.BenchmarkFragment;
 import ics.mobilememo.benchmark.workload.PoissonWorkloadGenerator;
 import ics.mobilememo.benchmark.workload.Request;
 import ics.mobilememo.benchmark.workload.RequestRecord;
 import ics.mobilememo.sharedmemory.atomicity.AbstractAtomicityRegisterClient;
-import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClient;
 import ics.mobilememo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
@@ -22,23 +15,28 @@ import log4android.ConfigureLog4J;
 
 import org.apache.log4j.Logger;
 
-import android.R.integer;
 import android.util.Log;
 
+/**
+ * @description executor responsible for issuing the requests from workload benchmarks
+ * 
+ * @author hengxin
+ * @date 2014-04-24
+ */
 public class Executor implements Runnable
 {
 	private static final String TAG = Executor.class.getName();
 	
 	/**
 	 * use "android-logging-log4j"
-	 * <url>https://code.google.com/p/android-logging-log4j/</url>
+	 * <a href>https://code.google.com/p/android-logging-log4j/</a>
 	 */
 	private final Logger log4android = Logger.getLogger(Executor.class);
 	
 	// number of requests to execute
 	private int request_number = -1;
 	private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
-//	AtomicityRegisterClient client = AtomicityRegisterClient.INSTANCE;
+	
 	/**
 	 * the appropriate client has been set when logging in. @see LoginActivity
 	 */
@@ -103,5 +101,14 @@ public class Executor implements Runnable
 			Log.d(TAG, "The number of request: " + index);
 			index++;
 		}
+		
+		/**
+		 * Shut down the logger and let all the buffered logs get flushed
+		 * See http://stackoverflow.com/a/3078377/1833118
+		 * 
+		 * @author hengxin
+		 * @date Jul 15, 2014
+		 */
+		ConfigureLog4J.INSTANCE.shutdown();
 	}
 }

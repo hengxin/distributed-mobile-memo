@@ -5,6 +5,7 @@
     <string name="app_name">MEMO</string>
 
     <!-- application consists of three pager sections -->
+    <string name="title_section_timing">Timing</string>
     <string name="title_section_group">Group</string>
     <string name="title_section_memo">Memo</string>
     <string name="title_section_benchmark">Benchmark</string>
@@ -73,4 +74,13 @@
 	<string name="txt_exec_ready">Execution has been stored in the file: /sdcard/execution.txt</string>
 	<string name="btn_exec_sync">Sync Time</string>
 	<!-- end: for the benchmark fragment -->
+	
+	<!-- Timing Service -->
+    <string name="hello_world">Hello world!</string>
+    <string name="btn_time_polling">Polling Time</string>
+    <string name="btn_start_polling">Start Polling</string>
+    <string name="txt_timing_log">Timing Service Log To Show.</string>
+    <string name="txt_timing_log_start">Connection to PC has been established. Wait for Authorization.</string>
+    <string name="txt_timing_log_polling">Permission granted. Now you can poll time from PC.</string>
+    <!-- End: Timing Service -->
 </resources>

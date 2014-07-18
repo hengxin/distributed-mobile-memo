@@ -4,6 +4,7 @@ import ics.mobilememo.benchmark.ui.BenchmarkFragment;
 import ics.mobilememo.group.GroupFragment;
 import ics.mobilememo.login.SessionManager;
 import ics.mobilememo.memo.MemoFragment;
+import ics.mobilememo.service.timingservice.TimePollingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class MobileMemoActivity extends ActionBarActivity implements
 	 *  (3) benchmark: class BenchmarkFragment, title "BENCHMARK"
 	 */
 	private List<Fragment> fragments = new ArrayList<>();
-	private List<String> frament_titles = new ArrayList<String>();
+	private List<String> fragment_titles = new ArrayList<String>();
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -65,7 +66,7 @@ public class MobileMemoActivity extends ActionBarActivity implements
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
 		this.fragments = this.addFragments();
-		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this.fragments, this.frament_titles);
+		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this.fragments, this.fragment_titles);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -109,14 +110,17 @@ public class MobileMemoActivity extends ActionBarActivity implements
 	 */
 	private List<Fragment> addFragments()
 	{
+		this.fragments.add(new TimePollingFragment());
+		this.fragment_titles.add(getString(R.string.title_section_timing).toUpperCase(Locale.getDefault()));
+		
 		this.fragments.add(new GroupFragment());
-		this.frament_titles.add(getString(R.string.title_section_group).toUpperCase(Locale.getDefault()));
+		this.fragment_titles.add(getString(R.string.title_section_group).toUpperCase(Locale.getDefault()));
 
 		this.fragments.add(new MemoFragment());
-		this.frament_titles.add(getString(R.string.title_section_memo).toUpperCase(Locale.getDefault()));
+		this.fragment_titles.add(getString(R.string.title_section_memo).toUpperCase(Locale.getDefault()));
 
 		this.fragments.add(new BenchmarkFragment());
-		this.frament_titles.add(getString(R.string.title_section_benchmark).toUpperCase(Locale.getDefault()));
+		this.fragment_titles.add(getString(R.string.title_section_benchmark).toUpperCase(Locale.getDefault()));
 		
 	    return this.fragments;
 	}
