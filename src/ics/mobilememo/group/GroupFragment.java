@@ -90,23 +90,6 @@ public class GroupFragment extends Fragment implements
 		this.server_replica_listview = (AbsListView) view.findViewById(android.R.id.list);
 		((AdapterView<ListAdapter>) this.server_replica_listview).setAdapter(this.server_replica_list_adapter);
 
-		/**
-		 * pre-install server replicas for test [BEGIN]
-		 * @TODO: remove it
-		 */
-		
-//		GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.85.216"));	// tablet
-//		GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.84.134"));	// WHF phone
-		GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.82.208"));	// nexus-0
-		GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.84.166"));	// nexus-3
-		GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.87.2"));	// nexus-33
-		
-		server_replica_list_adapter.notifyDataSetChanged();
-		
-		/**
-		 * pre-install [END]
-		 */
-		
 		// Set OnItemClickListener so we can be notified on item clicks
 		this.server_replica_listview.setOnItemClickListener(this);
 
@@ -140,7 +123,22 @@ public class GroupFragment extends Fragment implements
 			@Override
 			public void onClick(View v)
 			{
-
+				/**
+				 * pre-install server replicas for test [BEGIN]
+				 * @TODO: remove it
+				 */
+				
+//				GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.85.216"));	// tablet
+//				GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.84.134"));	// WHF phone
+				GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.82.208"));	// nexus-0
+				GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.84.166"));	// nexus-3
+				GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.87.2"));	// nexus-33
+				
+				server_replica_list_adapter.notifyDataSetChanged();
+				
+				/**
+				 * pre-install [END]
+				 */
 			}
 		});
     }

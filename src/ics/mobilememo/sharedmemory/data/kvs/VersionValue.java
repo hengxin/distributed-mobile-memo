@@ -9,8 +9,6 @@ package ics.mobilememo.sharedmemory.data.kvs;
 
 import java.io.Serializable;
 
-import android.util.Log;
-
 /**
  * @author hengxin
  * @description value with its version;
@@ -98,11 +96,7 @@ public class VersionValue implements Comparable<VersionValue>, Serializable
 	 */
 	public static VersionValue max(VersionValue[] vvals)
 	{
-		assert vvals.length != 0;
-
-		Log.d(TAG, "The length of VersionValue array is:" + vvals.length);
 		VersionValue max_vval = vvals[0];
-		Log.d(TAG, "The VersionValue is: " + max_vval.toString());
 
 		for (int i = 1; i < vvals.length; i++)
 			if (vvals[i].compareTo(max_vval) > 0)

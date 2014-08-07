@@ -23,7 +23,7 @@ public class APKUninstaller
 		adb_executor.execAdbOnlineDevicesPortForward();
 		
 		// uninstall apk "ics.android_usb_computer"
-		adb_executor.uninstall("ics.android_usb_computer");
+//		adb_executor.uninstall("ics.android_usb_computer");
 		// uninstall apk "ics.mobilememo"
 		adb_executor.uninstall("ics.mobilememo");
 	}

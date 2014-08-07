@@ -5,7 +5,6 @@
  */
 package ics.mobilememo.sharedmemory.atomicity.message;
 
-import android.util.Log;
 import ics.mobilememo.sharedmemory.architecture.communication.IPMessage;
 import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
@@ -74,8 +73,8 @@ public class AtomicityMessage extends IPMessage
 		
 		for (int i = 0; i < len; i++)
 		{
-			Log.d(TAG, "The length of READ_PHASE_ACKS is: " + len + "; The current under check is : " + i);
-			Log.d(TAG, atomicity_messages[i].toString());
+//			Log.d(TAG, "The length of READ_PHASE_ACKS is: " + len + "; The current under check is : " + i);
+//			Log.d(TAG, atomicity_messages[i].toString());
 			vvals[i] = atomicity_messages[i].vval;
 		}
 		
