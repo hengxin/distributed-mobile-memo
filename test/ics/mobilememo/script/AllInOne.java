@@ -37,6 +37,7 @@ public class AllInOne
 		// (3) extract "delay" values from separate sub-executions
 		System.out.println("[[[ 3. Extracting delay. ]]]");
 		new ExecutionDelayExtractor(destination_directory).extract();
+		new ExecutionDelayCombiner(destination_directory).combine();
 		
 		// (4) combine sub-executions into one
 		System.out.println("[[[ 4. Combine. ]]]");

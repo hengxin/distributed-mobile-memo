@@ -2,15 +2,17 @@ package ics.mobilememo.script;
 
 import ics.mobilememo.benchmark.workload.RequestRecord;
 import ics.mobilememo.execution.ExecutionLogHandler;
+import ics.mobilememo.utility.filesys.FileSysUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**
  * Extracting "delay" from "execution.txt" file
+ * (type \t delay)
+ * 
  * @author hengxin
  * @date Jul 5, 2014
  */
@@ -27,7 +29,7 @@ public class ExecutionDelayExtractor
 
 	public void extract()
 	{
-		for (String sub_directory : this.getSubDirectories())
+		for (String sub_directory : FileSysUtil.getSubDirectories(this.execution_directory))
 			this.extractFromSubDirectory(new File(this.execution_directory
 					+ "\\" + sub_directory));
 	}
@@ -60,7 +62,7 @@ public class ExecutionDelayExtractor
 		try
 		{
 			for (RequestRecord rr : exe_handler.loadRequestRecords())
-				bw.write(rr.getDelay() + "\n");
+				bw.write(rr.getType() + "\t" + rr.getDelay() + "\n");
 		} catch (IOException ioe)
 		{
 			ioe.printStackTrace();
@@ -78,26 +80,6 @@ public class ExecutionDelayExtractor
 		System.out.println("Extract delay values from " + execution_file.getAbsolutePath() + " and store them in " + execution_delay_file);
 	}
 
-	/**
-	 * @return sub-directories of the {@link #execution_directory} It is only a
-	 *         relative path, instead of the absolute path.
-	 */
-	private String[] getSubDirectories()
-	{
-		File file = new File(this.execution_directory);
-
-		String[] sub_directories = file.list(new FilenameFilter()
-		{
-			@Override
-			public boolean accept(File current, String name)
-			{
-				return new File(current, name).isDirectory();
-			}
-		});
-
-		return sub_directories;
-	}
-	
 	public static void main(String[] args)
 	{
 		new ExecutionDelayExtractor("C:\\Users\\ics-ant\\Desktop\\executions\\allinonetest").extract();
