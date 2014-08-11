@@ -37,52 +37,90 @@ package ics.mobilememo.verification;
 
 import ics.mobilememo.benchmark.workload.RequestRecord;
 import ics.mobilememo.execution.Execution;
+import ics.mobilememo.execution.ExecutionLogHandler;
 import ics.mobilememo.sharedmemory.data.kvs.Version;
 
 import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.collections4.functors.FalsePredicate;
 
 public class AtomicityVerifier
 {
-	// execution to check
+	// execution to be verified
 	private Execution execution = null;
 	
+	// number of occurrences of "old-new inversion"s
+	private int oni_count = 0;
+	
+	/**
+	 * Constructor of {@link AtomicityVerifier}
+	 * @param execution
+	 * 	{@link Execution} to be verified
+	 */
 	public AtomicityVerifier(Execution execution)
 	{
 		this.execution = execution;
 	}
 	
 	/**
+	 * Constructor of {@link AtomicityVerifier}
+	 * @param execution_file
+	 * 	a file containing the {@link Execution} to be verified
+	 */
+	public AtomicityVerifier(String execution_file)
+	{
+		ExecutionLogHandler exe_log_reader = new ExecutionLogHandler(execution_file);
+		List<RequestRecord> request_record_list = exe_log_reader.loadRequestRecords();
+		this.execution = new Execution(request_record_list);
+	}
+	
+	/**
 	 * verify atomicity against the {@link #execution}
 	 * @return <code>true</code> if the {@link #execution} satisfies atomicity;
 	 * 	<code>false</code>, otherwise.
+	 * 
+	 * @date Aug 10, 2014
+	 * @author hengxin
+	 * 
+	 * Notice that the verification does not halt immediately when it finds an "old-new inversion";
+	 * instead it counts the number of occurrences of them and store it in {@link #oni_count}
+	 * You can call {@link #getONICount()} after {@link #verifyAtomicity()} to get the counting.
 	 */
 	public boolean verifyAtomicity()
 	{
 		for (RequestRecord cur_read_request_record : this.execution.getReadRequestRecordList())
 		{
-			// no read operation can return some value out of thin air
+			/**
+			 * No read operation can return some value out of thin air.
+			 */
 			if (this.isValueFromNowhere(cur_read_request_record))
 			{	
 				System.err.println(cur_read_request_record.toString() + " reads value from nowhere.");
 				return false;
 			}
-			// no read operation returns a value from the distinct past, that is,
-			// one that precedes the most recently written non-overlapping value 
+			
+			/**
+			 * No read operation returns a value from the distinct past, that is,
+			 * one that precedes the most recently written non-overlapping value 
+			 */
 			if (this.isValueOverwritten(cur_read_request_record))
 			{
 				System.err.println(cur_read_request_record.toString() + " reads overwritten value.");
 				return false;
 			}
 			
-			// check old-new-inversion
+			/**
+			 * Check old-new-inversion and count their occurrences
+			 */
 			if (this.hasOldNewInversion(cur_read_request_record))
 			{
 				System.err.println(cur_read_request_record.toString() + " has old new inversion.");
-				return false;
+				this.oni_count++;
 			}
 		}
 		
-		return true;
+		return (this.oni_count > 0) ? false : true;
 	}
 	
 	/**
@@ -117,6 +155,15 @@ public class AtomicityVerifier
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * @return 
+	 * 	{@link #oni_count}: number of occurrences of "old-new inversion"s
+	 */
+	public int getONICount()
+	{
+		return this.oni_count;
 	}
 	
 	/**

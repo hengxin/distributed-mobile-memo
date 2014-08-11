@@ -14,6 +14,8 @@ import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
 import java.util.Map;
 
+import android.util.Log;
+
 /**
  * @author hengxin
  * @date Jun 27, 2014
@@ -59,7 +61,7 @@ public class SWMR2AtomicityRegisterClient extends
 	@Override
 	public VersionValue get(Key key)
 	{
-//		Log.d(TAG, TAG + " issues a GET request ...");
+		Log.d(TAG, TAG + " issues a GET request ...");
 		
 		this.op_cnt++;
 

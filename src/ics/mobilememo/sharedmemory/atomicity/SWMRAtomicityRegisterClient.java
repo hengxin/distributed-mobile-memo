@@ -84,7 +84,7 @@ public class SWMRAtomicityRegisterClient extends
 		
 		this.op_cnt++;
 
-		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
+//		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
 		
 		// read phase: contact a quorum of the server replicas for the latest value and version
 		Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
@@ -112,7 +112,7 @@ public class SWMRAtomicityRegisterClient extends
 	@Override
 	public VersionValue put(Key key, String val)
 	{
-		Log.d(TAG, TAG + " issues a PUT request ...");
+//		Log.d(TAG, TAG + " issues a PUT request ...");
 		
 		this.op_cnt++;
 		

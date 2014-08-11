@@ -1,5 +1,6 @@
 package ics.mobilememo.script;
 
+import ics.mobilememo.verification.AtomicityVerifier;
 import ics.mobilememo.verification.VerifierMain;
 
 /**
@@ -43,10 +44,12 @@ public class AllInOne
 		
 		// (5) verify atomicity and 2-atomicity against the combined execution
 		System.out.println("[[[ 5. Verifying atomicity. ]]]");
-		System.out.println("Verifying atomicity: " + new VerifierMain(combined_execution_file).verifyAtomicity());
+		AtomicityVerifier atomicity_verifier = new AtomicityVerifier(combined_execution_file);
+		System.out.println("Verifying atomicity: " + atomicity_verifier.verifyAtomicity());
+		System.out.println("Verifying atomicity is done. The number of \"old-new inversion\" is " + atomicity_verifier.getONICount());
 		
 		System.out.println("[[[ 6. Verifying 2-atomicity. ]]]");
-		System.out.println("Verifying 2-atomicity: " + new VerifierMain(combined_execution_file).verify2Atomicity());
+		System.out.println("Verifying 2-atomicity: " + new AtomicityVerifier(combined_execution_file).verify2Atomicity());
 		
 		/**
 		 * clean up
