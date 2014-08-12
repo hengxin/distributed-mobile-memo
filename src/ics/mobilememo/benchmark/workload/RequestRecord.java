@@ -177,6 +177,37 @@ public class RequestRecord extends Request implements Comparable<RequestRecord>
 	}
 	
 	/**
+	 * Does this {@link RequestRecord} start within another {@link RequestRecord} specified by @param rr?
+	 * 
+	 * @param rr
+	 * 	another {@link RequestRecord}
+	 * @return
+	 * 	True, if this {@link RequestRecord} start within another {@link RequestRecord} 
+	 * 	specified by @param rr;
+	 *  False, otherwise.
+	 */
+	public boolean startWithin(RequestRecord rr)
+	{
+		return rr.getStartTime() <= this.getStartTime() && this.getStartTime() <= rr.finish_time;
+	}
+	
+	/**
+	 * Does this {@link RequestRecord} finish within a time interval?
+	 * 
+	 * @param lo
+	 * 	low bound of a time interval
+	 * @param hi
+	 * 	high bound of a time interval
+	 * @return
+	 *  True, if this {@link RequestRecord} finish within a time interval;
+	 *  False, otherwise.
+	 */
+	public boolean finishWithin(long lo, long hi)
+	{
+		return lo <= this.getFinishTime() && this.getFinishTime() <= hi;
+	}
+	
+	/**
 	 * @inheritDoc
 	 * comparison between this {@link #RequestRecord} with another one
 	 * according to their {@link #start_time}  

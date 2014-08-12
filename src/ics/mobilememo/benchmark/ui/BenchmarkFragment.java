@@ -74,7 +74,7 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 		 * default values for test
 		 */
 		this.etxt_request_number.setText("50000");
-		this.etxt_rate.setText("5");
+		this.etxt_rate.setText("50");
 		this.etxt_key_range.setText("1");
 		this.etxt_value_range.setText("5");
 		
