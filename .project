@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>appcompat_v7</project>
+		<project>mobile-memo-statistics</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
