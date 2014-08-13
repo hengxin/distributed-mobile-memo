@@ -1,0 +1,9 @@
+50000
+20
+1
+5
+
+3 replicas
+
+atomicity: true
+2-atomicity: true

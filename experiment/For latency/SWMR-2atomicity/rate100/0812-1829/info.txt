@@ -1,0 +1,11 @@
+50000
+100
+1
+5
+
+3 replicas
+
+atomicity: true
+2-atomicity: true
+
+Number of concurrency patterns: 59243
