@@ -18,6 +18,7 @@ import ics.mobilememo.sharedmemory.data.kvs.Key;
 import ics.mobilememo.sharedmemory.data.kvs.Version;
 import ics.mobilememo.sharedmemory.data.kvs.VersionValue;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -206,14 +207,14 @@ public abstract class AbstractAtomicityRegisterClient implements
 			this.atomicity_message = rmsg;
 
 			this.replicas_num = GroupConfig.INSTANCE.getGroupSize(); // number of clients/server replicas in the system
-			this.proc_majority = replicas_num / 2 + 1; // counter indicating a majority of server replicas
+			this.proc_majority = this.replicas_num / 2 + 1; // counter indicating a majority of server replicas
 			// Log.d(TAG, "The majority number is: " + this.proc_majority);
 			this.latch_majority = new CountDownLatch(proc_majority); // wait for a majority of acks
 
 			// initialization
 			List<SystemNode> replica_list = GroupConfig.INSTANCE.getGroupMembers();
 
-			for (int i = 0; i < replicas_num; i++)
+			for (int i = 0; i < this.replicas_num; i++)
 			{
 				final String replica_ip = replica_list.get(i).getNodeIp();
 				
@@ -247,8 +248,24 @@ public abstract class AbstractAtomicityRegisterClient implements
 		{
 			final List<SystemNode> replica_list = GroupConfig.INSTANCE.getGroupMembers();
 
+			/**
+			 * Modified.
+			 * Sending messages to a random majority of server replicas 
+			 * instead of sending them to all and waiting for a majority of acks.
+			 * 
+			 * The purpose is to produce more "old-new inversions".
+			 * 
+			 * To get a random majority of samples from a list 'L' with size 'n':
+			 * call Collections.shuffle(L) and take the first $n / 2 + 1$ elements.
+			 * See http://stackoverflow.com/a/4702061/1833118
+			 * 
+			 * @author hengxin
+			 * @date Aug 16, 2014
+			 */
+			Collections.shuffle(replica_list);
+			
 			// broadcast
-			for (int i = 0; i < replicas_num; i++)
+			for (int i = 0; /** i < this.replicas_num;**/ i < this.proc_majority; i++)
 			{
 				final String replica_ip = replica_list.get(i).getNodeIp();
 

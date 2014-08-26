@@ -54,8 +54,10 @@ public class AllInOne
 		
 		// (6) quantify 2-atomicity
 		System.out.println("[[[ 6. Quantifying 2-atomicity. ]]]");
-		int cp_count = new Quantifying2Atomicity(combined_execution_file).countCP();
-		System.out.println("Number of concurrency patterns: " + cp_count);
+		Quantifying2Atomicity quantifer = new Quantifying2Atomicity(combined_execution_file);
+		quantifer.quantify();
+		System.out.println("The number of \"concurrency patterns\" is: " + quantifer.getCPCount());
+		System.out.println("The number of \"old new inversions\" is: " + quantifer.getONICount());
 
 		/**
 		 * clean up

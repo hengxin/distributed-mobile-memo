@@ -281,7 +281,7 @@ public class AtomicityVerifier
 	/**
 	 * Violation of Condition (3) for 2-atomicity:
 	 * (3) in a 2-atomicity execution, a read operation is allowed to return a stale value.
-	 * However, the staleness is (highly) bounded: any <it>preceding</it> read operations cannot
+	 * However, the staleness is (tightly) bounded: any <it>preceding</it> read operations cannot
 	 * return a value <it>more than 2 versions</it> later than that returned by a later read. 
 	 * Otherwise, we call that the read operation has a <bold>bad</bold> old-new inversion.
 	 * 
@@ -319,5 +319,15 @@ public class AtomicityVerifier
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Test
+	 */
+	public static void main(String[] args)
+	{
+		AtomicityVerifier atomicity_verifier = new AtomicityVerifier("C:\\Users\\ics-ant\\Desktop\\executions\\For ONI\\SWMR-2Atomicity\\rate200\\0815-1947-3\\execution.txt");
+		System.out.println("Verifying atomicity: " + atomicity_verifier.verifyAtomicity());
+		System.out.println("Verifying atomicity is done. The number of \"old-new inversion\" is " + atomicity_verifier.getONICount());
 	}
 }

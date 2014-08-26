@@ -10,6 +10,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
+import android.R.integer;
+
 /**
  * Given an execution satisfying 2-atomicity, the
  * statistics for 2-atomicity including:
@@ -25,6 +27,9 @@ public class Quantifying2Atomicity
 	private final String CP_FILE_NAME = "cp.txt";
 	// file to store the "concurrency pattern"s
 	private File cp_file = null;
+	
+	private int cp_count = 0;
+	private int oni_count = 0;
 	
 	/**
 	 * Constructor of {@link Quantifying2Atomicity}
@@ -53,9 +58,10 @@ public class Quantifying2Atomicity
 	}
 	
 	/**
-	 * @return number of occurrences of "concurrency pattern" (CP)
+	 * Quantifying 2-atomicity in terms of numbers of "concurrency patterns"
+	 * and "old-new inversions"
 	 */
-	public int countCP()
+	public void quantify()
 	{
 		BufferedWriter bw = null;
 		if (this.cp_file != null)
@@ -68,8 +74,6 @@ public class Quantifying2Atomicity
 				ioe.printStackTrace();
 			}
 		}
-		
-		int count = 0;
 		
 		for (RequestRecord read_request_record : this.execution.getReadRequestRecordList())
 		{
@@ -98,13 +102,15 @@ public class Quantifying2Atomicity
 						 */
 						if (pre_read_request_record.finishWithin(write_request_record.getStartTime(), read_request_record.getStartTime()))
 						{
-							count++;
+							// catch an occurrence of concurrency pattern
+							this.cp_count++;
 							
+							// store it in file
 							if (this.cp_file != null)
 							{
 								try
 								{
-									bw.write("Number of concurrency patterns: " + count + "\n" + 
+									bw.write("Number of concurrency patterns: " + this.cp_count + "\n" + 
 											read_request_record.toString() + "\n" + write_request_record.toString() + "\n" 
 											+ pre_read_request_record.toString() + "\n\n");
 								} catch (IOException ioe)
@@ -112,6 +118,10 @@ public class Quantifying2Atomicity
 									ioe.printStackTrace();
 								}
 							}
+							
+							// Is this an old-new inversion (an violation of atomicity)
+							if (this.isONI(read_request_record, write_request_record, pre_read_request_record))
+								this.oni_count++;
 						}
 					}
 					
@@ -129,13 +139,34 @@ public class Quantifying2Atomicity
 		{
 			ioe.printStackTrace();
 		}
-		
-		return count;
 	}
 	
-	public int countONI()
+	private boolean isONI(RequestRecord cur_read, RequestRecord write, RequestRecord pre_read)
 	{
-		return 0;
+		int cur_read_version = cur_read.getVersion().getSeqno();
+		int write_version = write.getVersion().getSeqno();
+		int pre_read_version = pre_read.getVersion().getSeqno();
+		
+		return (pre_read_version == write_version) &&
+				(pre_read_version == cur_read_version + 1);
+	}
+	
+	/**
+	 * @return {@link #cp_count}
+	 * 	number of "concurrency patterns"
+	 */
+	public int getCPCount()
+	{
+		return this.cp_count;
+	}
+	
+	/**
+	 * @return {@link #oni_count}
+	 * 	number of "old-new inversions"
+	 */
+	public int getONICount()
+	{
+		return this.oni_count;
 	}
 	
 	/**
@@ -146,7 +177,8 @@ public class Quantifying2Atomicity
 		Quantifying2Atomicity quantifer = new Quantifying2Atomicity("C:\\Users\\ics-ant\\Desktop\\executions\\allinonetest\\execution.txt");
 		
 		System.out.println("Quantifying 2-atomicity");
-		int cp_count = quantifer.countCP();
-		System.out.println("The number of concurrency pattern is: " + cp_count);
+		quantifer.quantify();
+		System.out.println("The number of \"concurrency patterns\" is: " + quantifer.getCPCount());
+		System.out.println("The number of \"old new inversions\" is: " + quantifer.getONICount());
 	}
 }
