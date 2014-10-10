@@ -12,14 +12,15 @@ In this project, such atomic registers reside on separate mobile phones.
 Suppose a distributed algorithm consisting of `n` processes that access (`read/write`) distributed shared atomic registers. To utilize this project, one follows the steps:
 
 - To distinguish the processes, each process is assigned a unique identifier. This is often a requirement of the algorithm itself.
+- All the participating processes are required to log into the project through the `Login` screen described below. It will ask for process identifier and ip address. Once logged in successfully, each process starts as a server replica which is also described below.
 - Each register is associated with a unique key. Registers are accessed according to their keys.
 - To determine whether the atomic registers accessed are of SWMR or MWMR types.
-- For an atomic SWMR register with key `k`, 
-  - call `SWMRAtomicityRegisterClient.INSTANCE().put(k:Key, val:String)` to write `val` to it;
-  - call `SWMRAtomicityRegisterClient.INSTANCE().get(k:Key)` to obtain its versioned value from which the value can be retrieved by calling `VersionValue#getValue()`.
-- For an atomic MWMR register with key `k`,
-  - call `MWMRAtomicityRegisterClient.INSTANCE().put(k:Key, val:String)` to write `val` to it.
-  - call `MWMRAtomicityRegisterClient.INSTANCE().get(k:Key)` to obtain its versioned value from which the value can be retrieved by calling `VersionValue#getValue()`. 
+- For an atomic SWMR register with key `k`, each process plays as a client and 
+  - calls `SWMRAtomicityRegisterClient.INSTANCE().put(k:Key, val:String)` to write `val` to it;
+  - calls `SWMRAtomicityRegisterClient.INSTANCE().get(k:Key)` to obtain its versioned value from which the value can be retrieved by calling `VersionValue#getValue()`.
+- For an atomic MWMR register with key `k`, each process plays as a client and
+  - calls `MWMRAtomicityRegisterClient.INSTANCE().put(k:Key, val:String)` to write `val` to it.
+  - calls `MWMRAtomicityRegisterClient.INSTANCE().get(k:Key)` to obtain its versioned value from which the value can be retrieved by calling `VersionValue#getValue()`. 
 
 ## 3. System models (See package  `sharedmemory`)
 
