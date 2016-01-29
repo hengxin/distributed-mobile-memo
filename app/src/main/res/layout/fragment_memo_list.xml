@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content" >
+
+	<!-- operations -->
+
+<!-- 
+	<TextView
+	    android:id="@+id/txt_memo_operations"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="10pt"
+	    android:layout_alignParentLeft="true"
+	    android:text="@string/txt_memo_operations" />
+ -->
+ 	
+    <ImageButton
+        android:id="@+id/imgbtn_add_memo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/img_btn_add"
+        android:src="@drawable/add" />
+    <!--android:maxHeight="@dimen/abc_action_bar_default_height"-->
+
+   <ImageButton
+       android:id="@+id/imgbtn_get_memo"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentTop="true"
+       android:layout_toLeftOf="@+id/imgbtn_add_memo"
+       android:contentDescription="@string/img_btn_search"
+       android:src="@drawable/get" />
+    <!--android:maxHeight="@dimen/abc_action_bar_default_height"-->
+
+    <ImageButton
+        android:id="@+id/imgbtn_delete_memo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/imgbtn_get_memo"
+        android:contentDescription="@string/img_btn_delete"
+        android:src="@drawable/delete" />
+    <!--android:maxHeight="@dimen/abc_action_bar_default_height"-->
+
+<!-- list of key-value pairs -->        
+    <!-- key-value pairs representation -->
+
+    <TextView
+        android:id="@+id/kv_representation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgbtn_delete_memo"
+        android:text="@string/txt_kv_representation" />
+
+    <!-- key-value pairs -->
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/kv_representation" />
+
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center" />
+         
+</RelativeLayout>
