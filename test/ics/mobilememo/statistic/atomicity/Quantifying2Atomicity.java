@@ -10,8 +10,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
-import android.R.integer;
-
 /**
  * Given an execution satisfying 2-atomicity, the
  * statistics for 2-atomicity including:
@@ -25,10 +23,17 @@ public class Quantifying2Atomicity
 	
 	// name of file to store the "concurrency pattern"s
 	private final String CP_FILE_NAME = "cp.txt";
-	// file to store the "concurrency pattern"s
+	// file to store the "concurrency patterns"
 	private File cp_file = null;
 	
+	// name of file to store the "old-new inversions"
+	private final String ONI_FILE_NAME = "oni.txt";
+	// file to store the "old-new inversions"
+	private File oni_file = null;
+	
+	// counting the occurrences of "concurrency patterns"
 	private int cp_count = 0;
+	// counting the occurrences of "old-new inversions"
 	private int oni_count = 0;
 	
 	/**
@@ -52,9 +57,10 @@ public class Quantifying2Atomicity
 	{
 		this.execution = new Execution(new ExecutionLogHandler(execution_file_path).loadRequestRecords());
 		
-		// create file to store the "concurrency pattern"s
+		// create files to store the "concurrency patterns" and "old-new inversions", respectively.
 		File execution_file = new File(execution_file_path);
 		this.cp_file = new File(execution_file.getParentFile(), this.CP_FILE_NAME);
+		this.oni_file = new File(execution_file.getParentFile(), this.ONI_FILE_NAME);
 	}
 	
 	/**
@@ -63,18 +69,33 @@ public class Quantifying2Atomicity
 	 */
 	public void quantify()
 	{
-		BufferedWriter bw = null;
+		// preparation for storing the "concurrency patterns"
+		BufferedWriter cp_bw = null;
 		if (this.cp_file != null)
 		{
 			try
 			{
-				bw = new BufferedWriter(new FileWriter(this.cp_file));
+				cp_bw = new BufferedWriter(new FileWriter(this.cp_file));
 			} catch (IOException ioe)
 			{
 				ioe.printStackTrace();
 			}
 		}
 		
+		// preparation for storing the "old-new inversions"
+		BufferedWriter oni_bw = null;
+		if (this.oni_file != null)
+		{
+			try
+			{
+				oni_bw = new BufferedWriter(new FileWriter(this.oni_file));
+			} catch (IOException ioe)
+			{
+				ioe.printStackTrace();
+			}
+		}
+		
+		// quantifying 2-atomicity for each read operation
 		for (RequestRecord read_request_record : this.execution.getReadRequestRecordList())
 		{
 			// scan all the write operations in their total order
@@ -110,7 +131,7 @@ public class Quantifying2Atomicity
 							{
 								try
 								{
-									bw.write("Number of concurrency patterns: " + this.cp_count + "\n" + 
+									cp_bw.write("Number of concurrency patterns: " + this.cp_count + "\n" + 
 											read_request_record.toString() + "\n" + write_request_record.toString() + "\n" 
 											+ pre_read_request_record.toString() + "\n\n");
 								} catch (IOException ioe)
@@ -121,7 +142,24 @@ public class Quantifying2Atomicity
 							
 							// Is this an old-new inversion (an violation of atomicity)
 							if (this.isONI(read_request_record, write_request_record, pre_read_request_record))
+							{
+								// catch an "old-new inversion"
 								this.oni_count++;
+								
+								// store it in file
+								if (this.oni_file != null)
+								{
+									try
+									{
+										oni_bw.write("Number of old-new inversions: " + this.oni_count + "\n" + 
+												read_request_record.toString() + "\n" + write_request_record.toString() + "\n"
+												+ pre_read_request_record.toString() + "\n\n");
+									} catch (IOException ioe)
+									{
+										ioe.printStackTrace();
+									}
+								}
+							}
 						}
 					}
 					
@@ -134,13 +172,23 @@ public class Quantifying2Atomicity
 		
 		try
 		{
-			bw.close();
+			cp_bw.close();
+			oni_bw.close();
 		} catch (IOException ioe)
 		{
 			ioe.printStackTrace();
 		}
 	}
 	
+	/**
+	 * To check whether these three operations constitute an "old-new inversion".
+	 * 
+	 * @param cur_read a read operation
+	 * @param write	a write operation
+	 * @param pre_read a read operation
+	 * @return <code>True</code> if these three operations constitute an "old-new inversion";
+	 * 	<code>False</code>, otherwise.
+	 */
 	private boolean isONI(RequestRecord cur_read, RequestRecord write, RequestRecord pre_read)
 	{
 		int cur_read_version = cur_read.getVersion().getSeqno();
@@ -174,7 +222,7 @@ public class Quantifying2Atomicity
 	 */
 	public static void main(String[] args)
 	{
-		Quantifying2Atomicity quantifer = new Quantifying2Atomicity("C:\\Users\\ics-ant\\Desktop\\executions\\allinonetest\\execution.txt");
+		Quantifying2Atomicity quantifer = new Quantifying2Atomicity("D:\\GitHub\\MobileMemo-Experiment\\For ONI\\replica factor = 2\\async = 10\\execution-1215-0933\\execution.txt");
 		
 		System.out.println("Quantifying 2-atomicity");
 		quantifer.quantify();

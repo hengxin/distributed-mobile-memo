@@ -8,6 +8,7 @@ import ics.mobilememo.benchmark.workload.Request;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import log4android.ConfigureLog4J;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -73,7 +74,7 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 		/**
 		 * default values for test
 		 */
-		this.etxt_request_number.setText("5000");
+		this.etxt_request_number.setText("200000");
 		this.etxt_rate.setText("50");
 		this.etxt_key_range.setText("1");
 		this.etxt_value_range.setText("5");
@@ -145,6 +146,7 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
 				
 				// the pre-processing can now be performed on the generated execution
 				txt_exec_ready.setText(R.string.txt_exec_ready);
+//				txt_exec_ready.setText("Execution has been stored in the file: /sdcard/single_execution/execution.txt");
 			}
 		});
     }

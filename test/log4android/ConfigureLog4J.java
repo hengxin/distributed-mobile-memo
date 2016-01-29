@@ -30,7 +30,7 @@ public enum ConfigureLog4J
 	        log_config = new LogConfigurator();
 	                
 	        log_config.setFileName(file_name);
-	        log_config.setMaxFileSize(5 * 1024 * 1024);	// 5MB
+	        log_config.setMaxFileSize(50 * 1024 * 1024);	// 50MB
 	        log_config.setRootLevel(Level.DEBUG);
 	        log_config.setFilePattern("%m%n");
 	        log_config.setUseLogCatAppender(false);

@@ -339,7 +339,7 @@ public abstract class AbstractAtomicityRegisterClient implements
 						this.status.put(from_ip, Communication.ACK);
 						this.info.put(from_ip, (AtomicityMessage) msg);
 
-						// Log.d(TAG, "Receiving an ACK message from: " + from_ip + "; It is " + msg.toString());
+//						 Log.d(TAG, "Receiving an ACK message from: " + from_ip + "; It is " + msg.toString());
 
 						/**
 						 * Replacing "wait/notifyAll" by "CountDownLatch"

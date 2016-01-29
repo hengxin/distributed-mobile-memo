@@ -47,12 +47,11 @@ public class AllInOne
 		System.out.println("[[[ 5.1 Verifying atomicity. ]]]");
 		AtomicityVerifier atomicity_verifier = new AtomicityVerifier(combined_execution_file);
 		System.out.println("Verifying atomicity: " + atomicity_verifier.verifyAtomicity());
-		System.out.println("Verifying atomicity is done. The number of \"old-new inversion\" is " + atomicity_verifier.getONICount());
 		
 		System.out.println("[[[ 5.2 Verifying 2-atomicity. ]]]");
 		System.out.println("Verifying 2-atomicity: " + new AtomicityVerifier(combined_execution_file).verify2Atomicity());
 		
-		// (6) quantify 2-atomicity
+		// (6) quantify 2-atomicity and get the number of "concurrency patterns" and "old-new inversions"
 		System.out.println("[[[ 6. Quantifying 2-atomicity. ]]]");
 		Quantifying2Atomicity quantifer = new Quantifying2Atomicity(combined_execution_file);
 		quantifer.quantify();

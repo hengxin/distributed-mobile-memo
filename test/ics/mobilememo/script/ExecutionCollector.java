@@ -26,8 +26,8 @@ public class ExecutionCollector extends JPanel
 	private final String single_execution_directory = "/sdcard/single_execution";
 	
 	// the (default) destination directory to which the execution files are copied/stored
-	private String collected_execution_directory = "C:\\Users\\ics-ant\\Desktop\\executions";
-	
+//	private String collected_execution_directory = "C:\\Users\\ics-ant\\Desktop\\executions";
+	private String collected_execution_directory = "D:\\GitHub\\MobileMemo-Experiment\\For ONI";
 	/**
 	 * collect all the execution-related files from separate mobile phones 
 	 * @return destination directory in which the files collected are stored

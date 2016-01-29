@@ -32,7 +32,7 @@ public enum AtomicityMessagingService implements IReceiver
 		assert (msg instanceof AtomicityMessage);
 		
 		/**
-		 * Simulating out of (receiving) order delivery by introducing random latency
+		 * Simulating the scenarios of "out of (receiving) order delivery" by introducing random latency
 		 * to create more "old-new inversions".
 		 * 
 		 * The average latency of read operations in 2-atomicity is about 80ms.
@@ -42,6 +42,10 @@ public enum AtomicityMessagingService implements IReceiver
 		 * @date Aug 15, 2014
 		 */
 		
+		/**
+		 * Varying the random delay to simulate different degrees of asynchrony:
+		 * 10ms, 20ms, 50ms, 100ms, 150ms, and 200ms
+		 */
 		try
 		{
 			Thread.sleep(new Random().nextInt(100));

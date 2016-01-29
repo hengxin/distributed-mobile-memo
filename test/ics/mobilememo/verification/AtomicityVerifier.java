@@ -43,15 +43,10 @@ import ics.mobilememo.sharedmemory.data.kvs.Version;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.collections4.functors.FalsePredicate;
-
 public class AtomicityVerifier
 {
 	// execution to be verified
 	private Execution execution = null;
-	
-	// number of occurrences of "old-new inversion"s
-	private int oni_count = 0;
 	
 	/**
 	 * Constructor of {@link AtomicityVerifier}
@@ -79,13 +74,6 @@ public class AtomicityVerifier
 	 * verify atomicity against the {@link #execution}
 	 * @return <code>true</code> if the {@link #execution} satisfies atomicity;
 	 * 	<code>false</code>, otherwise.
-	 * 
-	 * @date Aug 10, 2014
-	 * @author hengxin
-	 * 
-	 * Notice that the verification does not halt immediately when it finds an "old-new inversion";
-	 * instead it counts the number of occurrences of them and store it in {@link #oni_count}
-	 * You can call {@link #getONICount()} after {@link #verifyAtomicity()} to get the counting.
 	 */
 	public boolean verifyAtomicity()
 	{
@@ -111,16 +99,16 @@ public class AtomicityVerifier
 			}
 			
 			/**
-			 * Check old-new-inversion and count their occurrences
+			 * Check old-new-inversion
 			 */
 			if (this.hasOldNewInversion(cur_read_request_record))
 			{
 				System.err.println(cur_read_request_record.toString() + " has old new inversion.");
-				this.oni_count++;
+				return false;
 			}
 		}
 		
-		return (this.oni_count > 0) ? false : true;
+		return true;
 	}
 	
 	/**
@@ -155,15 +143,6 @@ public class AtomicityVerifier
 		}
 		
 		return true;
-	}
-	
-	/**
-	 * @return 
-	 * 	{@link #oni_count}: number of occurrences of "old-new inversion"s
-	 */
-	public int getONICount()
-	{
-		return this.oni_count;
 	}
 	
 	/**
@@ -328,6 +307,5 @@ public class AtomicityVerifier
 	{
 		AtomicityVerifier atomicity_verifier = new AtomicityVerifier("C:\\Users\\ics-ant\\Desktop\\executions\\For ONI\\SWMR-2Atomicity\\rate200\\0815-1947-3\\execution.txt");
 		System.out.println("Verifying atomicity: " + atomicity_verifier.verifyAtomicity());
-		System.out.println("Verifying atomicity is done. The number of \"old-new inversion\" is " + atomicity_verifier.getONICount());
 	}
 }

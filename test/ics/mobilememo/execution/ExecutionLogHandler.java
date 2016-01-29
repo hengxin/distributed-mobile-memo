@@ -56,7 +56,9 @@ public class ExecutionLogHandler
 		{
 			while ((raw_rr_line = br.readLine()) != null) 
 			{
-				request_record_list.add(this.parseRequestRecord(raw_rr_line));
+				RequestRecord rr = this.parseRequestRecord(raw_rr_line);
+				if (rr != null)
+					request_record_list.add(rr);
 			}
 		} catch (IOException ioe)
 		{
@@ -87,7 +89,8 @@ public class ExecutionLogHandler
 	{
 		String sync_file_name = this.file_name.replace(".txt", "_sync.txt");
 		
-		List<RequestRecord> rr_list = this.loadRequestRecords();
+		List<RequestRecord> rr_list;
+		rr_list = this.loadRequestRecords();
 		
 		BufferedWriter bw = null;
 		try
@@ -120,34 +123,74 @@ public class ExecutionLogHandler
 	 * parse the raw string of requests into instance of {@link RequestRecord}
 	 * @param raw_rr raw string of request to parse
 	 * @return {@link RequestRecord} corresponding to @param raw_rr
+	 * //@throws InvalidRequestRecordException invalid format of {@link RequestRecord}
 	 */
-	private RequestRecord parseRequestRecord(String raw_rr)
+	private RequestRecord parseRequestRecord(String raw_rr) // throws InvalidRequestRecordException
 	{
 		String[] rr_fields = raw_rr.split("\t");
 		
+		if (rr_fields.length < 7)
+//			throw new InvalidRequestRecordException(raw_rr);
+			return null;
+		
+		int type = -1;
+		long start_time = 0L;
+		long finish_time = 0L;
+		long delay = 0L;
+		Key key = null;
+		Version version = null;
+		String value = null;
+		
+		try{
 		// parse
 		String field = rr_fields[0];
-		int type = Integer.parseInt(field.split("\\s+")[1]);
+		type = Integer.parseInt(field.split("\\s+")[1]);
 		
 		field = rr_fields[1];
-		long start_time = Long.parseLong(field.split("\\s+")[1]);
+		start_time = Long.parseLong(field.split("\\s+")[1]);
 		
 		field = rr_fields[2];
-		long finish_time = Long.parseLong(field.split("\\s+")[1]);
+		finish_time = Long.parseLong(field.split("\\s+")[1]);
 		
 		field = rr_fields[3];
-		long delay = Long.parseLong(field.split("\\s+")[1]);
+		delay = Long.parseLong(field.split("\\s+")[1]);
 		
 		field = rr_fields[4];
-		Key key = new Key(field.split("\\s+")[1]);
+		key = new Key(field.split("\\s+")[1]);
 		
 		field = rr_fields[5].replaceAll("\\D+"," ").trim();
 		String[] ver_parts = field.split("\\s+");
-		Version version = new Version(Integer.parseInt(ver_parts[0]), Integer.parseInt(ver_parts[1]));
+		version = new Version(Integer.parseInt(ver_parts[0]), Integer.parseInt(ver_parts[1]));
 		
 		field = rr_fields[6];
-		String value = field.split("\\s+")[1];
+		value = field.split("\\s+")[1];
+		} catch(NumberFormatException nfe)
+		{
+//			throw new InvalidRequestRecordException(raw_rr);
+			return null;
+		} catch(ArrayIndexOutOfBoundsException aioobe)
+		{
+			return null;
+		}
 		
 		return new RequestRecord(type, start_time, finish_time, delay, key, version, value);
 	}
+	
+	/**
+	 * @author hengxin
+	 * @date Oct 11, 2014
+	 */
+	class InvalidRequestRecordException extends Exception
+	{
+		private static final long serialVersionUID = -4237793685217026661L;
+
+		//Parameterless Constructor
+	      public InvalidRequestRecordException() {}
+
+	      //Constructor that accepts a message
+	      public InvalidRequestRecordException(String message)
+	      {
+	         super("Invalid RequestRecord: " + message);
+	      }
+	 }
 }

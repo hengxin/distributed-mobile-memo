@@ -19,12 +19,15 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class PCHost
 {
 	private Executor exec = Executors.newFixedThreadPool(5);
+	
+	private static long cnt = 0;
 	
 	/**
 	 * pairs of (device, hostport)
@@ -103,6 +106,7 @@ public class PCHost
 	 */
 	private void sendResponseTimeMsg(final Socket host_socket)
 	{
+		System.out.println(++cnt);
 		SocketUtil.INSTANCE.sendMsg(new ResponseTimeMsg(System.currentTimeMillis()), host_socket);
 	}
 	
