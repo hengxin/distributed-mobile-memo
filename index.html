@@ -3,46 +3,43 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
     <title>Distributed-mobile-memo by hengxin</title>
   </head>
 
   <body>
-    <div id="container">
+    <header>
       <div class="inner">
+        <h1>Distributed-mobile-memo</h1>
+        <h2>mobile shared memory on Android operating system</h2>
+        <a href="https://github.com/hengxin/distributed-mobile-memo" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
 
-        <header>
-          <h1>Distributed-mobile-memo</h1>
-          <h2>mobile shared memory on Android operating system</h2>
-        </header>
-
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/hengxin/distributed-mobile-memo/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/hengxin/distributed-mobile-memo/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/hengxin/distributed-mobile-memo" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
           <h1>
-<a id="project-distributed-mobile-memo" class="anchor" href="#project-distributed-mobile-memo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Project distributed-mobile-memo</h1>
+<a id="project-distributed-mobile-memo" class="anchor" href="#project-distributed-mobile-memo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project distributed-mobile-memo</h1>
 
 <h2>
-<a id="1-what-is-this-project-about" class="anchor" href="#1-what-is-this-project-about" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. What is this project about?</h2>
+<a id="1-what-is-this-project-about" class="anchor" href="#1-what-is-this-project-about" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. What is this project about?</h2>
 
 <p>This project aims to provide a <em>distributed shared memory</em> consisting of <em>atomic</em> registers over asynchronous message-passing networks. Both atomic, single-writer multi-reader (for short, SWMR) registers and atomic, multi-writer multi-reader (for short, MWMR) ones are supported. In the view of database, it can also be regarded as a distributed storage system which conforms to the atomic consistency. </p>
 
 <p>In this project, such atomic registers reside on separate mobile phones.</p>
 
 <h2>
-<a id="2-how-to-use-this-project-as-a-black-box" class="anchor" href="#2-how-to-use-this-project-as-a-black-box" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. How to use this project as a black box?</h2>
+<a id="2-how-to-use-this-project-as-a-black-box" class="anchor" href="#2-how-to-use-this-project-as-a-black-box" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. How to use this project as a black box?</h2>
 
 <p>Suppose a distributed algorithm consisting of <code>n</code> processes that access (<code>read/write</code>) distributed shared atomic registers. To utilize this project, one follows the steps:</p>
 
@@ -68,52 +65,62 @@
 </ul>
 
 <h2>
-<a id="3-system-models-see-package--sharedmemory" class="anchor" href="#3-system-models-see-package--sharedmemory" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. System models (See package  <code>sharedmemory</code>)</h2>
+<a id="3-system-models-see-package--sharedmemory" class="anchor" href="#3-system-models-see-package--sharedmemory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. System models (See package  <code>sharedmemory</code>)</h2>
 
 <h3>
-<a id="31-clientserver-architecture" class="anchor" href="#31-clientserver-architecture" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1 Client/Server architecture</h3>
+<a id="31-clientserver-architecture" class="anchor" href="#31-clientserver-architecture" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3.1 Client/Server architecture</h3>
 
 <p>Each mobile phone holds a complete copy/replica of all data items and plays as a server. Clients issue their requests (read/write operations) to servers. All servers collectively process the requests and provide an illusion of a shared memory to the clients. In this project, the shared memory conforms to the atomic consistency. </p>
 
 <p>Clients should implement the <code>IRegisterClient</code> interface to issue the <code>get(key:Key)</code> and <code>put(key:Key, val:String)</code> operations.</p>
 
 <h3>
-<a id="32-data-model-see-package-sharedmemorydatakvs" class="anchor" href="#32-data-model-see-package-sharedmemorydatakvs" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2 Data model (See package <code>sharedmemory.data.kvs</code>)</h3>
+<a id="32-data-model-see-package-sharedmemorydatakvs" class="anchor" href="#32-data-model-see-package-sharedmemorydatakvs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3.2 Data model (See package <code>sharedmemory.data.kvs</code>)</h3>
 
 <p>We use the simple key-value data model. Each server replica holds a collection of data items. Each data item is associated with a key, which is simply a string. Values are strings as well. To fit in most algorithms for emulating a distributed shared memory, each key-value pair is further associated with a version. Specifically, in the algorithm for emulating atomic registers in this project, a version is comprised of an integer <code>process id</code> (of a client, as described above) and an integer local <code>seqno</code>. For each key, all versions are totally ordered. To summarize, each server replica holds a collection of <code>(key:Key, val:String, version:Version)</code> triples. </p>
 
 <p><code>KVStoreInMemory</code> is an implementation of a database of key-value model. It maintains a <code>HashMap</code> of <code>(Key, VersionValue)</code> pairs, where <code>Key</code> is simply a String and <code>VersionValue</code> is a value associated with a <code>Version</code>. The class <code>KVPair</code> is a compressed representation of <code>(Key, VersionValue)</code> pairs.  </p>
 
 <h3>
-<a id="33-communication-see-package-sharedmemoryarchitecturecommunication" class="anchor" href="#33-communication-see-package-sharedmemoryarchitecturecommunication" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3 Communication (See package <code>sharedmemory.architecture.communication</code>)</h3>
+<a id="33-communication-see-package-sharedmemoryarchitecturecommunication" class="anchor" href="#33-communication-see-package-sharedmemoryarchitecturecommunication" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3.3 Communication (See package <code>sharedmemory.architecture.communication</code>)</h3>
 
 <p>Clients and servers communicate by message-passing. Each message carries the ip of its sender, thus called <code>IPMessage</code>. The receivers (both the clients and the servers in this project) of messages implement the <code>IReceiver</code> interface to handle with received messages. </p>
 
 <p>The core of the communication modular lies at the <code>CommmunicationService</code> class. It sends an <code>IPMessage</code> to a designated destination by calling <code>public void sendOneWay(final String receiver_ip, final IPMessage msg)</code>. To start to listen to coming messages, a process (as a client or as a server) can call <code>public void start2Listen(String server_ip)</code>. In addition, the <code>CommunicationService</code> class has implemented the <code>onReceive()</code> method of the <code>IReceiver</code> interface to propagate its received messages to <code>AtomicityMessagingService</code>. The latter class is related to the algorithm for emulating atomic registers and is described below.</p>
 
 <h2>
-<a id="4-algorithm-for-emulating-atomic-registers-see-package-sharedmemoryatomicity" class="anchor" href="#4-algorithm-for-emulating-atomic-registers-see-package-sharedmemoryatomicity" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. Algorithm for emulating atomic registers (See package <code>sharedmemory.atomicity</code>)</h2>
+<a id="4-algorithm-for-emulating-atomic-registers-see-package-sharedmemoryatomicity" class="anchor" href="#4-algorithm-for-emulating-atomic-registers-see-package-sharedmemoryatomicity" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. Algorithm for emulating atomic registers (See package <code>sharedmemory.atomicity</code>)</h2>
 
 <h3>
-<a id="41-sketch-of-the-abd-algorithm" class="anchor" href="#41-sketch-of-the-abd-algorithm" aria-hidden="true"><span class="octicon octicon-link"></span></a>4.1 Sketch of the ABD algorithm</h3>
+<a id="41-sketch-of-the-abd-algorithm" class="anchor" href="#41-sketch-of-the-abd-algorithm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4.1 Sketch of the ABD algorithm</h3>
 
 <h3>
-<a id="42-messages-see-package-sharedmemoryatomicitymessage" class="anchor" href="#42-messages-see-package-sharedmemoryatomicitymessage" aria-hidden="true"><span class="octicon octicon-link"></span></a>4.2 Messages (See package <code>sharedmemory.atomicity.message</code>)</h3>
+<a id="42-messages-see-package-sharedmemoryatomicitymessage" class="anchor" href="#42-messages-see-package-sharedmemoryatomicitymessage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4.2 Messages (See package <code>sharedmemory.atomicity.message</code>)</h3>
 
 <h3>
-<a id="43" class="anchor" href="#43" aria-hidden="true"><span class="octicon octicon-link"></span></a>4.3</h3>
+<a id="43" class="anchor" href="#43" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4.3</h3>
 
 <h2>
-<a id="5-how-to-run-the-project" class="anchor" href="#5-how-to-run-the-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. How to run the project?</h2>
+<a id="5-how-to-run-the-project" class="anchor" href="#5-how-to-run-the-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. How to run the project?</h2>
         </section>
 
-        <footer>
-          Distributed-mobile-memo is maintained by <a href="https://github.com/hengxin">hengxin</a><br>
-          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+        <aside id="sidebar">
+          <a href="https://github.com/hengxin/distributed-mobile-memo/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/hengxin/distributed-mobile-memo/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
 
-        
+          <p class="repo-owner"><a href="https://github.com/hengxin/distributed-mobile-memo"></a> is maintained by <a href="https://github.com/hengxin">hengxin</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
       </div>
     </div>
+
+  
   </body>
 </html>
