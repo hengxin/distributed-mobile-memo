@@ -46,7 +46,7 @@ public class ExecutionCollector {
      * Collect all the execution-related files from separate mobile phones.
      */
     public void collect() {
-        ADBExecutor adb_executor = new ADBExecutor("D:\\AndroidSDK\\platform-tools\\adb.exe ");
+        ADBExecutor adb_executor = new ADBExecutor("C:\\AndroidSDK\\platform-tools\\adb.exe ");
 
         // "adb -s [device] forward tcp: tcp: "
         adb_executor.execAdbOnlineDevicesPortForward();

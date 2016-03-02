@@ -23,7 +23,7 @@ import io.github.hengxin.distributed_mobile_memo.utility.socket.SocketUtil;
 public class PCTimeOracle {
     private Executor exec = Executors.newFixedThreadPool(5);
 
-    private static long cnt = 0;
+    private static long cnt = 0;    // it is an estimator.
 
     private final Map<String, Integer> device_hostport_map;
     private final Map<String, Socket> device_hostsocket_map = new HashMap<>();
@@ -172,7 +172,7 @@ public class PCTimeOracle {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ADBExecutor adb_executor = new ADBExecutor("D:\\AndroidSDK\\platform-tools\\adb.exe ");
+        ADBExecutor adb_executor = new ADBExecutor("C:\\AndroidSDK\\platform-tools\\adb.exe ");
         Map<String, Integer> device_hostport_map = adb_executor.execAdbOnlineDevicesPortForward();
         final PCTimeOracle oracle = new PCTimeOracle(device_hostport_map);
 
