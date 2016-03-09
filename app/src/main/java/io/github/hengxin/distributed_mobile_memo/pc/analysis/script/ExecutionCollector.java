@@ -1,60 +1,41 @@
 package io.github.hengxin.distributed_mobile_memo.pc.analysis.script;
 
-import android.annotation.SuppressLint;
-
 import io.github.hengxin.distributed_mobile_memo.pc.adb.ADBExecutor;
 
 /**
- * Collect executions from separate mobile phones attached to computer via USB/ADB.
- *
+ * Collect all the execution files from individual phones.
  * @author hengxin
  * @date Jul 1, 2014
  */
 public class ExecutionCollector {
     private static final long serialVersionUID = 7715320944749649435L;
 
-    /**
-     * the source directory containing execution-related files in a single mobile phone
-     * <p>
-     * Lint Warning: Do not hardcode "/sdcard/"; use Environment.getExternalStorageDirectory().getPath() instead
-     */
-    @SuppressLint("SdCardPath")
-    private static final String SDCARD_EXECUTION_DIR = "/sdcard/single_execution";
-
-    /** default directory in computer to store all the execution files collected from mobile
-     * phones */
-    public static final String DEFAULT_EXECUTION_DIR = "D:\\GitHub\\MobileMemo-Experiment\\For ONI";
-
-    private String execDir;
+    private String adb_path;
 
     /**
-     * Constructor with default directory for storing executions {@value #DEFAULT_EXECUTION_DIR}
+     * Constructor of {@link ExecutionCollector}.
+     * @param adb_path  path of adb
      */
-    public ExecutionCollector() {
-        this(ExecutionCollector.DEFAULT_EXECUTION_DIR);
+    public ExecutionCollector(String adb_path) {
+        this.adb_path = adb_path;
     }
 
     /**
-     * Constructor with user-specified directory for storing executions.
-     * @param execDir
+     * Collect all the execution files from individual phones.
+     * @param from_dir  directory from which executions are collected
+     * @param to_dir    directory into which collected executions are stored
      */
-    public ExecutionCollector(String execDir) {
-        this.execDir = execDir;
-    }
-
-    /**
-     * Collect all the execution-related files from separate mobile phones.
-     */
-    public void collect() {
-        ADBExecutor adb_executor = new ADBExecutor("C:\\AndroidSDK\\platform-tools\\adb.exe ");
+    public void collect(String from_dir, String to_dir) {
+        ADBExecutor adb = new ADBExecutor(this.adb_path);
 
         // "adb -s [device] forward tcp: tcp: "
-        adb_executor.execAdbOnlineDevicesPortForward();
+        adb.execAdbOnlineDevicesPortForward();
         // copy execution-related files from mobile phones to computer
-        adb_executor.copyAll(this.SDCARD_EXECUTION_DIR, this.execDir);
+        adb.copyAll(from_dir, to_dir);
     }
 
-    public String getExecDir() {
-        return this.execDir;
+    public static void main(String[] args) {
+        new ExecutionCollector(ADBExecutor.DEFAULT_ADB_PATH).collect("/sdcard/single_execution",
+                "/~/android-studio-projects/distributed-mobile-memo");
     }
 }

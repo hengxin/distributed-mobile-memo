@@ -1,6 +1,7 @@
 package io.github.hengxin.distributed_mobile_memo.pc.adb;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -20,20 +21,19 @@ public class ADBExecutor {
     public static final int ANDROID_PORT = 30000;
     public static final int HOST_BASE_PORT = 35000;
 
+    public static final String DEFAULT_ADB_PATH = "/home/hengxin/Android/Sdk/platform-tools/adb";
+
     private final Map<String, String> deviceid_hostname_map = new HashMap<>();
 
-    /**
-     * directory of "adb.exe"
-     */
-    private final String adb_directory;
+    private final String adb_path;
 
     /**
-     * constructor of {@link ADBExecutor}
+     * Constructor of {@link ADBExecutor}.
      *
-     * @param adb_directory {@link #adb_directory}: directory of "adb.exe"
+     * @param adb_path  path of adb
      */
-    public ADBExecutor(String adb_directory) {
-        this.adb_directory = adb_directory;
+    public ADBExecutor(String adb_path) {
+        this.adb_path = adb_path;
 
         this.deviceid_hostname_map.put("429a40a2", "S4");
         this.deviceid_hostname_map.put("06701c69f0ec9b5b", "Nexus0");
@@ -45,8 +45,7 @@ public class ADBExecutor {
     }
 
     /**
-     * execute the ADB command "adb devices" to get online device ids
-     *
+     * Execute the ADB command "adb devices" to get online device ids.
      * @return a list of online device ids
      */
     public List<String> execAdbDevices() {
@@ -55,7 +54,7 @@ public class ADBExecutor {
         List<String> ret_device_id_list = new ArrayList<>();
         Process proc = null;
         try {
-            proc = new ProcessBuilder(this.adb_directory, "devices").start();
+            proc = new ProcessBuilder(this.adb_path, "devices").start();
             proc.waitFor();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -123,7 +122,7 @@ public class ADBExecutor {
 
         Process proc = null;
         try {
-            proc = new ProcessBuilder(this.adb_directory, "-s", device_id, "forward", "tcp:" + host_port, "tcp:" + to_port).start();
+            proc = new ProcessBuilder(this.adb_path, "-s", device_id, "forward", "tcp:" + host_port, "tcp:" + to_port).start();
             proc.waitFor();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -153,7 +152,7 @@ public class ADBExecutor {
 
         Process proc = null;
         try {
-            proc = new ProcessBuilder(this.adb_directory, "-s", device_id, "shell", "pm", "uninstall", apk).start();
+            proc = new ProcessBuilder(this.adb_path, "-s", device_id, "shell", "pm", "uninstall", apk).start();
             proc.waitFor();
         } catch (InterruptedException ire) {
             ire.printStackTrace();
@@ -179,7 +178,7 @@ public class ADBExecutor {
 
         Process proc = null;
         try {
-            proc = new ProcessBuilder(this.adb_directory, "-s", device_id, "pull", src_path, dest_path).start();
+            proc = new ProcessBuilder(this.adb_path, "-s", device_id, "pull", src_path, dest_path).start();
             proc.waitFor();
         } catch (InterruptedException ire) {
             ire.printStackTrace();
@@ -203,7 +202,7 @@ public class ADBExecutor {
         String sub_directory = null;
         for (String device : this.execAdbDevices()) {
             sub_directory = this.deviceid_hostname_map.get(device);
-            this.copy(device, src_path, dest_path + "\\" + sub_directory);
+            this.copy(device, src_path, dest_path + File.separator + sub_directory);
         }
     }
 
@@ -230,7 +229,7 @@ public class ADBExecutor {
 
         Process proc = null;
         try {
-            proc = new ProcessBuilder(this.adb_directory, "-s", device_id, "shell", "rm", "-r", path).start();
+            proc = new ProcessBuilder(this.adb_path, "-s", device_id, "shell", "rm", "-r", path).start();
             proc.waitFor();
         } catch (InterruptedException ire) {
             ire.printStackTrace();

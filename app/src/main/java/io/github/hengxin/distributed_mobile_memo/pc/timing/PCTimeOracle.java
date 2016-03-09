@@ -171,8 +171,19 @@ public class PCTimeOracle {
         }
     }
 
+    /**
+     * Run the {@link PCTimeOracle} application with one command line parameter of path of adb.exe.
+     * @param args  command line parameter of path of adb.exe
+     * @throws InterruptedException
+     */
     public static void main(String[] args) throws InterruptedException {
-        ADBExecutor adb_executor = new ADBExecutor("C:\\AndroidSDK\\platform-tools\\adb.exe ");
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Parameter: <Path of adb.exe>");
+        }
+
+        String adb_path = args[0];
+
+        ADBExecutor adb_executor = new ADBExecutor(adb_path);
         Map<String, Integer> device_hostport_map = adb_executor.execAdbOnlineDevicesPortForward();
         final PCTimeOracle oracle = new PCTimeOracle(device_hostport_map);
 

@@ -3,32 +3,36 @@ package io.github.hengxin.distributed_mobile_memo.pc.analysis.script;
 import io.github.hengxin.distributed_mobile_memo.pc.adb.ADBExecutor;
 
 /**
- * Script for uninstalling apks.
- *
+ * APK uninstaller.
  * @author hengxin
  * @date Jul 1, 2014
  */
 public class APKUninstaller {
-    public APKUninstaller() {
 
+    private String adb_path;
+
+    /**
+     * Constructor of {@link APKUninstaller}.
+     * @param adb_path  path of adb
+     */
+    public APKUninstaller(String adb_path) {
+        this.adb_path = adb_path;
     }
 
     /**
-     * uninstall "ics.android_usb_computer" and "ics.mobilememo"
+     * Uninstall the specified apk.
+     * @param apk   apk to be uninstalled
      */
-    public void uninstall() {
-        ADBExecutor adb_executor = new ADBExecutor("C:\\AndroidSDK\\platform-tools\\adb.exe ");
+    public void uninstall(String apk) {
+        ADBExecutor adb = new ADBExecutor(this.adb_path);
 
         // "adb -s [device] forward tcp: tcp: "
-        adb_executor.execAdbOnlineDevicesPortForward();
-
-        // uninstall apk "ics.android_usb_computer"
-//		adb_executor.uninstall("ics.android_usb_computer");
-        // uninstall apk "ics.mobilememo"
-        adb_executor.uninstall("io.github.hengxin.distributed_mobile_memo");
+        adb.execAdbOnlineDevicesPortForward();
+        // uninstall apk
+        adb.uninstall(apk);
     }
 
     public static void main(String[] args) {
-        new APKUninstaller().uninstall();
+        new APKUninstaller(ADBExecutor.DEFAULT_ADB_PATH).uninstall("io.github.hengxin.distributed_mobile_memo");
     }
 }

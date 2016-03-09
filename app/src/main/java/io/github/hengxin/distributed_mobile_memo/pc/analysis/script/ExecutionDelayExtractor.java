@@ -1,5 +1,8 @@
 package io.github.hengxin.distributed_mobile_memo.pc.analysis.script;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -7,68 +10,63 @@ import java.io.IOException;
 
 import io.github.hengxin.distributed_mobile_memo.benchmark.workload.RequestRecord;
 import io.github.hengxin.distributed_mobile_memo.pc.analysis.execution.ExecutionLogHandler;
-import io.github.hengxin.distributed_mobile_memo.utility.filesys.FileSysUtil;
 
 /**
- * Extracting "delay" from "execution.txt" file, consisting of
- * lines of "type \t delay" strings.
- *
+ * Extracting "delay" data from "execution" file which consists of lines of "type \t delay".
  * @author hengxin
  * @date Jul 5, 2014
  */
 public class ExecutionDelayExtractor {
-    private String execution_directory = null;
-    private static final String EXECUTION_FILE_NAME = "execution.txt";
-    private static final String EXECUTION_DELAY_FILE_NAME = "execution_delay.txt";
 
-    public ExecutionDelayExtractor(String execution_directory) {
-        this.execution_directory = execution_directory;
-    }
-
-    public void extract() {
-        for (String sub_directory : FileSysUtil.getSubDirectories(this.execution_directory))
-            this.extractFromSubDirectory(new File(this.execution_directory
-                    + "\\" + sub_directory));
-    }
-
-    private void extractFromSubDirectory(File directory) {
-        File[] files = directory.listFiles();
-        for (File file : files)
-            if (file.getName().equals(ExecutionDelayExtractor.EXECUTION_FILE_NAME))
-                this.extractFromFile(file);
-    }
-
-    private void extractFromFile(File execution_file) {
-        String execution_delay_file = execution_file.getAbsolutePath().replace(
-                ExecutionDelayExtractor.EXECUTION_FILE_NAME,
-                ExecutionDelayExtractor.EXECUTION_DELAY_FILE_NAME);
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter(execution_delay_file));
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+    /**
+     * Extract delay data from execution files in some specified directory.
+     * The directory {@param exec_dir} is assumed to be structured as follows:
+     *
+     * exec_dir
+     *   - sub_dir
+     *     - exec_file
+     *   - sub_dir
+     *     - exec_file
+     *   - ...
+     *     - ...
+     *
+     * The resulting structure will be:
+     *
+     * exec_dir
+     *   - sub_dir
+     *     - exec_file
+     *     - delay_file
+     *   - sub_dir
+     *     - exec_file
+     *     - delay_file
+     *   - ...
+     *     - ...
+     *     - ...
+     *
+     * @param exec_dir  directory whose subdirectories contain execution files
+     * @param exec_file execution file from which delay data is extracted
+     * @param delay_file delay file for storing extracted delay data
+     * @throws IOException  file/directory-related IO exceptions
+     */
+    public void extract(final String exec_dir, final String exec_file, final String delay_file) throws IOException {
+        for (File sub_dir : new File(exec_dir).listFiles()) {
+            if (sub_dir.isDirectory())  // TODO using listFiles(FileFilter)
+                for (File file : sub_dir.listFiles())
+                    if (file.getName().equals(exec_file))   // TODO using listFiles(FilenameFilter)
+                        this.extract(file, new File(sub_dir, delay_file));
         }
+    }
 
-        ExecutionLogHandler exe_handler = new ExecutionLogHandler(
-                execution_file.getAbsolutePath());
+    @TargetApi(Build.VERSION_CODES.KITKAT)  // for the try-with-resources statement
+    private void extract(final File exec_file, final File delay_file) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(delay_file))) {
+            ExecutionLogHandler exe_handler = new ExecutionLogHandler(exec_file.getAbsolutePath());
 
-        try {
-            for (RequestRecord rr : exe_handler.loadRequestRecords())
-                bw.write(rr.getType() + "\t" + rr.getDelay() + "\n");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } finally {
-            try {
-                bw.close();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
+            for (RequestRecord rr : exe_handler.loadRequestRecords()) {
+                bw.write(rr.getType() + "\t" + rr.getDelay());
+                bw.newLine();
             }
         }
-
-        System.out.println("Extract delay values from " + execution_file.getAbsolutePath() + " and store them in " + execution_delay_file);
     }
 
-    public static void main(String[] args) {
-        new ExecutionDelayExtractor("C:\\Users\\ics-ant\\Desktop\\executions\\allinonetest").extract();
-    }
 }
