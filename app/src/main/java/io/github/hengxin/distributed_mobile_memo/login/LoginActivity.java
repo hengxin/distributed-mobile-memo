@@ -70,10 +70,10 @@ public class LoginActivity extends Activity // implements OnItemSelectedListener
 
         // set adapter for Spinner
         this.spinner_algs = (Spinner) findViewById(R.id.spinner_algs);
-        ArrayAdapter<CharSequence> algs_adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> alg_adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_algs_array, android.R.layout.simple_spinner_item);
-        algs_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.spinner_algs.setAdapter(algs_adapter);
+        alg_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        this.spinner_algs.setAdapter(alg_adapter);
 
         // click the "Sign in" button
         findViewById(R.id.btn_sign_in).setOnClickListener(new View.OnClickListener() {
@@ -175,22 +175,20 @@ public class LoginActivity extends Activity // implements OnItemSelectedListener
     }
 
     /**
-     * the following two methods are from the interface @link AdapterView.OnItemSelectedListener
-     */
-
-    /**
-     * get the type of the chosen algorithm
+     * Get the chosen algorithm type from {@link Spinner} UI.
      */
     public int getAlgType() {
         String spinner_alg = this.spinner_algs.getSelectedItem().toString();
         int alg_type;
         System.out.println("The chosen algorithm is: " + spinner_alg);
-        if (spinner_alg.equals("SWMR_ATOMICITY"))
+        if (spinner_alg.equals("SWMR_ATOMICITY"))   // TODO: 16-3-10 eliminate the hard-coded string
             alg_type = AtomicityRegisterClientFactory.SWMR_ATOMICITY;
         else if (spinner_alg.equals("SWMR_2ATOMICITY"))
             alg_type = AtomicityRegisterClientFactory.SWMR_2ATOMICITY;
-        else
+        else if (spinner_alg.equals("MWMR_ATOMICITY"))
             alg_type = AtomicityRegisterClientFactory.MWMR_ATOMICITY;
+        else
+            alg_type = AtomicityRegisterClientFactory.EVENTUAL_CONSISTENCY;
 
         return alg_type;
     }

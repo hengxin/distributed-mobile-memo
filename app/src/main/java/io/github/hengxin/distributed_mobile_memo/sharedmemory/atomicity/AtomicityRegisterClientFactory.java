@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import io.github.hengxin.distributed_mobile_memo.group.GroupConfig;
+import io.github.hengxin.distributed_mobile_memo.sharedmemory.eventual.EventualConsistencyClient;
 
 /**
  * @author hengxin
@@ -60,6 +61,11 @@ public enum AtomicityRegisterClientFactory {
                 case AtomicityRegisterClientFactory.MWMR_ATOMICITY:
                     majority = replica_num / 2 + 1;
                     this.atomicity_register_client = new MWMRAtomicityRegisterClient(majority, majority);
+                    break;
+                case AtomicityRegisterClientFactory.EVENTUAL_CONSISTENCY:
+                    int write_quorum_size = replica_num / 2;
+                    int read_quorum_size = replica_num - 1 - write_quorum_size;
+                    this.atomicity_register_client = new EventualConsistencyClient(read_quorum_size, write_quorum_size);
                     break;
                 default:
                     throw new NoSuchAtomicAlgorithmSupported("No such atomicity algorithm " + alg_type);
