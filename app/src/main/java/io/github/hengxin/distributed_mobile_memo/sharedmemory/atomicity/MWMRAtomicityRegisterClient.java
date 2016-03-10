@@ -17,24 +17,10 @@ public class MWMRAtomicityRegisterClient extends
     // Log for class {@link MWMRAtomicityRegisterClient}
     private final static String TAG = MWMRAtomicityRegisterClient.class.getName();
 
-    /**
-     * Using the Singleton design pattern
-     * It is not allowed for an Enum to extend an abstract class.
-     * Therefore, I have to implement it explicitly.
-     * <p>
-     * Here, we put "Synchronized" on method level because there are no much concurrent accesses.
-     * See <a href = "http://en.wikipedia.org/wiki/Singleton_pattern">Singleton Pattern [wiki]</a>
-     */
-    private MWMRAtomicityRegisterClient() {
+    public MWMRAtomicityRegisterClient(final int read_quorum_size, final int write_quorum_size) {
+        super(read_quorum_size, write_quorum_size);
     }
 
-    private static MWMRAtomicityRegisterClient instance = null;
-
-    public static synchronized MWMRAtomicityRegisterClient INSTANCE() {
-        if (instance == null)
-            instance = new MWMRAtomicityRegisterClient();
-        return instance;
-    }
 
     /**
      * {@link #get(Key)} method supporting MWMR:
@@ -54,7 +40,7 @@ public class MWMRAtomicityRegisterClient extends
         // local computation: extract the latest VersionValue (value and its version)
         VersionValue max_vval = this.extractMaxVValFromAcks(read_phase_acks);
 
-        // write phase: write-back the VersionValue into a quorum of the server replicas
+        // write phase: write-back the VersionValue into a (write) quorum of the server replicas
         this.writePhase(key, max_vval);
 
         // return the latest VersionValue

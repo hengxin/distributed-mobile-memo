@@ -26,7 +26,6 @@ import io.github.hengxin.distributed_mobile_memo.R;
 import io.github.hengxin.distributed_mobile_memo.network.wifi.WifiAdmin;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.communication.MessagingService;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
-import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupported;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -153,8 +152,7 @@ public class LoginActivity extends Activity // implements OnItemSelectedListener
         // an error here. don't attempt to login
         if (cancel)
             focusView.requestFocus();
-        else    // TODO: show a progress spinner and kick off a background task to perform the user login attempt
-        {
+        else {   // TODO: show a progress spinner and kick off a background task to perform the user login attempt
             Log.d(TAG, "To Create Login Session");
 
             this.session.createLoginSession(node_id, node_name, node_ip, alg_type);
@@ -172,12 +170,7 @@ public class LoginActivity extends Activity // implements OnItemSelectedListener
             MessagingService.INSTANCE.new ServerTask().execute(node_ip);
             Log.d(TAG, "Start as a server");
             // ready to be a client
-            try {
-                AtomicityRegisterClientFactory.INSTANCE.setAtomicityRegisterClient(alg_type);
-            } catch (NoSuchAtomicAlgorithmSupported nsaase) {
-                nsaase.printStackTrace();
-            }
-
+            AtomicityRegisterClientFactory.INSTANCE.setAtomicityRegisterClient(alg_type);
         }
     }
 

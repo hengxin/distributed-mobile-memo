@@ -62,21 +62,29 @@ public class AllInOne {
         System.out.println("Verifying atomicity: " + atomicity_verifier.verifyAtomicity());
 
         System.out.println("[[[ 4.2 Verifying 2-atomicity. ]]]");
-        System.out.println("Verifying 2-atomicity: " + new AtomicityVerifier(allinone_exec_file).verify2Atomicity());
+        long start_time = System.currentTimeMillis();
+        boolean is_2atomicity = new AtomicityVerifier(allinone_exec_file).verify2Atomicity();
+        long finish_time = System.currentTimeMillis();
+        System.out.println("Verifying 2-atomicity: " + is_2atomicity + " in " + DurationFormatUtils.formatDuration
+                (finish_time - start_time, "HH:mm:ss.S"));
 
         // (5) quantify 2-atomicity and get the number of "concurrency patterns" and "old-new inversions"
         System.out.println("[[[ 5. Quantifying 2-atomicity. ]]]");
         Quantifying2Atomicity quantifer = new Quantifying2Atomicity(allinone_exec_file);
 
-        long start_time = System.currentTimeMillis();
+        start_time = System.currentTimeMillis();
         quantifer.quantify();
-        long finish_time = System.currentTimeMillis();
-        long quantify_time = finish_time - start_time;
+        finish_time = System.currentTimeMillis();
 
         System.out.println("Time for quantifying 2-atomicity: " + DurationFormatUtils
-                .formatDuration(quantify_time, "HH:mm:ss.S"));
-        System.out.println("The number of \"concurrency patterns\" is: " + quantifer.getCPCount());
-        System.out.println("The number of \"old new inversions\" is: " + quantifer.getONICount());
+                .formatDuration(finish_time - start_time, "HH:mm:ss.S"));
+
+        int cp_count = quantifer.getCPCount();
+        int oni_count = quantifer.getONICount();
+
+        System.out.println("The number of \"concurrency patterns\" is: " + cp_count);
+        System.out.println("The number of \"old new inversions\" is: " + oni_count);
+        System.out.println("ONI / CP = " + (oni_count * 1.0) / cp_count);
 
         // (6) remove sub-executions in separate mobile phones
         System.out.println("[[[ 6. Remove files. ]]]");

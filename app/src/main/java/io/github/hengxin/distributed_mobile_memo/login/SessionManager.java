@@ -23,7 +23,6 @@ import io.github.hengxin.distributed_mobile_memo.group.member.SystemNode;
 import io.github.hengxin.distributed_mobile_memo.network.wifi.WifiAdmin;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.communication.MessagingService;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
-import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupported;
 
 public class SessionManager {
     private static final String TAG = SessionManager.class.getName();
@@ -105,11 +104,7 @@ public class SessionManager {
                             MessagingService.INSTANCE.new ServerTask().execute(SessionManager.this.system_node.getNodeIp());
                             Log.d(TAG, "Start as a server");
                             // ready to be a client
-                            try {
-                                AtomicityRegisterClientFactory.INSTANCE.setAtomicityRegisterClient(SessionManager.this.system_node.getAlgType());
-                            } catch (NoSuchAtomicAlgorithmSupported nsaase) {
-                                nsaase.printStackTrace();
-                            }
+                            AtomicityRegisterClientFactory.INSTANCE.setAtomicityRegisterClient(SessionManager.this.system_node.getAlgType());
                         }
                     })
 

@@ -57,8 +57,17 @@ public enum AtomicityMessagingService implements IReceiver {
          */
         if (msg instanceof AtomicityReadPhaseMessage || msg instanceof AtomicityWritePhaseMessage)
             AtomicityRegisterServer.INSTANCE.handleAtomicityMessage((AtomicityMessage) msg);
-        else // (msg instanceof AtomicityReadAckPhaseMessage || msg instanceof AtomicityWriteAckPhaseMessage)
-            AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient().handleAtomicityMessage((AtomicityMessage) msg);
+        else {// (msg instanceof AtomicityReadAckPhaseMessage || msg instanceof AtomicityWriteAckPhaseMessage)
+            AbstractAtomicityRegisterClient client = null;
+            try {
+                client = AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient();
+            } catch (AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupported nsaas) {
+                nsaas.printStackTrace();
+                System.exit(1);
+            }
+
+            client.handleAtomicityMessage((AtomicityMessage) msg);
+        }
     }
 
 }

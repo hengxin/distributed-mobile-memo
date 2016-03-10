@@ -29,24 +29,10 @@ public class SWMR2AtomicityRegisterClient extends
     // for logging
     private static final String TAG = SWMR2AtomicityRegisterClient.class.getName();
 
-    /**
-     * Using the Singleton design pattern
-     * It is not allowed for an Enum to extend an abstract class.
-     * Therefore, I have to implement it explicitly.
-     *
-     * Here, we put "Synchronized" on method level because there are no much concurrent accesses.
-     * See <a href = "http://en.wikipedia.org/wiki/Singleton_pattern">Singleton Pattern [wiki]</a>
-     */
-    private SWMR2AtomicityRegisterClient() {
+    public SWMR2AtomicityRegisterClient(final int read_quorum_size, final int write_quorum_size) {
+        super(read_quorum_size, write_quorum_size);
     }
 
-    private static SWMR2AtomicityRegisterClient instance = null;
-
-    public static synchronized SWMR2AtomicityRegisterClient INSTANCE() {
-        if (instance == null)
-            instance = new SWMR2AtomicityRegisterClient();
-        return instance;
-    }
 
     /*
      * @see ics.mobilememo.sharedmemory.atomicity.AbstractAtomicityRegisterClient#get(ics.mobilememo.sharedmemory.data.kvs.Key)
@@ -64,7 +50,7 @@ public class SWMR2AtomicityRegisterClient extends
 
 //		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
 
-        // read phase: contact a quorum of the server replicas for the latest value and version
+        // read phase: contact a (read) quorum of the server replicas for the latest value and version
         Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
 
         // local computation: extract the latest VersionValue (value and its version)
