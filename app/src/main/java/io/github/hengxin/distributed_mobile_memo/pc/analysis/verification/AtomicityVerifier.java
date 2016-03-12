@@ -278,7 +278,7 @@ public class AtomicityVerifier {
      * Test
      */
     public static void main(String[] args) {
-        AtomicityVerifier atomicity_verifier = new AtomicityVerifier("C:\\Users\\ics-ant\\Desktop\\executions\\For ONI\\SWMR-2Atomicity\\rate200\\0815-1947-3\\execution.txt");
+        AtomicityVerifier atomicity_verifier = new AtomicityVerifier("C:\\Users\\ics-ant\\Desktop\\executions\\For ONITriple\\SWMR-2Atomicity\\rate200\\0815-1947-3\\execution.txt");
         System.out.println("Verifying atomicity: " + atomicity_verifier.verifyAtomicity());
     }
 }
