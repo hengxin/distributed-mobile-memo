@@ -36,9 +36,6 @@ public class Version implements Comparable<Version>, Serializable {
         this.pid = id;
     }
 
-    /**
-     * @return {@link #seqno}: the sequence no.
-     */
     public int getSeqno() {
         return this.seqno;
     }

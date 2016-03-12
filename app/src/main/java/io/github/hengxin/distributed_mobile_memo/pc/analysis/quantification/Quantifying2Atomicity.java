@@ -90,7 +90,7 @@ public class Quantifying2Atomicity {
                 write_request_record_iter.next();
 
             while (write_request_record_iter.hasNext()) {
-                RequestRecord write_request_record = (RequestRecord) write_request_record_iter.next();
+                RequestRecord write_request_record = write_request_record_iter.next();
 
                 /**
                  * Condition (1) for "concurrency pattern": the read operation starts during the interval
@@ -170,27 +170,19 @@ public class Quantifying2Atomicity {
                 (pre_read_version == cur_read_version + 1);
     }
 
-    /**
-     * @return {@link #cp_count}
-     * number of "concurrency patterns"
-     */
     public int getCPCount() {
         return this.cp_count;
     }
 
-    /**
-     * @return {@link #oni_count}
-     * number of "old-new inversions"
-     */
     public int getONICount() {
         return this.oni_count;
     }
 
-    /**
-     * Test
-     */
     public static void main(String[] args) {
-        Quantifying2Atomicity quantifer = new Quantifying2Atomicity("D:\\GitHub\\MobileMemo-Experiment\\For ONI\\replica factor = 2\\async = 10\\execution-1215-0933\\execution.txt");
+        if (args.length != 1)
+            throw new IllegalArgumentException("Parameter: <path>");
+
+        Quantifying2Atomicity quantifer = new Quantifying2Atomicity(args[0]);
 
         System.out.println("Quantifying 2-atomicity");
         quantifer.quantify();
