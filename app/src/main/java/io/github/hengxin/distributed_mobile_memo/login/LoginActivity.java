@@ -26,7 +26,6 @@ import io.github.hengxin.distributed_mobile_memo.R;
 import io.github.hengxin.distributed_mobile_memo.network.wifi.WifiAdmin;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.communication.MessagingService;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
-import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupported;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -71,10 +70,10 @@ public class LoginActivity extends Activity // implements OnItemSelectedListener
 
         // set adapter for Spinner
         this.spinner_algs = (Spinner) findViewById(R.id.spinner_algs);
-        ArrayAdapter<CharSequence> algs_adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> alg_adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_algs_array, android.R.layout.simple_spinner_item);
-        algs_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.spinner_algs.setAdapter(algs_adapter);
+        alg_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        this.spinner_algs.setAdapter(alg_adapter);
 
         // click the "Sign in" button
         findViewById(R.id.btn_sign_in).setOnClickListener(new View.OnClickListener() {
@@ -153,8 +152,7 @@ public class LoginActivity extends Activity // implements OnItemSelectedListener
         // an error here. don't attempt to login
         if (cancel)
             focusView.requestFocus();
-        else    // TODO: show a progress spinner and kick off a background task to perform the user login attempt
-        {
+        else {   // TODO: show a progress spinner and kick off a background task to perform the user login attempt
             Log.d(TAG, "To Create Login Session");
 
             this.session.createLoginSession(node_id, node_name, node_ip, alg_type);
@@ -172,32 +170,25 @@ public class LoginActivity extends Activity // implements OnItemSelectedListener
             MessagingService.INSTANCE.new ServerTask().execute(node_ip);
             Log.d(TAG, "Start as a server");
             // ready to be a client
-            try {
-                AtomicityRegisterClientFactory.INSTANCE.setAtomicityRegisterClient(alg_type);
-            } catch (NoSuchAtomicAlgorithmSupported nsaase) {
-                nsaase.printStackTrace();
-            }
-
+            AtomicityRegisterClientFactory.INSTANCE.setAtomicityRegisterClient(alg_type);
         }
     }
 
     /**
-     * the following two methods are from the interface @link AdapterView.OnItemSelectedListener
-     */
-
-    /**
-     * get the type of the chosen algorithm
+     * Get the chosen algorithm type from {@link Spinner} UI.
      */
     public int getAlgType() {
         String spinner_alg = this.spinner_algs.getSelectedItem().toString();
         int alg_type;
         System.out.println("The chosen algorithm is: " + spinner_alg);
-        if (spinner_alg.equals("SWMR_ATOMICITY"))
+        if (spinner_alg.equals("SWMR_ATOMICITY"))   // TODO: 16-3-10 eliminate the hard-coded string
             alg_type = AtomicityRegisterClientFactory.SWMR_ATOMICITY;
         else if (spinner_alg.equals("SWMR_2ATOMICITY"))
             alg_type = AtomicityRegisterClientFactory.SWMR_2ATOMICITY;
-        else
+        else if (spinner_alg.equals("MWMR_ATOMICITY"))
             alg_type = AtomicityRegisterClientFactory.MWMR_ATOMICITY;
+        else
+            alg_type = AtomicityRegisterClientFactory.EVENTUAL_CONSISTENCY;
 
         return alg_type;
     }

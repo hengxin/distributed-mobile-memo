@@ -35,10 +35,7 @@ public class Executor implements Runnable {
     private int request_number = -1;
     private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
 
-    /**
-     * the appropriate client has been set when logging in. @see LoginActivity
-     */
-    AbstractAtomicityRegisterClient client = AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient();
+    AbstractAtomicityRegisterClient client = null;
 
     /**
      * constructor of {@link Executor}
@@ -54,6 +51,13 @@ public class Executor implements Runnable {
 
         this.request_queue = request_queue;
         this.request_number = request_number;
+
+        try {
+            this.client = AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient();
+        } catch (AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupportedException nsaas) {
+            nsaas.printStackTrace();
+            System.exit(1);
+        }
     }
 
     /**

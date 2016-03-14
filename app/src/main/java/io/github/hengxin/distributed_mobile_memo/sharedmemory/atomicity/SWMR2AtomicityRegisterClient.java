@@ -16,37 +16,16 @@ import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Key;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionValue;
 
 /**
+ * Implementation of SWMR (ALMOST) atomic register supporting single writer and multiple readers (SWMR).
+ * The term "ALMOST" here refers to the fact that it is NOT atomic actually.
+ * However, it is 2-atomicity with read operations always getting values with bounded (<= 2) staleness.
+ * (Moreover, the probability of reading a stale value can be computed.)
+ *
  * @author hengxin
  * @date Jun 27, 2014
- *
- * Implementation of SWMR (ALMOST) atomic register supporting single writer and multiple readers (SWMR).
- *   The term "ALMOST" here refers to the fact that it is NOT atomic actually. 
- *   However, it is 2-atomicity with read operations always getting values with bounded (<= 2) staleness.
- *   (Moreover, the probability of reading a stale value can be computed.)
  */
-public class SWMR2AtomicityRegisterClient extends
-        SWMRAtomicityRegisterClient {
-    // for logging
+public class SWMR2AtomicityRegisterClient extends SWMRAtomicityRegisterClient {
     private static final String TAG = SWMR2AtomicityRegisterClient.class.getName();
-
-    /**
-     * Using the Singleton design pattern
-     * It is not allowed for an Enum to extend an abstract class.
-     * Therefore, I have to implement it explicitly.
-     *
-     * Here, we put "Synchronized" on method level because there are no much concurrent accesses.
-     * See <a href = "http://en.wikipedia.org/wiki/Singleton_pattern">Singleton Pattern [wiki]</a>
-     */
-    private SWMR2AtomicityRegisterClient() {
-    }
-
-    private static SWMR2AtomicityRegisterClient instance = null;
-
-    public static synchronized SWMR2AtomicityRegisterClient INSTANCE() {
-        if (instance == null)
-            instance = new SWMR2AtomicityRegisterClient();
-        return instance;
-    }
 
     /*
      * @see ics.mobilememo.sharedmemory.atomicity.AbstractAtomicityRegisterClient#get(ics.mobilememo.sharedmemory.data.kvs.Key)
@@ -64,7 +43,7 @@ public class SWMR2AtomicityRegisterClient extends
 
 //		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
 
-        // read phase: contact a quorum of the server replicas for the latest value and version
+        // read phase: contact a (read) quorum of the server replicas for the latest value and version
         Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
 
         // local computation: extract the latest VersionValue (value and its version)

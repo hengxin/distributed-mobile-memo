@@ -14,34 +14,12 @@ import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Version;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionValue;
 
 /**
+ * Client for atomic SWMR registers.
  * @author hengxin
- *         Implementing atomic register supporting single writer and multiple readers (SWMR).
  */
-public class SWMRAtomicityRegisterClient extends
-        AbstractAtomicityRegisterClient {
-    // for logging
+public class SWMRAtomicityRegisterClient extends AbstractAtomicityRegisterClient {
+
     private static final String TAG = SWMRAtomicityRegisterClient.class.getName();
-
-    /**
-     * Using the Singleton design pattern
-     * It is not allowed for an Enum to extend an abstract class.
-     * Therefore, I have to implement it explicitly.
-     * <p>
-     * Here, we put "Synchronized" on method level because there are no much concurrent accesses.
-     * See <a href = "http://en.wikipedia.org/wiki/Singleton_pattern">Singleton Pattern [wiki]</a>
-     */
-
-    // "protected" constructor: \link SWMR2AtomicityRegisterClient needs to extend this class.
-    protected SWMRAtomicityRegisterClient() {
-    }
-
-    private static SWMRAtomicityRegisterClient instance = null;
-
-    public static synchronized SWMRAtomicityRegisterClient INSTANCE() {
-        if (instance == null)
-            instance = new SWMRAtomicityRegisterClient();
-        return instance;
-    }
 
     /**
      * @author added by hengxin
@@ -81,13 +59,13 @@ public class SWMRAtomicityRegisterClient extends
 
 //		Log.d(TAG, "Begin to get value associated with Key = " + key.toString());
 
-        // read phase: contact a quorum of the server replicas for the latest value and version
+        // read phase: contact a (read) quorum of the server replicas for the latest value and version
         Map<String, AtomicityMessage> read_phase_acks = this.readPhase(key);
 
         // local computation: extract the latest VersionValue (value and its version)
         VersionValue max_vval = this.extractMaxVValFromAcks(read_phase_acks);
 
-        // write phase: write-back the VersionValue into a quorum of the server replicas
+        // write phase: write-back the VersionValue into a (write) quorum of the server replicas
         this.writePhase(key, max_vval);
 
         // return the latest VersionValue
@@ -116,7 +94,7 @@ public class SWMRAtomicityRegisterClient extends
         // construct the {@link VersionValue} to put
         VersionValue new_vval = new VersionValue(this.getNextVersion(max_version), val);
 
-        // write phase: write-back the VersionValue into a quorum of the server replicas
+        // write phase: write-back the VersionValue into a (write) quorum of the server replicas
         this.writePhase(key, new_vval);
 
         return new_vval;

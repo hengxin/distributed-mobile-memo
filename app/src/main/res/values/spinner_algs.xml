@@ -4,5 +4,6 @@
 	        <item>SWMR_2ATOMICITY</item>
 	        <item>SWMR_ATOMICITY</item>
 	        <item>MWMR_ATOMICITY</item>
+			<item>EVENTUAL_CONSISTENCY</item>
 	    </string-array>
     </resources>

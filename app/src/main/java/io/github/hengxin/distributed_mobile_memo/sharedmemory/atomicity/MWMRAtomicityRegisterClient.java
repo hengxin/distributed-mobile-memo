@@ -12,29 +12,9 @@ import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Key;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Version;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionValue;
 
-public class MWMRAtomicityRegisterClient extends
-        AbstractAtomicityRegisterClient {
-    // Log for class {@link MWMRAtomicityRegisterClient}
+public class MWMRAtomicityRegisterClient extends AbstractAtomicityRegisterClient {
+
     private final static String TAG = MWMRAtomicityRegisterClient.class.getName();
-
-    /**
-     * Using the Singleton design pattern
-     * It is not allowed for an Enum to extend an abstract class.
-     * Therefore, I have to implement it explicitly.
-     * <p>
-     * Here, we put "Synchronized" on method level because there are no much concurrent accesses.
-     * See <a href = "http://en.wikipedia.org/wiki/Singleton_pattern">Singleton Pattern [wiki]</a>
-     */
-    private MWMRAtomicityRegisterClient() {
-    }
-
-    private static MWMRAtomicityRegisterClient instance = null;
-
-    public static synchronized MWMRAtomicityRegisterClient INSTANCE() {
-        if (instance == null)
-            instance = new MWMRAtomicityRegisterClient();
-        return instance;
-    }
 
     /**
      * {@link #get(Key)} method supporting MWMR:
@@ -54,7 +34,7 @@ public class MWMRAtomicityRegisterClient extends
         // local computation: extract the latest VersionValue (value and its version)
         VersionValue max_vval = this.extractMaxVValFromAcks(read_phase_acks);
 
-        // write phase: write-back the VersionValue into a quorum of the server replicas
+        // write phase: write-back the VersionValue into a (write) quorum of the server replicas
         this.writePhase(key, max_vval);
 
         // return the latest VersionValue

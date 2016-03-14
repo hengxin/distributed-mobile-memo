@@ -6,6 +6,7 @@
 package io.github.hengxin.distributed_mobile_memo.memo.request;
 
 import io.github.hengxin.distributed_mobile_memo.R;
+import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AbstractAtomicityRegisterClient;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionValue;
 
@@ -22,11 +23,18 @@ public class KVGetRequestDialog extends KVRequestDialog {
     }
 
     /**
-     * perform the "GET" request
+     * Perform the "GET" request.
      */
     @Override
     public VersionValue onRequestPerformed() {
-        return AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient().get(super.request_key);
-    }
+        AbstractAtomicityRegisterClient client = null;
+        try {
+            client = AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient();
+        } catch (AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupportedException nsaas) {
+            nsaas.printStackTrace();
+            System.exit(1);
+        }
 
+        return client.get(super.request_key);
+    }
 }

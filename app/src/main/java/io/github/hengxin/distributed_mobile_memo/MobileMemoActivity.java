@@ -20,6 +20,7 @@ import io.github.hengxin.distributed_mobile_memo.benchmark.ui.BenchmarkFragment;
 import io.github.hengxin.distributed_mobile_memo.group.GroupFragment;
 import io.github.hengxin.distributed_mobile_memo.login.SessionManager;
 import io.github.hengxin.distributed_mobile_memo.memo.MemoFragment;
+import io.github.hengxin.distributed_mobile_memo.quorum.QuorumFragment;
 import io.github.hengxin.distributed_mobile_memo.service.timingservice.TimePollingFragment;
 
 public class MobileMemoActivity extends ActionBarActivity implements
@@ -35,7 +36,7 @@ public class MobileMemoActivity extends ActionBarActivity implements
      * (3) benchmark: class BenchmarkFragment, title "BENCHMARK"
      */
     private List<Fragment> fragments = new ArrayList<>();
-    private List<String> fragment_titles = new ArrayList<String>();
+    private List<String> fragment_titles = new ArrayList<>();
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -111,6 +112,9 @@ public class MobileMemoActivity extends ActionBarActivity implements
         this.fragments.add(new GroupFragment());
         this.fragment_titles.add(getString(R.string.title_section_group).toUpperCase(Locale.getDefault()));
 
+        this.fragments.add(new QuorumFragment());
+        this.fragment_titles.add(getString(R.string.title_section_quorum).toUpperCase(Locale.getDefault()));
+
         this.fragments.add(new MemoFragment());
         this.fragment_titles.add(getString(R.string.title_section_memo).toUpperCase(Locale.getDefault()));
 
@@ -122,7 +126,6 @@ public class MobileMemoActivity extends ActionBarActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.mobile_memo, menu);
         return true;

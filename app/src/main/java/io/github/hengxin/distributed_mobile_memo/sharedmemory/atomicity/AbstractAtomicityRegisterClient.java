@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import io.github.hengxin.distributed_mobile_memo.group.GroupConfig;
 import io.github.hengxin.distributed_mobile_memo.group.member.SystemNode;
 import io.github.hengxin.distributed_mobile_memo.login.SessionManager;
+import io.github.hengxin.distributed_mobile_memo.quorum.QuorumSystem;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.IRegisterClient;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.communication.IPMessage;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.communication.IReceiver;
@@ -43,49 +44,64 @@ public abstract class AbstractAtomicityRegisterClient implements
         IRegisterClient, IAtomicityMessageHandler {
     private static final String TAG = AbstractAtomicityRegisterClient.class.getName();
 
-    private Communication comm = null; // {@link Communication} instance for read phase/write phase
+    private Communication comm;
+    protected QuorumSystem quorum;
 
     /**
-     * Counter of operations invoked by this client
+     * Counter of operations invoked by this client.
      * <p>
-     * This field is only accessed (read/written) by this client.
-     * It is communicated via {@link IPMessage}.
-     * No synchronization needed.
+     * This field is only accessed (read/written) by this client. No synchronization needed.
      */
     protected int op_cnt;
 
-    @Override
-    public abstract VersionValue get(Key key);
-
-    @Override
-    public abstract VersionValue put(Key key, String val);
+    public QuorumSystem initQuorumSystem() {
+        this.quorum = this.configQuorumSystem();
+        return this.quorum;
+    }
 
     /**
-     * read phase: contact a quorum of the processors, querying for the latest
-     * value and version
+     * @return  a {@link QuorumSystem} that will be used in protocol. By default, it returns a
+     * majority quorum system. The subclasses that want to have different quorum systems should
+     * override this method.
+     */
+    public QuorumSystem configQuorumSystem() {
+        return QuorumSystem.createMajorityQuorumSystem(GroupConfig.INSTANCE.getGroupSize());
+    }
+
+    public void setQuorumSystem(QuorumSystem quorum_system) {
+        this.quorum = quorum_system;
+    }
+
+    /**
+     * Read phase: contact all replicas to query their latest value and version, wait for responses from a (read) quorum
+     * of them, and return the responses to caller (usually read/write operations).
      *
-     * @param key {@link Key} to identify
+     * <p>The communication mechanism utilizes {@link io.github.hengxin.distributed_mobile_memo.sharedmemory
+     * .atomicity.AbstractAtomicityRegisterClient.Communication}</p>
+     *
+     * @param key {@link Key} to read
      * @return an array of messages of type {@link AtomicityMessage} (actually
-     * {@link AtomicityReadPhaseAckMessage}) each of which comes from a
-     * server replica specified by its ip address
+     * {@link AtomicityReadPhaseAckMessage}) each of which comes from a server replica specified by its ip address)
      */
     public Map<String, AtomicityMessage> readPhase(Key key) {
         AtomicityMessage atomicity_read_phase_message = new AtomicityReadPhaseMessage(new SessionManager().getNodeIp(), this.op_cnt, key);
-        this.comm = new Communication(atomicity_read_phase_message);
+        this.comm = new Communication(atomicity_read_phase_message, this.quorum.getReadQuorumSize());
         return this.comm.communicate();
     }
 
     /**
-     * write phase: write a {@link Key} + {@link VersionValue} pair into a
-     * quorum of the server replicas
+     * Write phase: contact all replicas to write a @param key + @param vval pair into them, wait for acks from a
+     * (write) quorum of them, and return <i>nothing</i> to caller (usually read/write operations).
      *
-     * @param key  {@link Key} to identify
-     * @param vval {@link VersionValue} associated with the {@link Key} to be
-     *             written
+     * <p>The communication mechanism utilizes {@link io.github.hengxin.distributed_mobile_memo.sharedmemory
+     * .atomicity.AbstractAtomicityRegisterClient.Communication}</p>
+     *
+     * @param key  {@link Key} to write
+     * @param vval {@link VersionValue} associated with the {@link Key} to be written
      */
     public void writePhase(Key key, VersionValue vval) {
         AtomicityMessage atomicity_write_phase_message = new AtomicityWritePhaseMessage(new SessionManager().getNodeIp(), this.op_cnt, key, vval);
-        this.comm = new Communication(atomicity_write_phase_message);
+        this.comm = new Communication(atomicity_write_phase_message, this.quorum.getWriteQuorumSize());
         this.comm.communicate();
     }
 
@@ -133,37 +149,36 @@ public abstract class AbstractAtomicityRegisterClient implements
      * <p>
      * FIXME: check the "synchronized" keyword in the class
      */
-    public class Communication implements IReceiver // IClientReceiver
-    {
+    public class Communication implements IReceiver {
         private final String TAG = Communication.class.getName();
 
         private AtomicityMessage atomicity_message = null; // message to send: READ_PHASE or WRITE_PHASE message
 
+        // TODO using Java enum to represent status
         // status used to control the sending of messages
         private static final int NOT_SENT = 0; // message was not sent yet
-        private static final int NOT_ACK = 1; // message was sent but not yet
-        // acknowledged
+        private static final int NOT_ACK = 1; // message was sent but not yet acknowledged
         private static final int ACK = 2; // message was acknowledged
 
         // to implement the ping-pong communication mechanism
         private static final int HERE = 4;
         private static final int THERE = 8;
 
-        private final int replicas_num; // number of processors in the system
-        private final int proc_majority; // counter indicating a majority of
-        // processors
-        private CountDownLatch latch_majority; // to coordinate the threads
+        private final int replicas_num;     // number of processors in the system
+        // quorum size: number of replicas from which the client needs to receive acks before completing this
+        // communication phase
+        private final int quorum_size;
+        private CountDownLatch latch_for_quorum; // {@link CountDownLatch} associated with quorum
 
         /**
-         * Using thread-safe counterpart to {@link HashMap}:
-         * {@link ConcurrentHashMap}
+         * Using thread-safe counterpart to {@link HashMap} {@link ConcurrentHashMap}
          *
          * @author hengxin
          * @date Jul 3, 2014
          */
-        private final Map<String, Integer> turn = new ConcurrentHashMap<String, Integer>();
-        private final Map<String, Integer> status = new ConcurrentHashMap<String, Integer>();
-        private final Map<String, AtomicityMessage> info = new ConcurrentHashMap<String, AtomicityMessage>();
+        private final Map<String, Integer> turn = new ConcurrentHashMap<>();
+        private final Map<String, Integer> status = new ConcurrentHashMap<>();
+        private final Map<String, AtomicityMessage> info = new ConcurrentHashMap<>();
 
         /**
          * Custom locks for modifying {@link #turn}, {@link #status}, and
@@ -186,14 +201,16 @@ public abstract class AbstractAtomicityRegisterClient implements
          * ({@link AbstractAtomicityRegisterClient})
          *
          * @param rmsg {@link AtomicityMessage} to communicate
+         * @param quorum_size   quorum size: number of replicas from which the client needs to receive acks before
+         *                      completing this communication phase
          */
-        public Communication(AtomicityMessage rmsg) {
+        public Communication(AtomicityMessage rmsg, int quorum_size) {
             this.atomicity_message = rmsg;
 
-            this.replicas_num = GroupConfig.INSTANCE.getGroupSize(); // number of clients/server replicas in the system
-            this.proc_majority = this.replicas_num / 2 + 1; // counter indicating a majority of server replicas
-            // Log.d(TAG, "The majority number is: " + this.proc_majority);
-            this.latch_majority = new CountDownLatch(proc_majority); // wait for a majority of acks
+            this.replicas_num = GroupConfig.INSTANCE.getGroupSize();
+//            this.quorum_size = this.replicas_num / 2 + 1;
+            this.quorum_size = quorum_size;
+            this.latch_for_quorum = new CountDownLatch(quorum_size);
 
             // initialization
             List<SystemNode> replica_list = GroupConfig.INSTANCE.getGroupMembers();
@@ -219,7 +236,7 @@ public abstract class AbstractAtomicityRegisterClient implements
         }
 
         /**
-         * A processor use the "communicate" primitive to broadcast a message to
+         * A processor uses the "communicate" primitive to broadcast a message to
          * all the processors and then to collect ACKs from a majority of them.
          *
          * @return collection of corresponding ACK messages
@@ -246,7 +263,7 @@ public abstract class AbstractAtomicityRegisterClient implements
             Collections.shuffle(replica_list);
 
             // broadcast
-            for (int i = 0; /** i < this.replicas_num;**/i < this.proc_majority; i++) {
+            for (int i = 0; /** i < this.replicas_num;**/i < this.quorum_size; i++) {
                 final String replica_ip = replica_list.get(i).getNodeIp();
 
                 final int hash = replica_ip.hashCode() & 0x7FFFFFFF;
@@ -268,7 +285,7 @@ public abstract class AbstractAtomicityRegisterClient implements
              *       approach
              */
             try {
-                this.latch_majority.await();
+                this.latch_for_quorum.await();
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
@@ -305,7 +322,7 @@ public abstract class AbstractAtomicityRegisterClient implements
                         MessagingService.INSTANCE.sendOneWay(from_ip, this.atomicity_message); // re-send the rmsg
                         this.turn.put(from_ip, Communication.THERE);
                         this.status.put(from_ip, Communication.NOT_ACK);
-                        // this.latch_majority.countDown();	// Don't count acks of old messages (Jul 2, 2014)
+                        // this.latch_for_quorum.countDown();	// Don't count acks of old messages (Jul 2, 2014)
                         break;
 
                     case Communication.NOT_ACK:
@@ -319,7 +336,7 @@ public abstract class AbstractAtomicityRegisterClient implements
                          * @author hengxin
                          * @date 2013-8-14
                          */
-                        this.latch_majority.countDown();
+                        this.latch_for_quorum.countDown();
                         break;
 
                     default:

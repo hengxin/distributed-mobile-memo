@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -138,20 +137,6 @@ public class MemoFragment extends Fragment implements
         return view;
     }
 
-//	@Override
-//	public void onAttach(Activity activity)
-//	{
-//		super.onAttach(activity);
-//		try
-//		{
-//			this.mListener = (OnFragmentInteractionListener) activity;
-//		} catch (ClassCastException e)
-//		{
-//			throw new ClassCastException(activity.toString()
-//					+ " must implement OnFragmentInteractionListener");
-//		}
-//	}
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -221,19 +206,6 @@ public class MemoFragment extends Fragment implements
     }
 
     /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = data_listview.getEmptyView();
-
-        if (emptyText instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
-
-    /**
      * It implements {@link IRequestResultListener} to handle with
      * the return values ({@link Key} and {@link VersionValue})
      * from its dialogs: update its {@link ListView} with
@@ -246,24 +218,5 @@ public class MemoFragment extends Fragment implements
         this.kvpairs_list.add(new KVPair(key, vval));
         this.data_list_adapter.notifyDataSetChanged();
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated to
-     * the activity and potentially other fragments contained in that activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     *
-     * Not used for the time being
-     *
-     * @see MobileMemoActivity
-     */
-//	public interface OnFragmentInteractionListener
-//	{
-//		// TODO: Update argument type and name
-//		public void onFragmentInteraction(String id);
-//	}
 
 }

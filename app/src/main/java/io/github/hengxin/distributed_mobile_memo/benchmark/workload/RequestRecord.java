@@ -65,52 +65,32 @@ public class RequestRecord extends Request implements Comparable<RequestRecord> 
         super.val = val;
     }
 
-    /**
-     * @return {@link #version} of type {@link Version}
-     */
     public Version getVersion() {
         return version;
     }
 
-    /**
-     * @return {@link #start_time}
-     */
     public long getStartTime() {
         return this.start_time;
     }
 
-    /**
-     * set {@link #start_time}
-     * @param start_time
-     */
     public void setStartTime(long start_time) {
         this.start_time = start_time;
     }
 
-    /**
-     * @return {@link #finish_time}
-     */
     public long getFinishTime() {
         return this.finish_time;
     }
 
-    /**
-     * set {@link #finish_time}
-     * @param finish_time
-     */
     public void setFinishTime(long finish_time) {
         this.finish_time = finish_time;
     }
 
-    /**
-     * @return {@link #delay}
-     */
     public long getDelay() {
         return this.delay;
     }
 
     /**
-     * String of RequestRecord: type \t start_time \t finish_time \t delay \t key \t vvalue
+     * @return String of RequestRecord: type \t start_time \t finish_time \t delay \t key \t vvalue
      */
     @Override
     public String toString() {
@@ -158,10 +138,27 @@ public class RequestRecord extends Request implements Comparable<RequestRecord> 
      *   false, otherwise.
      */
     public boolean precedes(RequestRecord rr) {
-        if (this.finish_time < rr.start_time)
-            return true;
+        return this.finish_time < rr.start_time;
+    }
 
-        return false;
+    /**
+     * Check whether this {@link RequestRecord} reads from another one {@code rr}.
+     * It first checks whether this one is of {@link Request#READ_TYPE} and {@code rr} {@link Request#WRITE_TYPE}.
+     * @param rr a {@link RequestRecord}
+     * @return  {@code true} if this {@link RequestRecord} reads from {@code rr}; {@code false}, otherwise.
+     */
+    public boolean readFrom(RequestRecord rr) {
+        if (! this.isRead() || rr.isRead())
+            return false;
+        return this.version.equals(rr.version);
+    }
+
+    /**
+     * Check whether this {@link RequestRecord} if of READ type.
+     * @return {@link true} if it is READ; {@code false}, otherwise (i.e., it is of WRITE type).
+     */
+    public boolean isRead() {
+        return this.type == Request.READ_TYPE;
     }
 
     /**
@@ -195,8 +192,8 @@ public class RequestRecord extends Request implements Comparable<RequestRecord> 
 
     /**
      * @inheritDoc
-     * comparison between this {@link #RequestRecord} with another one
-     * according to their {@link #start_time}
+     * Comparison between this {@link #RequestRecord} with another one
+     * according to their {@link #start_time}.
      */
     @Override
     public int compareTo(RequestRecord rr) {

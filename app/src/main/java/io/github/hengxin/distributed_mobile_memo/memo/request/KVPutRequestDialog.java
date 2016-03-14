@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import io.github.hengxin.distributed_mobile_memo.MobileMemoActivity;
 import io.github.hengxin.distributed_mobile_memo.R;
+import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AbstractAtomicityRegisterClient;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AtomicityRegisterClientFactory;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionValue;
 
@@ -27,12 +28,21 @@ public class KVPutRequestDialog extends KVRequestDialog {
     }
 
     /**
-     * perform the "PUT" request
+     * Perform the "PUT" request.
      */
     @Override
     public VersionValue onRequestPerformed() {
         Toast.makeText(MobileMemoActivity.MOBILEMEMO_ACTIVITY, "Put " + super.request_key.toString() + '[' + val_str + ']', Toast.LENGTH_SHORT).show();
-        return AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient().put(super.request_key, val_str);
+
+        AbstractAtomicityRegisterClient client = null;
+        try {
+            client = AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient();
+        } catch (AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupportedException nsaas) {
+            nsaas.printStackTrace();
+            System.exit(1);
+        }
+
+        return client.put(super.request_key, val_str);
     }
 
 }
