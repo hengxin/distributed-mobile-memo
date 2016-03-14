@@ -20,13 +20,12 @@ import io.github.hengxin.distributed_mobile_memo.benchmark.workload.PoissonWorkl
 import io.github.hengxin.distributed_mobile_memo.benchmark.workload.Request;
 
 /**
- * Configure the benchmark workloads and run them
+ * Configure the benchmark workloads and run them.
  *
  * @author hengxin
  * @date Jun 02, Jun 28, 2014
  */
-public class BenchmarkFragment extends Fragment // implements OnItemSelectedListener 
-{
+public class BenchmarkFragment extends Fragment {// implements OnItemSelectedListener
     private static final String TAG = BenchmarkFragment.class.getName();
 
     // as a reader or a writer
@@ -38,7 +37,6 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
     private EditText etxt_value_range = null;
     private Button btn_run_benchmark = null;
 
-    // TextView to show whether the execution has been generated or not
     private TextView txt_exec_ready = null;
 
     /**
@@ -53,9 +51,6 @@ public class BenchmarkFragment extends Fragment // implements OnItemSelectedList
         super.onCreate(savedInstanceState);
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

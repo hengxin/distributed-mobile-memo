@@ -2,9 +2,7 @@ package io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity;
 
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import io.github.hengxin.distributed_mobile_memo.group.GroupConfig;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.eventual.EventualConsistencyClient;
 
 /**
@@ -43,32 +41,23 @@ public enum AtomicityRegisterClientFactory {
      * @return a concrete instance of {@link AbstractAtomicityRegisterClient}
      */
     @NonNull
-    public AbstractAtomicityRegisterClient getAtomicityRegisterClient() throws NoSuchAtomicAlgorithmSupported {
+    public AbstractAtomicityRegisterClient getAtomicityRegisterClient() throws NoSuchAtomicAlgorithmSupportedException {
         if (this.atomicity_register_client == null) {
-            int replica_num = GroupConfig.INSTANCE.getGroupSize();
-            int majority;
-            Log.d(TAG, "Replica number is: " + replica_num);
-
             switch (alg_type) {
                 case AtomicityRegisterClientFactory.SWMR_ATOMICITY:
-                    majority = replica_num / 2 + 1;
-                    this.atomicity_register_client = new SWMRAtomicityRegisterClient(majority, majority);
+                    this.atomicity_register_client = new SWMRAtomicityRegisterClient();
                     break;
                 case AtomicityRegisterClientFactory.SWMR_2ATOMICITY:
-                    majority = replica_num / 2 + 1;
-                    this.atomicity_register_client = new SWMR2AtomicityRegisterClient(majority, majority);
+                    this.atomicity_register_client = new SWMR2AtomicityRegisterClient();
                     break;
                 case AtomicityRegisterClientFactory.MWMR_ATOMICITY:
-                    majority = replica_num / 2 + 1;
-                    this.atomicity_register_client = new MWMRAtomicityRegisterClient(majority, majority);
+                    this.atomicity_register_client = new MWMRAtomicityRegisterClient();
                     break;
                 case AtomicityRegisterClientFactory.EVENTUAL_CONSISTENCY:
-                    int write_quorum_size = replica_num / 2;
-                    int read_quorum_size = replica_num - 1 - write_quorum_size;
-                    this.atomicity_register_client = new EventualConsistencyClient(read_quorum_size, write_quorum_size);
+                    this.atomicity_register_client = new EventualConsistencyClient();
                     break;
                 default:
-                    throw new NoSuchAtomicAlgorithmSupported("No such atomicity algorithm " + alg_type);
+                    throw new NoSuchAtomicAlgorithmSupportedException("No such atomicity algorithm " + alg_type);
             }
         }
 
@@ -81,11 +70,11 @@ public enum AtomicityRegisterClientFactory {
      * @author hengxin
      * @date Jun 27, 2014
      */
-    public class NoSuchAtomicAlgorithmSupported extends Exception {
+    public class NoSuchAtomicAlgorithmSupportedException extends Exception {
 
         private static final long serialVersionUID = -4107923527979819074L;
 
-        public NoSuchAtomicAlgorithmSupported(String msg) {
+        public NoSuchAtomicAlgorithmSupportedException(String msg) {
             super(msg);
         }
 

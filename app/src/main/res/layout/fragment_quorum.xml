@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                tools:context="io.github.hengxin.distributed_mobile_memo.quorum.QuorumFragment">
+
+    <!-- TextView for read quorum -->
+    <TextView
+        android:id="@+id/txt_read_quorum"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5pt"
+        android:layout_alignParentLeft="true"
+        android:text="@string/txt_read_quorum"/>
+
+    <!-- NumberPicker for read quorum -->
+    <NumberPicker
+        android:id="@+id/np_read_quorum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_read_quorum"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10pt"
+        android:layout_marginLeft="15pt"/>
+
+    <!-- TextView for write quorum -->
+    <TextView
+        android:id="@+id/txt_write_quorum"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5pt"
+        android:layout_alignParentRight="true"
+        android:text="@string/txt_write_quorum"/>
+
+    <!-- NumberPicker for write quorum -->
+    <NumberPicker
+        android:id="@+id/np_write_quorum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_write_quorum"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10pt"
+        android:layout_marginRight="15pt"/>
+
+    <Button
+        android:id="@+id/btn_quorum_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/np_write_quorum"
+        android:layout_marginTop="15pt"
+        android:layout_alignParentRight="true"
+        android:text="@string/btn_quorum_done"/>
+
+    <Button
+        android:id="@+id/btn_quorum_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/np_write_quorum"
+        android:layout_marginTop="15pt"
+        android:layout_toLeftOf="@+id/btn_quorum_done"
+        android:layout_marginRight="25pt"
+        android:text="@string/btn_quorum_default"/>
+
+    <View
+        android:id="@+id/sep_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/btn_quorum_default"
+        android:layout_marginTop="10pt"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/txt_quorum_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sep_line"
+        android:layout_marginTop="10pt"
+        android:text="@string/txt_quorum_info"/>
+
+</RelativeLayout>

@@ -30,7 +30,7 @@ public class KVGetRequestDialog extends KVRequestDialog {
         AbstractAtomicityRegisterClient client = null;
         try {
             client = AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient();
-        } catch (AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupported nsaas) {
+        } catch (AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupportedException nsaas) {
             nsaas.printStackTrace();
             System.exit(1);
         }

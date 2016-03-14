@@ -16,23 +16,16 @@ import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Key;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionValue;
 
 /**
+ * Implementation of SWMR (ALMOST) atomic register supporting single writer and multiple readers (SWMR).
+ * The term "ALMOST" here refers to the fact that it is NOT atomic actually.
+ * However, it is 2-atomicity with read operations always getting values with bounded (<= 2) staleness.
+ * (Moreover, the probability of reading a stale value can be computed.)
+ *
  * @author hengxin
  * @date Jun 27, 2014
- *
- * Implementation of SWMR (ALMOST) atomic register supporting single writer and multiple readers (SWMR).
- *   The term "ALMOST" here refers to the fact that it is NOT atomic actually. 
- *   However, it is 2-atomicity with read operations always getting values with bounded (<= 2) staleness.
- *   (Moreover, the probability of reading a stale value can be computed.)
  */
-public class SWMR2AtomicityRegisterClient extends
-        SWMRAtomicityRegisterClient {
-    // for logging
+public class SWMR2AtomicityRegisterClient extends SWMRAtomicityRegisterClient {
     private static final String TAG = SWMR2AtomicityRegisterClient.class.getName();
-
-    public SWMR2AtomicityRegisterClient(final int read_quorum_size, final int write_quorum_size) {
-        super(read_quorum_size, write_quorum_size);
-    }
-
 
     /*
      * @see ics.mobilememo.sharedmemory.atomicity.AbstractAtomicityRegisterClient#get(ics.mobilememo.sharedmemory.data.kvs.Key)

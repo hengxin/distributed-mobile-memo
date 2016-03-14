@@ -54,7 +54,7 @@ public class Executor implements Runnable {
 
         try {
             this.client = AtomicityRegisterClientFactory.INSTANCE.getAtomicityRegisterClient();
-        } catch (AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupported nsaas) {
+        } catch (AtomicityRegisterClientFactory.NoSuchAtomicAlgorithmSupportedException nsaas) {
             nsaas.printStackTrace();
             System.exit(1);
         }

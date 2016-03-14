@@ -103,8 +103,8 @@ public class AllInOne {
         ONITriple.write2File(quantifer.getONIList(), oni_file);
 
         // (6) quantifying rwn, if the result of verifying 2-atomicity is {@code false}
+        System.out.println("[[[ 6. Quantifying RWN execution... ]]]");
         if (! is_2atomicity) {
-            System.out.println("Quantifying RWN execution ...");
             start_time = System.currentTimeMillis();
             QuantifyingRWN quantifier = new QuantifyingRWN();
             quantifier.quantify(allinone_exec_file);
@@ -115,15 +115,16 @@ public class AllInOne {
             String staleness_file = parent_path + File.separator + PCConstants.STALE_MAP_FILE_NAME;
             violation_map.write2File(staleness_file, true);
             System.out.println("Write StalenessViolationMap into file: " + staleness_file);
-        }
+        } else
+            System.out.println("It is 2-atomic; no need to be quantified here.");
 
         // (7) remove sub-executions in separate mobile phones
-        System.out.println("[[[ 6. Remove files. ]]]");
+        System.out.println("[[[ 7. Remove files. ]]]");
         System.out.println("Remove files in " + PCConstants.DEFAULT_EXECUTION_SDCARD_DIR);
         new ExecutionsRemover(adb_path).remove(PCConstants.DEFAULT_EXECUTION_SDCARD_DIR);
 
         // (8) uninstall apks
-        System.out.println("[[[ 7. Uninstall apks. ]]]");
+        System.out.println("[[[ 8. Uninstall apks. ]]]");
         new APKUninstaller(adb_path).uninstall(PCConstants.DEFAULT_APK);
     }
 

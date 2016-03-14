@@ -17,8 +17,8 @@ import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionVa
  * Client for atomic SWMR registers.
  * @author hengxin
  */
-public class SWMRAtomicityRegisterClient extends
-        AbstractAtomicityRegisterClient {
+public class SWMRAtomicityRegisterClient extends AbstractAtomicityRegisterClient {
+
     private static final String TAG = SWMRAtomicityRegisterClient.class.getName();
 
     /**
@@ -33,10 +33,6 @@ public class SWMRAtomicityRegisterClient extends
      * It is initialized to (-1, THIS.PID)
      */
     private Version cached_version = new Version(-1, new SessionManager().getNodeId());
-
-    public SWMRAtomicityRegisterClient(final int read_quorum_size, final int write_quorum_size) {
-        super(read_quorum_size, write_quorum_size);
-    }
 
     /**
      * increment the {@link #cached_version} and return the new {@link Version}

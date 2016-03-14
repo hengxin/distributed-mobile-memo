@@ -12,15 +12,9 @@ import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Key;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Version;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionValue;
 
-public class MWMRAtomicityRegisterClient extends
-        AbstractAtomicityRegisterClient {
-    // Log for class {@link MWMRAtomicityRegisterClient}
+public class MWMRAtomicityRegisterClient extends AbstractAtomicityRegisterClient {
+
     private final static String TAG = MWMRAtomicityRegisterClient.class.getName();
-
-    public MWMRAtomicityRegisterClient(final int read_quorum_size, final int write_quorum_size) {
-        super(read_quorum_size, write_quorum_size);
-    }
-
 
     /**
      * {@link #get(Key)} method supporting MWMR:

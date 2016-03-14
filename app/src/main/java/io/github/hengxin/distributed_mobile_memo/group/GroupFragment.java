@@ -31,15 +31,9 @@ public class GroupFragment extends Fragment implements
      */
     protected static final int FRAGMENT_REQUEST_CODE = 0;
 
-    /**
-     * The fragment's ListView/GridView.
-     */
     private AbsListView server_replica_listview;
 
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
+    // adapter used to populate the ListView/GridView with Views.
     private ArrayAdapter<SystemNode> server_replica_list_adapter;
 
     /**
@@ -54,7 +48,7 @@ public class GroupFragment extends Fragment implements
         super.onCreate(savedInstanceState);
 
         // set adapter to show a list of {@link SystemNode}s
-        this.server_replica_list_adapter = new ArrayAdapter<SystemNode>(getActivity(),
+        this.server_replica_list_adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1,
                 GroupConfig.INSTANCE.getGroupMembers());
     }

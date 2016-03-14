@@ -12,6 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import io.github.hengxin.distributed_mobile_memo.group.GroupConfig;
 import io.github.hengxin.distributed_mobile_memo.group.member.SystemNode;
 import io.github.hengxin.distributed_mobile_memo.login.SessionManager;
+import io.github.hengxin.distributed_mobile_memo.quorum.QuorumSystem;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.IRegisterClient;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.communication.IPMessage;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.communication.IReceiver;
@@ -43,29 +44,33 @@ public abstract class AbstractAtomicityRegisterClient implements
         IRegisterClient, IAtomicityMessageHandler {
     private static final String TAG = AbstractAtomicityRegisterClient.class.getName();
 
-    private Communication comm = null;
-    protected final int read_quorum_size;
-    protected final int write_quorum_size;
+    private Communication comm;
+    protected QuorumSystem quorum;
 
     /**
      * Counter of operations invoked by this client.
      * <p>
-     * This field is only accessed (read/written) by this client.
-     * It is communicated via {@link IPMessage}.
-     * No synchronization needed.
+     * This field is only accessed (read/written) by this client. No synchronization needed.
      */
     protected int op_cnt;
 
-    public AbstractAtomicityRegisterClient(final int read_quorum_size, final int write_quorum_size) {
-        this.read_quorum_size = read_quorum_size;
-        this.write_quorum_size = write_quorum_size;
+    public QuorumSystem initQuorumSystem() {
+        this.quorum = this.configQuorumSystem();
+        return this.quorum;
     }
 
-    @Override
-    public abstract VersionValue get(Key key);
+    /**
+     * @return  a {@link QuorumSystem} that will be used in protocol. By default, it returns a
+     * majority quorum system. The subclasses that want to have different quorum systems should
+     * override this method.
+     */
+    public QuorumSystem configQuorumSystem() {
+        return QuorumSystem.createMajorityQuorumSystem(GroupConfig.INSTANCE.getGroupSize());
+    }
 
-    @Override
-    public abstract VersionValue put(Key key, String val);
+    public void setQuorumSystem(QuorumSystem quorum_system) {
+        this.quorum = quorum_system;
+    }
 
     /**
      * Read phase: contact all replicas to query their latest value and version, wait for responses from a (read) quorum
@@ -80,7 +85,7 @@ public abstract class AbstractAtomicityRegisterClient implements
      */
     public Map<String, AtomicityMessage> readPhase(Key key) {
         AtomicityMessage atomicity_read_phase_message = new AtomicityReadPhaseMessage(new SessionManager().getNodeIp(), this.op_cnt, key);
-        this.comm = new Communication(atomicity_read_phase_message, read_quorum_size);
+        this.comm = new Communication(atomicity_read_phase_message, this.quorum.getReadQuorumSize());
         return this.comm.communicate();
     }
 
@@ -96,7 +101,7 @@ public abstract class AbstractAtomicityRegisterClient implements
      */
     public void writePhase(Key key, VersionValue vval) {
         AtomicityMessage atomicity_write_phase_message = new AtomicityWritePhaseMessage(new SessionManager().getNodeIp(), this.op_cnt, key, vval);
-        this.comm = new Communication(atomicity_write_phase_message, write_quorum_size);
+        this.comm = new Communication(atomicity_write_phase_message, this.quorum.getWriteQuorumSize());
         this.comm.communicate();
     }
 
