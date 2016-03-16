@@ -208,7 +208,6 @@ public abstract class AbstractAtomicityRegisterClient implements
             this.atomicity_message = rmsg;
 
             this.replicas_num = GroupConfig.INSTANCE.getGroupSize();
-//            this.quorum_size = this.replicas_num / 2 + 1;
             this.quorum_size = quorum_size;
             this.latch_for_quorum = new CountDownLatch(quorum_size);
 

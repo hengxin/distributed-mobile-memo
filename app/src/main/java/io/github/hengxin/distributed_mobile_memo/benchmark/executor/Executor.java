@@ -71,8 +71,6 @@ public class Executor implements Runnable {
         String val = request.getValue();
         VersionValue vvalue = null;
 
-//		long invocation_time = System.currentTimeMillis();
-
         long invocation_time = TimingService.INSTANCE.pollingTime();
         if (type == Request.WRITE_TYPE)    // it is W[0]
             vvalue = client.put(key, val);
@@ -80,15 +78,13 @@ public class Executor implements Runnable {
             vvalue = client.get(key);
         long response_time = TimingService.INSTANCE.pollingTime();
 
-//		long response_time = System.currentTimeMillis();
-
         // the delay = response_time - invocation_time is calculated and recorded
         RequestRecord rr = new RequestRecord(type, invocation_time, response_time, key, vvalue);
         log4android.debug(rr.toString());
     }
 
     /**
-     * take requests from workload benchmarks one by one and issue them
+     * Take requests from workload benchmarks one by one and issue them.
      */
     @Override
     public void run() {

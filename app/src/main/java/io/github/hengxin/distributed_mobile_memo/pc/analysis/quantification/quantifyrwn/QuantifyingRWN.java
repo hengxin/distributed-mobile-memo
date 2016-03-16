@@ -117,7 +117,7 @@ public class QuantifyingRWN {
         System.out.println("Time is: " + DurationFormatUtils.formatDurationHMS(finish_time - start_time));
 
         StalenessViolationMap violation_map = quantifier.getViolationMap();
-        String staleness_file = new File(path).getParent() + File.separator + PCConstants.STALE_MAP_FILE_NAME;
+        String staleness_file = new File(path).getParent() + File.separator + PCConstants.STALE_MAP_FILE_PATH;
         violation_map.write2File(staleness_file, true);
         System.out.println("Write StalenessViolationMap into file: " + staleness_file);
     }

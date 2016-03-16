@@ -1,5 +1,6 @@
 package io.github.hengxin.distributed_mobile_memo.pc.analysis.script;
 
+import io.github.hengxin.distributed_mobile_memo.pc.PCConstants;
 import io.github.hengxin.distributed_mobile_memo.pc.adb.ADBExecutor;
 
 /**
@@ -35,7 +36,7 @@ public class ExecutionCollector {
     }
 
     public static void main(String[] args) {
-        new ExecutionCollector(ADBExecutor.DEFAULT_ADB_PATH).collect("/sdcard/single_execution",
+        new ExecutionCollector(ADBExecutor.DEFAULT_ADB_PATH).collect(PCConstants.MEMO_IN_SDCARD_DIR,
                 "/~/android-studio-projects/distributed-mobile-memo");
     }
 }
