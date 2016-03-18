@@ -51,8 +51,7 @@ public class FilesCombiner {
             throws IOException {
         String allinone_file_path = exec_dir + File.separator + allinone_file;
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(allinone_file_path))) {
-
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FileUtil.create(allinone_file_path)))) {
             String line = null;
 
             for (File sub_dir : new File(exec_dir).listFiles()) {

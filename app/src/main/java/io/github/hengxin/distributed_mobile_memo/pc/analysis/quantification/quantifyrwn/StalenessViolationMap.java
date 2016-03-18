@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import io.github.hengxin.distributed_mobile_memo.benchmark.workload.RequestRecord;
+import io.github.hengxin.distributed_mobile_memo.utility.filesys.FileUtil;
 
 /**
  * {@link StalenessViolationMap} maintains a map mapping each staleness level to a set of {@link RequestRecord}s.
@@ -47,7 +48,7 @@ public class StalenessViolationMap {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void write2File(String path, boolean isSummary) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FileUtil.create(path)))) {
             int size = this.violation_map.size();
             bw.write(String.valueOf(size));
             bw.newLine();

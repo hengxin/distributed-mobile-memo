@@ -43,22 +43,23 @@ public class AllInOne {
         String adb_path = args[0];
         String pc_dir = args[1];
 
-        // (1) collect sub-executions on separate mobile phones and store them in computer disk
+        // (1) collect sub-executions from {@code PCConstants.MEMO_IN_SDCARD_DIR} on separate mobile phones
+        // and store them in {@code pc_dir}
         System.out.println("[[[ 1. Collecting. ]]]");
-        new ExecutionCollector(adb_path).collect(PCConstants.DEFAULT_EXECUTION_SDCARD_DIR, pc_dir);
+        new ExecutionCollector(adb_path).collect(PCConstants.MEMO_IN_SDCARD_DIR, pc_dir);
 
         // (2) extract "delay" values from separate sub-executions
         System.out.println("[[[ 2. Extracting and combining delay. ]]]");
         new ExecutionDelayExtractor().extract(pc_dir, PCConstants.INDIVIDUAL_EXECUTION_FILE,
                 PCConstants.INDIVIDUAL_DELAY_FILE);
         String allinone_delay_file = new FilesCombiner().combine(pc_dir, PCConstants.INDIVIDUAL_DELAY_FILE,
-                PCConstants.ALLINONE_DELAY_FILE);
+                PCConstants.ALLINONE_DELAY_FILE_PATH);
         System.out.println("AllInOne delay is in: " + allinone_delay_file);
 
         // (3) combine sub-executions into one
         System.out.println("[[[ 3. Combine. ]]]");
         String allinone_exec_file = new FilesCombiner().combine(pc_dir, PCConstants.INDIVIDUAL_EXECUTION_FILE,
-                PCConstants.ALLINONE_EXECUTION_FILE);
+                PCConstants.ALLINONE_EXECUTION_FILE_PATH);
         System.out.println("AllInOne execution is in: " + allinone_exec_file);
 
         // (4) verify atomicity and 2-atomicity against the combined execution
@@ -91,14 +92,13 @@ public class AllInOne {
         System.out.println("The number of \"old new inversions\" is: " + oni_count);
         System.out.println("ONI / CP = " + (oni_count * 1.0) / cp_count);
 
-        String parent_path = new File(allinone_exec_file).getParent();
         // store concurrency patterns
-        String cp_file = parent_path + File.separator + PCConstants.CP_FILE_NAME;
+        String cp_file = pc_dir + File.separator + PCConstants.CP_FILE_PATH;
         System.out.println("Store concurrency patterns into file: " + cp_file);
         ONITriple.write2File(quantifer.getCPList(), cp_file);
 
         // store old-new inversions
-        String oni_file = parent_path + File.separator + PCConstants.ONI_FILE_NAME;
+        String oni_file = pc_dir + File.separator + PCConstants.ONI_FILE_PATH;
         System.out.println("Store oni into file: " + oni_file);
         ONITriple.write2File(quantifer.getONIList(), oni_file);
 
@@ -112,7 +112,7 @@ public class AllInOne {
             System.out.println("Time is: " + DurationFormatUtils.formatDurationHMS(finish_time - start_time));
 
             StalenessViolationMap violation_map = quantifier.getViolationMap();
-            String staleness_file = parent_path + File.separator + PCConstants.STALE_MAP_FILE_NAME;
+            String staleness_file = pc_dir + File.separator + PCConstants.STALE_MAP_FILE_PATH;
             violation_map.write2File(staleness_file, true);
             System.out.println("Write StalenessViolationMap into file: " + staleness_file);
         } else
@@ -120,8 +120,8 @@ public class AllInOne {
 
         // (7) remove sub-executions in separate mobile phones
         System.out.println("[[[ 7. Remove files. ]]]");
-        System.out.println("Remove files in " + PCConstants.DEFAULT_EXECUTION_SDCARD_DIR);
-        new ExecutionsRemover(adb_path).remove(PCConstants.DEFAULT_EXECUTION_SDCARD_DIR);
+        System.out.println("Remove files in " + PCConstants.MEMO_IN_SDCARD_DIR);
+        new ExecutionsRemover(adb_path).remove(PCConstants.MEMO_IN_SDCARD_DIR);
 
         // (8) uninstall apks
         System.out.println("[[[ 8. Uninstall apks. ]]]");

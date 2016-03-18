@@ -107,9 +107,13 @@ public class GroupFragment extends Fragment implements
 
 //				GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.85.216"));	// tablet
 //				GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.84.134"));	// WHF phone
+//                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.101"));
                 GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.110"));
                 GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.111"));
                 GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.112"));
+                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.113"));
+//                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.114"));
+//                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.128"));
 //                GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.87.48"));
 //                GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.86.14"));
 

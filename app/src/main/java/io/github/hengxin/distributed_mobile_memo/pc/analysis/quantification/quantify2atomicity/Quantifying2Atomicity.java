@@ -30,8 +30,8 @@ public class Quantifying2Atomicity {
     private int cp_count = 0;
     private int oni_count = 0;
 
-    private List<ONITriple> cp_list = new ArrayList<>();
-    private List<ONITriple> oni_list = new ArrayList<>();
+    private final List<ONITriple> cp_list = new ArrayList<>();
+    private final List<ONITriple> oni_list = new ArrayList<>();
 
     /**
      * Quantifying 2-atomicity in terms of numbers of "concurrency patterns (cp)" and "old-new inversions (oni)".
@@ -133,12 +133,12 @@ public class Quantifying2Atomicity {
 
         String parent_path = new File(path).getParent();
         // store concurrency patterns
-        String cp_file = parent_path + File.separator + PCConstants.CP_FILE_NAME;
+        String cp_file = parent_path + File.separator + PCConstants.CP_FILE_PATH;
         System.out.println("Store concurrency patterns into file: " + cp_file);
         ONITriple.write2File(quantifer.getCPList(), cp_file);
 
         // store old-new inversions
-        String oni_file = parent_path + File.separator + PCConstants.ONI_FILE_NAME;
+        String oni_file = parent_path + File.separator + PCConstants.ONI_FILE_PATH;
         System.out.println("Store oni into file: " + oni_file);
         ONITriple.write2File(quantifer.getONIList(), oni_file);
     }

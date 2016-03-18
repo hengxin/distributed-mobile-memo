@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 import io.github.hengxin.distributed_mobile_memo.benchmark.workload.RequestRecord;
+import io.github.hengxin.distributed_mobile_memo.utility.filesys.FileUtil;
 
 /**
  * {@link ONITriple} represents possible concurrency patterns
@@ -69,7 +70,7 @@ public class ONITriple {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void write2File(List<ONITriple> oni_triple_list, String path) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FileUtil.create(path)))) {
             int count = 0;
             for (ONITriple oni_triple : oni_triple_list) {
                 count++;
