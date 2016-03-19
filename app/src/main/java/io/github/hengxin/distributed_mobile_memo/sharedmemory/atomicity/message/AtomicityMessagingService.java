@@ -7,8 +7,6 @@
  */
 package io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.message;
 
-import java.util.Random;
-
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.communication.IPMessage;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.architecture.communication.IReceiver;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.AbstractAtomicityRegisterClient;
@@ -28,25 +26,13 @@ public enum AtomicityMessagingService implements IReceiver {
         assert (msg instanceof AtomicityMessage);
 
         /**
-         * Simulating the scenarios of "out of (receiving) order delivery" by introducing random latency
-         * to create more "old-new inversions".
-         *
-         * The average latency of read operations in 2-atomicity is about 80ms.
-         * Set the random delivery latency to 100ms.
-         *
-         * @author hengxin
-         * @date Aug 15, 2014
+         * Injecting artificial delay to simulate latency variances.
          */
-
-        /**
-         * Varying the random delay to simulate different degrees of asynchrony:
-         * 10ms, 20ms, 50ms, 100ms, 150ms, and 200ms
-         */
-        try {
-            Thread.sleep(new Random().nextInt(100));
-        } catch (InterruptedException ie) {
-            ie.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(new Random().nextInt(10));
+//        } catch (InterruptedException ie) {
+//            ie.printStackTrace();
+//        }
 
         /**
          *  {@link AtomicityRegisterServer} is responsible for handling with messages

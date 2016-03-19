@@ -22,11 +22,11 @@ import io.github.hengxin.distributed_mobile_memo.utility.filesys.FilesCombiner;
  * (1) collect sub-executions on separate mobile phones and store them in computer disk
  * (2) extract "delay" values from separate sub-executions and combine them
  * (3) combine sub-executions into one
- * (4) verify atomicity and 2-atomicity against the combined execution
- * (5) quantify 2-atomicity (i.e., counting occurrences of old-new inversions)
- * (6) quantifying rwn, if the result of verifying 2-atomicity is {@code false}
- * (7) remove sub-executions in separate mobile phones
- * (8) uninstall apks
+ * (4) remove sub-executions in separate mobile phones
+ * (5) uninstall apks
+ * (6) verify atomicity and 2-atomicity against the combined execution
+ * (7) quantify 2-atomicity (i.e., counting occurrences of old-new inversions)
+ * (8) quantifying rwn, if the result of verifying 2-atomicity is {@code false}
  *
  * @author hengxin
  * @date Jul 1, 2014
@@ -62,20 +62,29 @@ public class AllInOne {
                 PCConstants.ALLINONE_EXECUTION_FILE_PATH);
         System.out.println("AllInOne execution is in: " + allinone_exec_file);
 
-        // (4) verify atomicity and 2-atomicity against the combined execution
-        System.out.println("[[[ 4.1 Verifying atomicity. ]]]");
+        // (4) remove sub-executions in separate mobile phones
+        System.out.println("[[[ 4. Remove files. ]]]");
+        System.out.println("Remove files in " + PCConstants.MEMO_IN_SDCARD_DIR);
+        new ExecutionsRemover(adb_path).remove(PCConstants.MEMO_IN_SDCARD_DIR);
+
+        // (5) uninstall apks
+        System.out.println("[[[ 5. Uninstall apks. ]]]");
+        new APKUninstaller(adb_path).uninstall(PCConstants.MEMO_APK);
+
+        // (6) verify atomicity and 2-atomicity against the combined execution
+        System.out.println("[[[ 6.1 Verifying atomicity. ]]]");
         AtomicityVerifier atomicity_verifier = new AtomicityVerifier(allinone_exec_file);
         System.out.println("Verifying atomicity: " + atomicity_verifier.verifyAtomicity());
 
-        System.out.println("[[[ 4.2 Verifying 2-atomicity. ]]]");
+        System.out.println("[[[ 6.2 Verifying 2-atomicity. ]]]");
         long start_time = System.currentTimeMillis();
         boolean is_2atomicity = new AtomicityVerifier(allinone_exec_file).verify2Atomicity();
         long finish_time = System.currentTimeMillis();
         System.out.println("Verifying 2-atomicity: " + is_2atomicity + " in " + DurationFormatUtils.formatDurationHMS
                 (finish_time - start_time));
 
-        // (5) quantify 2-atomicity and get the number of "concurrency patterns" and "old-new inversions"
-        System.out.println("[[[ 5. Quantifying 2-atomicity. ]]]");
+        // (7) quantify 2-atomicity and get the number of "concurrency patterns" and "old-new inversions"
+        System.out.println("[[[ 7. Quantifying 2-atomicity. ]]]");
         Quantifying2Atomicity quantifer = new Quantifying2Atomicity();
 
         start_time = System.currentTimeMillis();
@@ -102,8 +111,8 @@ public class AllInOne {
         System.out.println("Store oni into file: " + oni_file);
         ONITriple.write2File(quantifer.getONIList(), oni_file);
 
-        // (6) quantifying rwn, if the result of verifying 2-atomicity is {@code false}
-        System.out.println("[[[ 6. Quantifying RWN execution... ]]]");
+        // (8) quantifying rwn, if the result of verifying 2-atomicity is {@code false}
+        System.out.println("[[[ 8. Quantifying RWN execution... ]]]");
         if (! is_2atomicity) {
             start_time = System.currentTimeMillis();
             QuantifyingRWN quantifier = new QuantifyingRWN();
@@ -117,15 +126,6 @@ public class AllInOne {
             System.out.println("Write StalenessViolationMap into file: " + staleness_file);
         } else
             System.out.println("It is 2-atomic; no need to be quantified here.");
-
-        // (7) remove sub-executions in separate mobile phones
-        System.out.println("[[[ 7. Remove files. ]]]");
-        System.out.println("Remove files in " + PCConstants.MEMO_IN_SDCARD_DIR);
-        new ExecutionsRemover(adb_path).remove(PCConstants.MEMO_IN_SDCARD_DIR);
-
-        // (8) uninstall apks
-        System.out.println("[[[ 8. Uninstall apks. ]]]");
-        new APKUninstaller(adb_path).uninstall(PCConstants.DEFAULT_APK);
     }
 
 }

@@ -1,7 +1,5 @@
 package io.github.hengxin.distributed_mobile_memo.sharedmemory.eventual;
 
-import android.util.Log;
-
 import io.github.hengxin.distributed_mobile_memo.group.GroupConfig;
 import io.github.hengxin.distributed_mobile_memo.quorum.QuorumSystem;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.SWMR2AtomicityRegisterClient;
@@ -22,7 +20,6 @@ public class EventualConsistencyClient extends SWMR2AtomicityRegisterClient {
     @Override
     public QuorumSystem configQuorumSystem() {
         int replica_size = GroupConfig.INSTANCE.getGroupSize();
-        Log.d(TAG, "replica size = " + replica_size);
         int write_quorum_size = (replica_size + 1) / 2;
         int read_quorum_size = replica_size - write_quorum_size;
 

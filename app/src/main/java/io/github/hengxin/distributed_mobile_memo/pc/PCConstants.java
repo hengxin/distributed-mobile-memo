@@ -26,5 +26,5 @@ public class PCConstants {
     public static final String RWN_DIR = "rwn";
     public static final String STALE_MAP_FILE_PATH = RWN_DIR + File.separator + "staleness.txt";
 
-    public static final String DEFAULT_APK = "io.github.hengxin.distributed_mobile_memo";
+    public static final String MEMO_APK = "io.github.hengxin.distributed_mobile_memo";
 }
