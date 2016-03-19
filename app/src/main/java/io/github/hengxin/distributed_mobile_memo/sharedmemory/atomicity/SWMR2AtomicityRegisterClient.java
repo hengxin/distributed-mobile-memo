@@ -9,6 +9,8 @@
 
 package io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity;
 
+import android.util.Log;
+
 import java.util.Map;
 
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.message.AtomicityMessage;
@@ -37,7 +39,7 @@ public class SWMR2AtomicityRegisterClient extends SWMRAtomicityRegisterClient {
      */
     @Override
     public VersionValue get(Key key) {
-//		Log.d(TAG, TAG + " issues a GET request ...");
+		Log.d(TAG, TAG + " issues a GET request ...");
 
         this.op_cnt++;
 

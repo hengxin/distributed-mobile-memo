@@ -1,7 +1,5 @@
 package io.github.hengxin.distributed_mobile_memo.benchmark.executor;
 
-import android.util.Log;
-
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.BlockingQueue;
@@ -96,7 +94,7 @@ public class Executor implements Runnable {
                 ie.printStackTrace();
             }
 
-            Log.d(TAG, "The number of request: " + index);
+//            Log.d(TAG, "The number of request: " + index);
             index++;
         }
 

@@ -1,5 +1,6 @@
 package io.github.hengxin.distributed_mobile_memo.pc.analysis.script;
 
+import io.github.hengxin.distributed_mobile_memo.pc.PCConstants;
 import io.github.hengxin.distributed_mobile_memo.pc.adb.ADBExecutor;
 
 /**
@@ -34,6 +35,6 @@ public class ExecutionsRemover {
     }
 
     public static void main(String[] args) {
-        new ExecutionsRemover(ADBExecutor.DEFAULT_ADB_PATH).remove("/sdcard/single_execution");
+        new ExecutionsRemover(ADBExecutor.DEFAULT_ADB_PATH).remove(PCConstants.MEMO_IN_SDCARD_DIR);
     }
 }

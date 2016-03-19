@@ -101,7 +101,6 @@ public enum MessagingService implements IReceiver {
                         try {
                             ObjectInputStream ois = new ObjectInputStream(connection.getInputStream());
                             IPMessage msg = (IPMessage) ois.readObject();
-//							Log.i(TAG, "Receiving message: " + msg.toString());
                             MessagingService.this.onReceive(msg);
                         } catch (StreamCorruptedException sce) {
                             sce.printStackTrace();

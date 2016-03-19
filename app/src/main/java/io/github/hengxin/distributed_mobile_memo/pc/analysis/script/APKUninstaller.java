@@ -1,5 +1,6 @@
 package io.github.hengxin.distributed_mobile_memo.pc.analysis.script;
 
+import io.github.hengxin.distributed_mobile_memo.pc.PCConstants;
 import io.github.hengxin.distributed_mobile_memo.pc.adb.ADBExecutor;
 
 /**
@@ -33,6 +34,6 @@ public class APKUninstaller {
     }
 
     public static void main(String[] args) {
-        new APKUninstaller(ADBExecutor.DEFAULT_ADB_PATH).uninstall("io.github.hengxin.distributed_mobile_memo");
+        new APKUninstaller(ADBExecutor.DEFAULT_ADB_PATH).uninstall(PCConstants.MEMO_APK);
     }
 }
