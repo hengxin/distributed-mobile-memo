@@ -23,7 +23,7 @@ public enum AtomicityMessagingService implements IReceiver {
     @Override
     public void onReceive(IPMessage msg) {
         // it only receives messages of type type {@link AtomicityMessage} from {@link MessagingService}
-        assert (msg instanceof AtomicityMessage);
+//        assert (msg instanceof AtomicityMessage);
 
         /**
          * Injecting artificial delay to simulate latency variances.

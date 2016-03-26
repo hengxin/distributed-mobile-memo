@@ -31,14 +31,12 @@ public class Executor implements Runnable {
 
     // number of requests to execute
     private int request_number = -1;
-    private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<Request>();
+    private BlockingQueue<Request> request_queue = new LinkedBlockingDeque<>();
 
     AbstractAtomicityRegisterClient client = null;
 
     /**
-     * constructor of {@link Executor}
-     * <p>
-     * using the producer-consumer synchronization mechanism
+     * Using the producer-consumer synchronization mechanism.
      *
      * @param request_queue  {@link #request_queue}: queue of {@link RequestRecord}s
      *                       between producer {@link PoissonWorkloadGenerator} and consumer {@link Executor}

@@ -26,9 +26,6 @@ public class AtomicityReadPhaseMessage extends AtomicityMessage {
         super(ip, cnt, key, VersionValue.RESERVED_VERSIONVALUE);
     }
 
-    /**
-     * Show the READ_PHASE message
-     */
     @Override
     public String toString() {
         return "[READ_PHASE]: " + super.toString();

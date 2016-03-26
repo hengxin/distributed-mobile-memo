@@ -65,11 +65,8 @@ public class AtomicityMessage extends IPMessage {
         int len = atomicity_messages.length;
         VersionValue[] vvals = new VersionValue[len];
 
-        for (int i = 0; i < len; i++) {
-//			Log.d(TAG, "The length of READ_PHASE_ACKS is: " + len + "; The current under check is : " + i);
-//			Log.d(TAG, atomicity_messages[i].toString());
+        for (int i = 0; i < len; i++)
             vvals[i] = atomicity_messages[i].vval;
-        }
 
         return vvals;
     }

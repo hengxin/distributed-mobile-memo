@@ -34,7 +34,7 @@ public class PoissonWorkloadGenerator implements Runnable {
 
     // used to generate number sequence accordance with some specified distribution
     private NumberGenerator<Double> exp_interarrival_gen = null;
-    private final long oneMinute = 1000;
+    private static final int oneMinute = 1000;
 
     /**
      * constructor of {@link PoissonWorkloadGenerator}
@@ -57,16 +57,11 @@ public class PoissonWorkloadGenerator implements Runnable {
     }
 
     /**
-     * generate inter-arrival time
-     * @return inter-arrival time
      * @throws InterruptedException thread is interrupted
-     *
-     * TODO: high-level api
      * @throws RequestTypeNotDefinedException
      */
     private Request generateNextRequest() throws InterruptedException, RequestTypeNotDefinedException {
-        long interval = Math.round(exp_interarrival_gen.nextValue() * oneMinute);
-        Thread.sleep(interval);
+        Thread.sleep(Math.round(exp_interarrival_gen.nextValue() * oneMinute));
 
         return RequestFactory.INSTANCE.generateRequest(this.role, this.key_range, this.value_range);
     }
