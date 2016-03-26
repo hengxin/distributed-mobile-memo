@@ -190,7 +190,6 @@ public abstract class AbstractAtomicityRegisterClient implements
          *     Locking ConcurrentHashMap for Exclusive</a>
          */
         private final Object[] locks = new Object[10];
-
         {
             for (int i = 0; i < locks.length; i++)
                 locks[i] = new Object();
@@ -321,7 +320,6 @@ public abstract class AbstractAtomicityRegisterClient implements
                         MessagingService.INSTANCE.sendOneWay(from_ip, this.atomicity_message); // re-send the rmsg
                         this.turn.put(from_ip, Communication.THERE);
                         this.status.put(from_ip, Communication.NOT_ACK);
-                        // this.latch_for_quorum.countDown();	// Don't count acks of old messages (Jul 2, 2014)
                         break;
 
                     case Communication.NOT_ACK:

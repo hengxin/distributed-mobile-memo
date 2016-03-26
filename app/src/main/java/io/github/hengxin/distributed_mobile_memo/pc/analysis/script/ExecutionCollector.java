@@ -36,7 +36,10 @@ public class ExecutionCollector {
     }
 
     public static void main(String[] args) {
-        new ExecutionCollector(ADBExecutor.DEFAULT_ADB_PATH).collect(PCConstants.MEMO_IN_SDCARD_DIR,
-                "/~/android-studio-projects/distributed-mobile-memo");
+        if (args.length != 2)
+            throw new IllegalArgumentException("Arguments: <adb_path> <pc_path>");
+
+        new ExecutionCollector(args[0])
+                .collect(PCConstants.MEMO_IN_SDCARD_DIR, args[1]);
     }
 }

@@ -8,58 +8,50 @@ package io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs;
 
 import java.io.Serializable;
 
+import static java.util.Objects.hash;
+
 /**
+ * The "Key" part of the "key-value" store; it is just a "int" NOW.
  * @author hengxin
- * @description the "Key" part of the "key-value" store;
- * 	it is just a String NOW.
  */
 public class Key implements Serializable {
     private static final long serialVersionUID = -1479354097038655441L;
 
-    private String key_str;    // key to identify (String format)
+    public static final Key RESERVED_KEY = new Key(Integer.MIN_VALUE);
 
-    /**
-     * Reserved key with string literal "RESERVED_KEY"
-     */
-    public static final Key RESERVED_KEY = new Key("RESERVED_KEY");
+    private final int key;
 
-    /**
-     * Constructor for Key: it is just a String now
-     * @param key key in String
-     */
-    public Key(String key) {
-        this.key_str = key;
+    public Key(int key) {
+        this.key = key;
     }
 
     /**
-     * String format of Key for output: Key : {@link #key_str}
+     * @throws NumberFormatException if {@code key} is not an "int".
      */
+    public static Key parse(String key_str) {
+        return new Key(Integer.parseInt(key_str));
+    }
+
     @Override
     public String toString() {
-        return "Key: " + this.key_str;
+        return String.valueOf(key);
     }
 
-    /**
-     * Override the hashCode() method for HashMap
-     *
-     * Guarantee: Two {@link Key}s regarded equal semantically hold the same hash code.
-     */
     @Override
     public int hashCode() {
-        int result = 17;
-        result = 37 * result + this.key_str.hashCode();
-        return result;
+        return hash(this.key);
     }
 
-    /**
-     * For serializable interface (necessary for network communication)
-     */
     @Override
     public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (obj == null)
+            return false;
         if (!(obj instanceof Key))
             return false;
 
-        Key key = (Key) obj;
-        return this.key_str.equals(key.key_str);
+        Key that = (Key) obj;
+        return this.key == that.key;
     }
 }

@@ -34,6 +34,7 @@
  */
 package io.github.hengxin.distributed_mobile_memo.pc.analysis.verification;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,24 +44,13 @@ import io.github.hengxin.distributed_mobile_memo.pc.analysis.execution.Execution
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Version;
 
 public class AtomicityVerifier {
-    // execution to be verified
     private Execution execution = null;
 
     /**
-     * Constructor of {@link AtomicityVerifier}
-     * @param execution
-     * 	{@link Execution} to be verified
-     */
-    public AtomicityVerifier(Execution execution) {
-        this.execution = execution;
-    }
-
-    /**
-     * Constructor of {@link AtomicityVerifier}
      * @param execution_file
      * 	a file containing the {@link Execution} to be verified
      */
-    public AtomicityVerifier(String execution_file) {
+    public AtomicityVerifier(String execution_file) throws IOException {
         ExecutionLogHandler exe_log_reader = new ExecutionLogHandler(execution_file);
         List<RequestRecord> request_record_list = exe_log_reader.loadRequestRecords();
         this.execution = new Execution(request_record_list);
@@ -73,26 +63,17 @@ public class AtomicityVerifier {
      */
     public boolean verifyAtomicity() {
         for (RequestRecord cur_read_request_record : this.execution.getReadRequestRecordList()) {
-            /**
-             * No read operation can return some value out of thin air.
-             */
             if (this.isValueFromNowhere(cur_read_request_record)) {
+                // TODO: 2016/3/26 refactor the "print" statements 
                 System.err.println(cur_read_request_record.toString() + " reads value from nowhere.");
                 return false;
             }
 
-            /**
-             * No read operation returns a value from the distinct past, that is,
-             * one that precedes the most recently written non-overlapping value
-             */
             if (this.isValueOverwritten(cur_read_request_record)) {
                 System.err.println(cur_read_request_record.toString() + " reads overwritten value.");
                 return false;
             }
 
-            /**
-             * Check old-new-inversion
-             */
             if (this.hasOldNewInversion(cur_read_request_record)) {
                 System.err.println(cur_read_request_record.toString() + " has old new inversion.");
                 return false;
@@ -274,11 +255,9 @@ public class AtomicityVerifier {
         return false;
     }
 
-    /**
-     * Test
-     */
-    public static void main(String[] args) {
-        AtomicityVerifier atomicity_verifier = new AtomicityVerifier("C:\\Users\\ics-ant\\Desktop\\executions\\For ONITriple\\SWMR-2Atomicity\\rate200\\0815-1947-3\\execution.txt");
+    public static void main(String[] args) throws IOException {
+        AtomicityVerifier atomicity_verifier =
+                new AtomicityVerifier("C:\\Users\\ics-ant\\Desktop\\executions\\For ONITriple\\SWMR-2Atomicity\\rate200\\0815-1947-3\\execution.txt");
         System.out.println("Verifying atomicity: " + atomicity_verifier.verifyAtomicity());
     }
 }

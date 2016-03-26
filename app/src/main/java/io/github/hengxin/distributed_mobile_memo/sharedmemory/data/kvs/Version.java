@@ -6,8 +6,11 @@
  */
 package io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs;
 
-import java.io.Serializable;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Splitter;
 
+import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  * @author hengxin
@@ -22,39 +25,33 @@ public class Version implements Comparable<Version>, Serializable {
      */
     public static final Version RESERVED_VERSION = new Version(-1, -1);
 
-    private int seqno;    // sequence no.
-    private int pid;        // pid
+    private int seqno;
+    private final int pid;
 
-    /**
-     * constructor of {@link Version} with {@link #seqno} and {@link #pid}
-     *
-     * @param seqno sequence no
-     * @param id pid
-     */
     public Version(int seqno, int id) {
         this.seqno = seqno;
         this.pid = id;
+    }
+
+    /**
+     * @throws NumberFormatException
+     */
+    public static Version parse(String ver_str) {
+        Iterator<String> version_iter = Splitter.on(CharMatcher.anyOf("(,)"))
+                .trimResults()
+                .omitEmptyStrings()
+                .split(ver_str)
+                .iterator();
+        return new Version(Integer.parseInt(version_iter.next()),
+                Integer.parseInt(version_iter.next()));
     }
 
     public int getSeqno() {
         return this.seqno;
     }
 
-//	/**
-//	 * @return {@link #id}: the pid
-//	 */
-//	public int getId()
-//	{
-//		return this.id;
-//	}
-
-//	public Version incrementSeqNo()
-//	{
-//		
-//	}
-
     /**
-     * increment the {@link #seqno}
+     * Increment the {@link #seqno}.
      * @param pid pid to set
      * @return the new incremented Version (leaving the old {@link Version} unchanged)
      *
@@ -68,7 +65,7 @@ public class Version implements Comparable<Version>, Serializable {
     }
 
     /**
-     * we compare two versions according to the lexicographic order
+     * Compare two versions according to the lexicographic order.
      * @param version another Version to be compared with
      * @return 1 if this Version is larger;
      * 		  -1 if another Version is larger;
@@ -88,26 +85,31 @@ public class Version implements Comparable<Version>, Serializable {
         return 0;
     }
 
-    /**
-     * String format of the Version representation:
-     * Version : (seqno, id)
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Version: (").append(this.seqno).append(',').append(this.pid).append(')');
-        return sb.toString();
-    }
-
-    /**
-     * are the two Version (s) equal
-     */
     @Override
     public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
         if (!(obj instanceof Version))
             return false;
 
-        Version ver = (Version) obj;
-        return this.seqno == ver.seqno && this.pid == ver.pid;
+        Version that = (Version) obj;
+        return this.seqno == that.seqno && this.pid == that.pid;
     }
+
+    /**
+     * String format of {@link Version}: (seqno, id).
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(20);
+
+        sb.append('(')
+                .append(seqno).append(',').append(pid)
+                .append(')');
+
+        return sb.toString();
+    }
+
 }

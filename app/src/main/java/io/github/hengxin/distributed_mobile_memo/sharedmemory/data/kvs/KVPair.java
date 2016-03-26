@@ -20,23 +20,14 @@ public class KVPair {
         this.vval = vval;
     }
 
-    /**
-     * @return {@link #key}: of Key
-     */
     public Key getKey() {
         return this.key;
     }
 
-    /**
-     * @return {@link #vval}: of VersionValue
-     */
     public VersionValue getVVal() {
         return this.vval;
     }
 
-    /**
-     * Key : key; VersionValue
-     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

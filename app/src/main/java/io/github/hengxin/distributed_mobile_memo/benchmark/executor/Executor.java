@@ -59,15 +59,15 @@ public class Executor implements Runnable {
     }
 
     /**
-     * issue the request and record statistical information
+     * Issue the request and record statistical information.
      *
      * @param request request to issue
      */
     private void issue(Request request) {
         int type = request.getType();
         Key key = request.getKey();
-        String val = request.getValue();
-        VersionValue vvalue = null;
+        int val = request.getValue();
+        VersionValue vvalue;
 
         long invocation_time = TimingService.INSTANCE.pollingTime();
         if (type == Request.WRITE_TYPE)    // it is W[0]
@@ -76,14 +76,10 @@ public class Executor implements Runnable {
             vvalue = client.get(key);
         long response_time = TimingService.INSTANCE.pollingTime();
 
-        // the delay = response_time - invocation_time is calculated and recorded
-        RequestRecord rr = new RequestRecord(type, invocation_time, response_time, key, vvalue);
-        log4android.debug(rr.toString());
+        log4android.debug(new RequestRecord(type, invocation_time, response_time, key, vvalue)
+                .toCompactedString());
     }
 
-    /**
-     * Take requests from workload benchmarks one by one and issue them.
-     */
     @Override
     public void run() {
         int index = 0;
@@ -93,8 +89,6 @@ public class Executor implements Runnable {
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
-
-//            Log.d(TAG, "The number of request: " + index);
             index++;
         }
 

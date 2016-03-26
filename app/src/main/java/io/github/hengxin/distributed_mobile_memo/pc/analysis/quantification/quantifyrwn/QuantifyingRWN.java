@@ -36,7 +36,7 @@ public class QuantifyingRWN {
      * @See <a href = "https://github.com/hengxin/distributed-mobile-memo/wiki/Offline-Analysis#quantifying-rwn
      * -executions-quantifyingrwn">Quantifying RWN Executions @ wiki of this project on GitHub</a>.
      */
-    public void quantify(String path) {
+    public void quantify(String path) throws IOException {
         Execution rwn_execution = new Execution(new ExecutionLogHandler(path).loadRequestRecords());
 
         List<RequestRecord> write_rr_list = rwn_execution.getWriteRequestRecordList();

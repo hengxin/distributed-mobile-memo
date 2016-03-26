@@ -34,6 +34,9 @@ public class APKUninstaller {
     }
 
     public static void main(String[] args) {
-        new APKUninstaller(ADBExecutor.DEFAULT_ADB_PATH).uninstall(PCConstants.MEMO_APK);
+        if (args.length != 1)
+            throw new IllegalArgumentException("Argument: <adb_path>");
+
+        new APKUninstaller(args[0]).uninstall(PCConstants.MEMO_APK);
     }
 }

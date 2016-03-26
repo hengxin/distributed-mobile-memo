@@ -17,7 +17,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -30,29 +29,15 @@ import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionVa
 public abstract class KVRequestDialog extends DialogFragment {
     private static final String TAG = KVRequestDialog.class.getName();
 
-    /**
-     * {@link Key} in its String format
-     */
     protected String key_str = null;
-    /**
-     * value in its String format
-     *
-     * @see VersionValue
-     *
-     *      note: the information of {@link #val_str} is not necessary for both
-     *      {@link KVGetRequestDialog} and {@link KVRemoveRequestDialog}
-     * @see #is_val_required
-     */
     protected String val_str = null;
 
     protected Key request_key = null;
     protected VersionValue vval_return = null;
 
     /**
-     * the information of {@link #val_str} (thus, together with the value input
-     * box) is not necessary for both {@link KVGetRequestDialog} and
-     * {@link KVRemoveRequestDialog} while it is required for
-     * {@link KVPutRequestDialog}
+     * {@link #val_str} is not necessary for either {@link KVGetRequestDialog} or
+     * {@link KVRemoveRequestDialog} while it is required for {@link KVPutRequestDialog}.
      *
      * @see KVPutRequestDialog
      * @see KVGetRequestDialog
@@ -111,9 +96,7 @@ public abstract class KVRequestDialog extends DialogFragment {
                                 KVRequestDialog.this.key_str = KVRequestDialog.this.etxt_key.getText().toString();
                                 if (KVRequestDialog.this.is_val_required)
                                     KVRequestDialog.this.val_str = KVRequestDialog.this.etxt_val.getText().toString();
-                                KVRequestDialog.this.request_key = new Key(KVRequestDialog.this.key_str);
-
-                                Log.d(TAG, "Request key = " + KVRequestDialog.this.key_str);
+                                KVRequestDialog.this.request_key = Key.parse(KVRequestDialog.this.key_str);
 
                                 // invoke appropriate action for each request
                                 VersionValue vval = KVRequestDialog.this.onRequestPerformed();

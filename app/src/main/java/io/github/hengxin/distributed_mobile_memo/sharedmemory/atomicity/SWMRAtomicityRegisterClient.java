@@ -83,7 +83,7 @@ public class SWMRAtomicityRegisterClient extends AbstractAtomicityRegisterClient
      * @see also MWMRAtomicityRegisterClient#put(Key, String)
      */
     @Override
-    public VersionValue put(Key key, String val) {
+    public VersionValue put(Key key, int val) {
 //		Log.d(TAG, TAG + " issues a PUT request ...");
 
         this.op_cnt++;

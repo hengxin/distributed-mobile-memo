@@ -42,7 +42,7 @@ public class KVPutRequestDialog extends KVRequestDialog {
             System.exit(1);
         }
 
-        return client.put(super.request_key, val_str);
+        return client.put(super.request_key, Integer.parseInt(val_str));
     }
 
 }

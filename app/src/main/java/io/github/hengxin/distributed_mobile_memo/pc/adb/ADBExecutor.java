@@ -21,17 +21,9 @@ public class ADBExecutor {
     public static final int ANDROID_PORT = 30000;
     public static final int HOST_BASE_PORT = 35000;
 
-    public static final String DEFAULT_ADB_PATH = "/home/hengxin/Android/Sdk/platform-tools/adb";
-
     private final Map<String, String> deviceid_hostname_map = new HashMap<>();
-
     private final String adb_path;
 
-    /**
-     * Constructor of {@link ADBExecutor}.
-     *
-     * @param adb_path  path of adb
-     */
     public ADBExecutor(String adb_path) {
         this.adb_path = adb_path;
 

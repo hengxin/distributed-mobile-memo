@@ -66,11 +66,8 @@ public class PoissonWorkloadGenerator implements Runnable {
      */
     private Request generateNextRequest() throws InterruptedException, RequestTypeNotDefinedException {
         long interval = Math.round(exp_interarrival_gen.nextValue() * oneMinute);
-//		Log.i(LOG, "The inter-arrival time is " + interval);
-
         Thread.sleep(interval);
 
-        // generate requests randomly
         return RequestFactory.INSTANCE.generateRequest(this.role, this.key_range, this.value_range);
     }
 

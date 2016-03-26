@@ -8,16 +8,14 @@ package io.github.hengxin.distributed_mobile_memo.benchmark.workload;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Key;
 
 public abstract class Request {
+    // TODO: 2016/3/26 using enum for type 
     public static final int WRITE_TYPE = 0;
     public static final int READ_TYPE = 1;
 
     protected int type = -1;
     protected Key key = null;
-    protected String val = null;
+    protected int val;
 
-    /**
-     * @param key {@link Key} for this {@link Request}
-     */
     public Request(Key key) {
         this.key = key;
     }
@@ -29,19 +27,11 @@ public abstract class Request {
         return type;
     }
 
-    /**
-     * @return key of the request
-     */
     public Key getKey() {
         return key;
     }
 
-    /**
-     * if the request is a W[0], get its value to be written
-     *
-     * @return value to write
-     */
-    public String getValue() {
+    public int getValue() {
         return val;
     }
 }	

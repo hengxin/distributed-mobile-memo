@@ -38,7 +38,7 @@ public class Quantifying2Atomicity {
      * @param path path of the file that contains the execution to quantify
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void quantify(String path) {
+    public void quantify(String path) throws IOException {
         Execution exec = new Execution(new ExecutionLogHandler(path).loadRequestRecords());
 
         // quantifying 2-atomicity for each read operation

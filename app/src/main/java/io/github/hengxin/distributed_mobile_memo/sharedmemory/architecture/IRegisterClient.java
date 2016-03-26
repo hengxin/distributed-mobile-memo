@@ -25,6 +25,6 @@ public interface IRegisterClient {
      * @param val non-versioned value associated with the key
      * @return {@link VersionValue} to put associated with the key
      */
-    public VersionValue put(Key key, String val);
+    public VersionValue put(Key key, int val);
 
 }

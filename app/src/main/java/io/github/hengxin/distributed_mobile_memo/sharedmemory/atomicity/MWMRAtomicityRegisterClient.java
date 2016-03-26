@@ -5,8 +5,6 @@
  */
 package io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity;
 
-import android.util.Log;
-
 import java.util.Map;
 
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.atomicity.message.AtomicityMessage;
@@ -24,7 +22,7 @@ public class MWMRAtomicityRegisterClient extends AbstractAtomicityRegisterClient
      */
     @Override
     public VersionValue get(Key key) {
-		Log.d(TAG, TAG + " issues a GET request ...");
+//		Log.d(TAG, TAG + " issues a GET request ...");
 
         this.op_cnt++;
 
@@ -44,11 +42,11 @@ public class MWMRAtomicityRegisterClient extends AbstractAtomicityRegisterClient
     }
 
     /**
-     * {@link #put(Key, String)} method supporting MWMR:
+     * {@link #put(Key, int)} method supporting MWMR:
      * it consists of three phases: read_phase, local computation, and write_phase
      */
     @Override
-    public VersionValue put(Key key, String val) {
+    public VersionValue put(Key key, int val) {
 //		Log.d(TAG, "Client issues a PUT request ...");
 
         this.op_cnt++;

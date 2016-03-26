@@ -15,7 +15,7 @@ public class WriteRequest extends Request {
      * @param key {@link Key} to write
      * @param val value to write
      */
-    public WriteRequest(Key key, String val) {
+    public WriteRequest(Key key, int val) {
         super(key);
         super.type = Request.WRITE_TYPE;
         super.val = val;

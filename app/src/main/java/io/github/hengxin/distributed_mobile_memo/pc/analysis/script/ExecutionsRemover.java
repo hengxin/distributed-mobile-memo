@@ -35,6 +35,10 @@ public class ExecutionsRemover {
     }
 
     public static void main(String[] args) {
-        new ExecutionsRemover(ADBExecutor.DEFAULT_ADB_PATH).remove(PCConstants.MEMO_IN_SDCARD_DIR);
+        if (args.length != 1)
+            throw new IllegalArgumentException("Argument: <adb_path>");
+
+        new ExecutionsRemover(args[0])
+                .remove(PCConstants.MEMO_IN_SDCARD_DIR);
     }
 }

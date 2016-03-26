@@ -14,40 +14,30 @@ import java.io.Serializable;
  * 	Here, value is in String type for simplicity.
  */
 public class VersionValue implements Comparable<VersionValue>, Serializable {
-    private static final String TAG = VersionValue.class.getName();
-
     private static final long serialVersionUID = -6258082960233438012L;
+
+    private static final String TAG = VersionValue.class.getName();
 
     /**
      * Reserved versioned value: RESERVED_VERSIONVALUE = (RESERVED_VERSION = (-1,-1), {@link #RESERVED_VALUE} )
      */
-    private static final String RESERVED_VALUE = "RESERVED_VALUE";
-    public static final VersionValue RESERVED_VERSIONVALUE = new VersionValue(Version.RESERVED_VERSION, RESERVED_VALUE);
+    private static final int RESERVED_VALUE = Integer.MIN_VALUE;
+    public static final VersionValue RESERVED_VERSIONVALUE = new VersionValue(Version
+            .RESERVED_VERSION, RESERVED_VALUE);
 
     private Version ver = null;
-    private String val = null;
+    private int val;
 
-    /**
-     * @param ver Version
-     * @param val val in type String
-     */
-    public VersionValue(Version ver, String val) {
+    public VersionValue(Version ver, int val) {
         this.ver = ver;
         this.val = val;
     }
 
-    /**
-     * @return {@link #ver}: the version
-     */
     public Version getVersion() {
         return this.ver;
     }
 
-    /**
-     * @return {@link #val}: the value associated with the version;
-     * it is a String NOW.
-     */
-    public String getValue() {
+    public int getValue() {
         return this.val;
     }
 

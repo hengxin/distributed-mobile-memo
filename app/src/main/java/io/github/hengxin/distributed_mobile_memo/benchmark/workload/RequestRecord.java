@@ -6,45 +6,27 @@
  */
 package io.github.hengxin.distributed_mobile_memo.benchmark.workload;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Splitter;
+
+import java.util.List;
+
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Key;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.Version;
 import io.github.hengxin.distributed_mobile_memo.sharedmemory.data.kvs.VersionValue;
 
 public class RequestRecord extends Request implements Comparable<RequestRecord> {
-    //	private VersionValue vvalue = null;
     private Version version = null;
 
     private long start_time = 0;
     private long finish_time = 0;
-    // delay = finish_time - start_time
     private long delay = 0;
 
-    /**
-     * constructor of {@link RequestRecord}
-     *
-     * @param type {@value Request#WRITE_TYPE} or {@value Request#READ_TYPE}
-     * @param start start time
-     * @param finish finish time
-     * @param vvalue value (with version number)
-     *
-     * delay = finish - start will be calculated and recorded
-     */
     public RequestRecord(int type, long start, long finish, Key key, VersionValue vvalue) {
-        super(key);
-
-        super.type = type;
-
-        this.start_time = start;
-        this.finish_time = finish;
-        this.delay = this.finish_time - this.start_time;
-
-        this.version = vvalue.getVersion();
-        super.val = vvalue.getValue();
+        this(type, start, finish, finish - start, key, vvalue.getVersion(), vvalue.getValue());
     }
 
     /**
-     * constructor of {@link RequestRecord}
-     *
      * @param type {@value Request#WRITE_TYPE} or {@value Request#READ_TYPE}
      * @param start start time
      * @param finish finish time
@@ -52,7 +34,8 @@ public class RequestRecord extends Request implements Comparable<RequestRecord> 
      * @param version {@link Version}
      * @param val value
      */
-    public RequestRecord(int type, long start, long finish, long delay, Key key, Version version, String val) {
+    public RequestRecord(int type, long start, long finish, long delay,
+                         Key key, Version version, int val) {
         super(key);
 
         super.type = type;
@@ -73,16 +56,8 @@ public class RequestRecord extends Request implements Comparable<RequestRecord> 
         return this.start_time;
     }
 
-    public void setStartTime(long start_time) {
-        this.start_time = start_time;
-    }
-
     public long getFinishTime() {
         return this.finish_time;
-    }
-
-    public void setFinishTime(long finish_time) {
-        this.finish_time = finish_time;
     }
 
     public long getDelay() {
@@ -94,41 +69,57 @@ public class RequestRecord extends Request implements Comparable<RequestRecord> 
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        return MoreObjects.toStringHelper(this)
+                .add("Type", type)
+                .add("Start", start_time)
+                .add("Finish", finish_time)
+                .add("Delay", delay)
+                .add("Key", key)
+                .add("Version", version)
+                .add("Value", val)
+                .toString();
+    }
 
-        sb.append("Type: ").append(this.type).append('\t')
-                .append("Start: ").append(this.start_time).append('\t')
-                .append("Finish: ").append(this.finish_time).append('\t')
-                .append("Delay: ").append(this.delay).append('\t')
-                .append(this.key).append('\t')
-                .append(this.version).append('\t')
-                .append("Value: ").append(super.val);
+    /**
+     * @see #parse(String)
+     */
+    public String toCompactedString() {
+        StringBuilder sb = new StringBuilder(50);
+
+        sb.append(type).append(';')
+                .append(start_time).append(';')
+                .append(finish_time).append(';')
+                .append(delay).append(';')
+                .append(key).append(';')
+                .append(version).append(';')
+                .append(val);
 
         return sb.toString();
     }
 
     /**
-     * compare two {@link RequestRecord}s as intervals
-     * to determine which is the preceding one.
-     * return:
-     * 1 if this {@link RequestRecord} precedes the other one (@parma rr)
-     * -1 if the one specified by @param rr precedes this one
-     * 0 if the two {@link RequestRecord}s are concurrent
-     *
-     * @param rr {@link RequestRecord} to compare with
-     * @return
-     * 1 if this {@link RequestRecord} precedes the other one (@parma rr)
-     * -1 if the one specified by @param rr precedes this one
-     * 0 if the two {@link RequestRecord}s are concurrent
+     * @param rr_str  String format of {@link RequestRecord}
+     * @return  {@link RequestRecord} parsed from {@code rr_str};
+     *  {@code null} if parse fails.
      */
-    public int intervalCompareTo(RequestRecord rr) {
-        if (this.finish_time < rr.start_time)
-            return 1;
+    public static RequestRecord parse(String rr_str) {
+        List<String> rr_fields = Splitter.on(';')
+                .trimResults()
+                .omitEmptyStrings()
+                .splitToList(rr_str);
 
-        if (rr.finish_time < this.start_time)
-            return -1;
+        if (rr_fields.size() != 7)
+            return null;
 
-        return 0;
+        int type = Integer.parseInt(rr_fields.get(0));
+        long start = Long.parseLong(rr_fields.get(1));
+        long finish = Long.parseLong(rr_fields.get(2));
+        long delay = Long.parseLong(rr_fields.get(3));
+        Key key = Key.parse(rr_fields.get(4));
+        Version version = Version.parse(rr_fields.get(5));
+        int val = Integer.parseInt(rr_fields.get(6));
+
+        return new RequestRecord(type, start, finish, delay, key, version, val);
     }
 
     /**
@@ -139,18 +130,6 @@ public class RequestRecord extends Request implements Comparable<RequestRecord> 
      */
     public boolean precedes(RequestRecord rr) {
         return this.finish_time < rr.start_time;
-    }
-
-    /**
-     * Check whether this {@link RequestRecord} reads from another one {@code rr}.
-     * It first checks whether this one is of {@link Request#READ_TYPE} and {@code rr} {@link Request#WRITE_TYPE}.
-     * @param rr a {@link RequestRecord}
-     * @return  {@code true} if this {@link RequestRecord} reads from {@code rr}; {@code false}, otherwise.
-     */
-    public boolean readFrom(RequestRecord rr) {
-        if (! this.isRead() || rr.isRead())
-            return false;
-        return this.version.equals(rr.version);
     }
 
     /**
