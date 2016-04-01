@@ -113,8 +113,10 @@ public class Communication implements IReceiver {
          */
         Collections.shuffle(replica_list);
 
+        // TODO: 2016/3/27 contact all replicas!
         // broadcast
-        for (int i = 0; /** i < this.replicas_num;**/ i < this.quorum_size; i++) {
+//        for (int i = 0; /** i < this.replicas_num;**/ i < this.quorum_size; i++) {
+        for (int i = 0; i < this.replicas_num; i++) {
             final String replica_ip = replica_list.get(i).getNodeIp();
 
             final int hash = replica_ip.hashCode() & 0x7FFFFFFF;
