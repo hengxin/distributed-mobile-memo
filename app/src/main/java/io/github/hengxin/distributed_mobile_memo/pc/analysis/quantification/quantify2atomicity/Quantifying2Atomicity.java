@@ -43,6 +43,9 @@ public class Quantifying2Atomicity {
 
         // quantifying 2-atomicity for each read operation
         for (RequestRecord read_rr : exec.getReadRequestRecordList()) {
+            boolean rr_cp_flag = false;
+            boolean rr_oni_flag = false;
+
             Iterator<RequestRecord> write_rr_iter = exec.getWriteRequestRecordList().iterator();  // in program order
 
             if (write_rr_iter.hasNext())    // skip the first write
@@ -60,11 +63,17 @@ public class Quantifying2Atomicity {
                          * Condition (2) of concurrency pattern : another read operation
                          */
                         if (pre_read_rr.finishWithin(write_rr.getStartTime(), read_rr.getStartTime())) {
-                            this.cp_count++;
+                            if (! rr_cp_flag) {
+                                this.cp_count++;
+                                rr_cp_flag = true;
+                            }
                             cp_list.add(new ONITriple(read_rr, write_rr, pre_read_rr));
 
                             if (this.isONI(read_rr, write_rr, pre_read_rr)) {
-                                this.oni_count++;
+                                if (! rr_oni_flag) {
+                                    this.oni_count++;
+                                    rr_oni_flag = true;
+                                }
                                 this.oni_list.add(new ONITriple(read_rr, write_rr, pre_read_rr));
                             }
                         }
