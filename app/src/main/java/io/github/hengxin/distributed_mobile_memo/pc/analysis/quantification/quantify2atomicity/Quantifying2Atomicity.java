@@ -5,7 +5,9 @@ import android.os.Build;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,6 +17,7 @@ import io.github.hengxin.distributed_mobile_memo.benchmark.workload.RequestRecor
 import io.github.hengxin.distributed_mobile_memo.pc.PCConstants;
 import io.github.hengxin.distributed_mobile_memo.pc.analysis.execution.Execution;
 import io.github.hengxin.distributed_mobile_memo.pc.analysis.execution.ExecutionLogHandler;
+import io.github.hengxin.distributed_mobile_memo.utility.filesys.FileUtil;
 
 /**
  * Given an execution satisfying 2-atomicity, the
@@ -124,6 +127,7 @@ public class Quantifying2Atomicity {
      * @throws IOException  if the file specified in {@code args} is not found
      * @throws IllegalArgumentException  if the size {@code args} != 1
      */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void main(String[] args) throws IOException {
         if (args.length != 1)
             throw new IllegalArgumentException("Parameter: <path>");
@@ -150,6 +154,15 @@ public class Quantifying2Atomicity {
         String oni_file = parent_path + File.separator + PCConstants.ONI_FILE_PATH;
         System.out.println("Store oni into file: " + oni_file);
         ONITriple.write2File(quantifer.getONIList(), oni_file);
+
+        // store statistics
+        String stat_file = parent_path + File.separator + PCConstants.TWO_ATOMICITY_STAT;
+        System.out.println("Store statistics into file: " + stat_file);
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FileUtil.create(stat_file)))) {
+            bw.write(String.valueOf(quantifer.getCPCount()));
+            bw.newLine();
+            bw.write(String.valueOf(quantifer.getONICount()));
+        }
     }
 
 }

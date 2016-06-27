@@ -22,6 +22,7 @@ public class PCConstants {
     public static final String TWO_ATOMICITY_DIR = "2atomicity";
     public static final String CP_FILE_PATH = TWO_ATOMICITY_DIR + File.separator + "cp.txt";
     public static final String ONI_FILE_PATH = TWO_ATOMICITY_DIR + File.separator + "oni.txt";
+    public static final String TWO_ATOMICITY_STAT = TWO_ATOMICITY_DIR + File.separator + "2atomicity_stat.txt";
 
     public static final String RWN_DIR = "rwn";
     public static final String STALE_MAP_FILE_PATH = RWN_DIR + File.separator + "staleness.txt";
