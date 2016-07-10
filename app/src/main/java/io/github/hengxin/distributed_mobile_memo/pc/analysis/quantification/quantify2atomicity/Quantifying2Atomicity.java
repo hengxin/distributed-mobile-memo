@@ -5,7 +5,9 @@ import android.os.Build;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,6 +17,7 @@ import io.github.hengxin.distributed_mobile_memo.benchmark.workload.RequestRecor
 import io.github.hengxin.distributed_mobile_memo.pc.PCConstants;
 import io.github.hengxin.distributed_mobile_memo.pc.analysis.execution.Execution;
 import io.github.hengxin.distributed_mobile_memo.pc.analysis.execution.ExecutionLogHandler;
+import io.github.hengxin.distributed_mobile_memo.utility.filesys.FileUtil;
 
 /**
  * Given an execution satisfying 2-atomicity, the
@@ -43,6 +46,9 @@ public class Quantifying2Atomicity {
 
         // quantifying 2-atomicity for each read operation
         for (RequestRecord read_rr : exec.getReadRequestRecordList()) {
+            boolean rr_cp_flag = false;
+            boolean rr_oni_flag = false;
+
             Iterator<RequestRecord> write_rr_iter = exec.getWriteRequestRecordList().iterator();  // in program order
 
             if (write_rr_iter.hasNext())    // skip the first write
@@ -60,11 +66,17 @@ public class Quantifying2Atomicity {
                          * Condition (2) of concurrency pattern : another read operation
                          */
                         if (pre_read_rr.finishWithin(write_rr.getStartTime(), read_rr.getStartTime())) {
-                            this.cp_count++;
+                            if (! rr_cp_flag) {
+                                this.cp_count++;
+                                rr_cp_flag = true;
+                            }
                             cp_list.add(new ONITriple(read_rr, write_rr, pre_read_rr));
 
                             if (this.isONI(read_rr, write_rr, pre_read_rr)) {
-                                this.oni_count++;
+                                if (! rr_oni_flag) {
+                                    this.oni_count++;
+                                    rr_oni_flag = true;
+                                }
                                 this.oni_list.add(new ONITriple(read_rr, write_rr, pre_read_rr));
                             }
                         }
@@ -115,6 +127,7 @@ public class Quantifying2Atomicity {
      * @throws IOException  if the file specified in {@code args} is not found
      * @throws IllegalArgumentException  if the size {@code args} != 1
      */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void main(String[] args) throws IOException {
         if (args.length != 1)
             throw new IllegalArgumentException("Parameter: <path>");
@@ -141,6 +154,15 @@ public class Quantifying2Atomicity {
         String oni_file = parent_path + File.separator + PCConstants.ONI_FILE_PATH;
         System.out.println("Store oni into file: " + oni_file);
         ONITriple.write2File(quantifer.getONIList(), oni_file);
+
+        // store statistics
+        String stat_file = parent_path + File.separator + PCConstants.TWO_ATOMICITY_STAT;
+        System.out.println("Store statistics into file: " + stat_file);
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FileUtil.create(stat_file)))) {
+            bw.write(String.valueOf(quantifer.getCPCount()));
+            bw.newLine();
+            bw.write(String.valueOf(quantifer.getONICount()));
+        }
     }
 
 }
