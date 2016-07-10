@@ -36,6 +36,9 @@ public class ADBExecutor {
         this.deviceid_hostname_map.put("09434d61255da52f", "Nexus2");
 
         this.deviceid_hostname_map.put("0b83bfa40adf7040", "Nexus-WL");
+
+        this.deviceid_hostname_map.put("74a5281028fc", "HuaWei0");
+        this.deviceid_hostname_map.put("74a5281026aa","HuaWei1");
     }
 
     /**

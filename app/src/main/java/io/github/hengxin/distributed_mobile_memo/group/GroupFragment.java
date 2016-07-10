@@ -114,13 +114,16 @@ public class GroupFragment extends Fragment implements
 //                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.113"));
 //                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.114"));
 
-                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.100"));
+//                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.100"));
                 GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.101"));
                 GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.102"));
-                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.103"));
+//                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.103"));
                 GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.104"));
 //                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.105"));
 //                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.106"));
+                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.108"));
+                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.109"));
+//                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.128"));
 //                GroupConfig.INSTANCE.addReplica(new SystemNode("192.168.1.128"));
 //                GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.87.48"));
 //                GroupConfig.INSTANCE.addReplica(new SystemNode("114.212.86.14"));

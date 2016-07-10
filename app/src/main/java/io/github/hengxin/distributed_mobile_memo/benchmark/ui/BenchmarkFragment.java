@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -130,7 +132,8 @@ public class BenchmarkFragment extends Fragment {// implements OnItemSelectedLis
                 btn_run_benchmark.setEnabled(true);
 
                 // the pre-processing can now be performed on the generated execution
-                txt_exec_ready.setText(R.string.txt_exec_ready);
+                txt_exec_ready.setText
+                        (R.string.txt_exec_ready + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 //				txt_exec_ready.setText("Execution has been stored in the file: /sdcard/single_execution/execution.txt");
             }
         });
